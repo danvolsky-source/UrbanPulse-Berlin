@@ -94,6 +94,9 @@ export default function Home() {
     city: selectedCity,
   });
   
+  console.log("Communities data:", communities);
+  console.log("Communities loading:", communitiesLoading);
+  
   const { data: districts, isLoading: districtsLoading } = trpc.districts.list.useQuery({ city: selectedCity });
   
   // Calculate year-over-year changes
@@ -275,9 +278,9 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {districtsLoading ? (
               <>
-                <Skeleton className="h-40" />
-                <Skeleton className="h-40" />
-                <Skeleton className="h-40" />
+                <Skeleton key="skeleton-1" className="h-40" />
+                <Skeleton key="skeleton-2" className="h-40" />
+                <Skeleton key="skeleton-3" className="h-40" />
               </>
             ) : (
               districts?.map((district) => (

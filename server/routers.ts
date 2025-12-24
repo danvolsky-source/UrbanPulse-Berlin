@@ -72,45 +72,15 @@ export const appRouter = router({
       }),
     communityComposition: publicProcedure
       .input((val: unknown) => {
-        if (typeof val === "object" && val !== null && "city" in val) {
+        if (val === undefined || val === null) return { city: "Berlin" };
+        if (typeof val === "object" && "city" in val) {
           return val as { city: string };
         }
-        throw new Error("Invalid input");
+        return { city: "Berlin" };
       })
       .query(async ({ input }) => {
         const { getCommunityComposition } = await import("./db");
-        const data = await getCommunityComposition(input.city);
-        
-        // Group by community and calculate progression
-        const communities = new Map<string, any>();
-        
-        data.forEach((row: any) => {
-          if (!communities.has(row.community)) {
-            communities.set(row.community, {
-              name: row.community,
-              progression: [],
-              latestPercentage: 0,
-            });
-          }
-          
-          const community = communities.get(row.community)!;
-          community.progression.push({
-            year: row.year,
-            population: Number(row.population),
-          });
-          community.latestPercentage = Number(row.percentage_of_total);
-        });
-        
-        // Convert to array and sort by latest percentage
-        const result = Array.from(communities.values())
-          .map(c => ({
-            ...c,
-            progression: c.progression.sort((a: any, b: any) => a.year - b.year),
-          }))
-          .sort((a, b) => b.latestPercentage - a.latestPercentage)
-          .slice(0, 5); // Top 5 communities
-        
-        return result;
+        return await getCommunityComposition(input.city);
       }),
     byDistrict: publicProcedure
       .input((val: unknown) => {

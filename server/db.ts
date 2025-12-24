@@ -170,26 +170,20 @@ export async function getCommunityComposition(city: string) {
     .innerJoin(districts, eq(demographics.districtId, districts.id))
     .where(eq(districts.city, city));
   
-  // Group by community and calculate totals
-  const communityMap = new Map<string, { name: string; latestPopulation: number; progression: Array<{ year: number; population: number }> }>();
+  // Group by community and year, summing populations across districts
+  const communityYearMap = new Map<string, Map<number, number>>();
   
   result.forEach(row => {
-    if (!communityMap.has(row.community)) {
-      communityMap.set(row.community, {
-        name: row.community,
-        latestPopulation: 0,
-        progression: [],
-      });
+    if (!communityYearMap.has(row.community)) {
+      communityYearMap.set(row.community, new Map());
     }
     
-    const community = communityMap.get(row.community)!;
-    community.progression.push({
-      year: row.year,
-      population: row.population,
-    });
+    const yearMap = communityYearMap.get(row.community)!;
+    const currentPop = yearMap.get(row.year) || 0;
+    yearMap.set(row.year, currentPop + row.population);
   });
   
-  // Calculate latest population and percentage
+  // Calculate total city population
   const totalPopulation = await db
     .select({ total: districts.population })
     .from(districts)
@@ -197,19 +191,22 @@ export async function getCommunityComposition(city: string) {
   
   const cityPopulation = totalPopulation.reduce((sum, d) => sum + d.total, 0);
   
-  const communities = Array.from(communityMap.values()).map(community => {
-    // Sort progression by year
-    community.progression.sort((a, b) => a.year - b.year);
+  // Convert to final format
+  const communities = Array.from(communityYearMap.entries()).map(([name, yearMap]) => {
+    // Convert year map to progression array and sort by year
+    const progression = Array.from(yearMap.entries())
+      .map(([year, population]) => ({ year, population }))
+      .sort((a, b) => a.year - b.year);
     
-    // Get latest population (last year)
-    const latestYear = community.progression[community.progression.length - 1];
-    const latestPopulation = latestYear ? latestYear.population : 0;
+    // Get latest population (last year in the progression)
+    const latestPopulation = progression.length > 0 ? progression[progression.length - 1].population : 0;
+    const latestPercentage = cityPopulation > 0 ? (latestPopulation / cityPopulation) * 100 : 0;
     
     return {
-      name: community.name,
+      name,
       latestPopulation,
-      latestPercentage: cityPopulation > 0 ? (latestPopulation / cityPopulation) * 100 : 0,
-      progression: community.progression,
+      latestPercentage,
+      progression,
     };
   });
   

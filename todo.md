@@ -43,6 +43,7 @@
 - [x] Verify geospatial queries performance
 - [x] All tests passing (9/9)
 - [x] Create first checkpoint
+- [x] Create final checkpoint with multi-city support
 
 ## Multi-City Expansion
 - [x] Add demographic data for Munich (München)
@@ -63,3 +64,9 @@
 - [ ] Include screenshots (optional)
 - [ ] Add license file (optional)
 - [ ] Create .gitignore for sensitive files (optional)
+
+## Bug Fixes
+- [x] Fix missing key props in list rendering (React warning)
+- [x] Fix NaN% display in community composition table
+- [x] Fix communityComposition API endpoint input validation
+- [x] Remove duplicate data processing in communityComposition endpoint
