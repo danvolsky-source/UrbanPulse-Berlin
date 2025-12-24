@@ -42,4 +42,24 @@
 - [x] Test map interactions and data loading
 - [x] Verify geospatial queries performance
 - [x] All tests passing (9/9)
-- [ ] Create first checkpoint
+- [x] Create first checkpoint
+
+## Multi-City Expansion
+- [x] Add demographic data for Munich (München)
+- [x] Add demographic data for Hamburg
+- [x] Add demographic data for Cologne (Köln)
+- [x] Update backend API to support city selection
+- [x] Create city selector component
+- [x] Update homepage to show selected city data
+- [x] Create maps for Munich, Hamburg, Cologne
+- [x] Add city-specific district boundaries
+- [x] Test all cities thoroughly
+
+## GitHub Documentation
+- [x] Write comprehensive README.md
+- [x] Add installation instructions
+- [x] Document database setup
+- [x] Add API documentation
+- [ ] Include screenshots (optional)
+- [ ] Add license file (optional)
+- [ ] Create .gitignore for sensitive files (optional)

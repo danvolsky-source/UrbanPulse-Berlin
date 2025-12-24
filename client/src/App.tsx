@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { CityProvider } from "./contexts/CityContext";
 import Home from "./pages/Home";
 import MapView from "./pages/MapView";
 import DistrictDetail from "./pages/DistrictDetail";
@@ -34,10 +35,12 @@ function App() {
         defaultTheme="dark"
         // switchable
       >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <CityProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </CityProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

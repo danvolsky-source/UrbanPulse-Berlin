@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { TrendingUp, TrendingDown, Minus, Church, Building2, Star } from "lucide-react";
 import { Link } from "wouter";
+import { useCity } from "@/contexts/CityContext";
+import CitySelector from "@/components/CitySelector";
 
 interface CommunityData {
   name: string;
@@ -80,18 +82,19 @@ function ProgressionIndicator({ data }: { data: Array<{ year: number; population
 }
 
 export default function Home() {
+  const { selectedCity } = useCity();
   const currentYear = 2024;
   
   const { data: summaryData, isLoading: summaryLoading } = trpc.demographics.citySummary.useQuery({
-    city: "Berlin",
+    city: selectedCity,
     year: currentYear,
   });
   
   const { data: communities, isLoading: communitiesLoading } = trpc.demographics.communityComposition.useQuery({
-    city: "Berlin",
+    city: selectedCity,
   });
   
-  const { data: districts, isLoading: districtsLoading } = trpc.districts.list.useQuery();
+  const { data: districts, isLoading: districtsLoading } = trpc.districts.list.useQuery({ city: selectedCity });
   
   // Calculate year-over-year changes
   const mosquesChange = summaryData?.current && summaryData?.previous
@@ -120,6 +123,7 @@ export default function Home() {
                 Demographic insights and property market analysis
               </p>
             </div>
+            <CitySelector />
             <nav className="flex gap-6">
               <Link href="/" className="text-foreground hover:text-primary transition-colors font-medium">
                 Home
@@ -138,7 +142,7 @@ export default function Home() {
       <main className="container py-12">
         {/* Demographic Snapshot */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Demographic Snapshot: Berlin</h2>
+          <h2 className="text-2xl font-bold mb-6">Demographic Snapshot: {selectedCity}</h2>
           
           {/* Religious Infrastructure */}
           <div className="mb-8">

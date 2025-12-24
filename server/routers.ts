@@ -18,10 +18,18 @@ export const appRouter = router({
   }),
 
   districts: router({
-    list: publicProcedure.query(async () => {
-      const { getAllDistricts } = await import("./db");
-      return await getAllDistricts();
-    }),
+    list: publicProcedure
+      .input((val: unknown) => {
+        if (val === undefined || val === null) return { city: undefined };
+        if (typeof val === "object" && "city" in val) {
+          return val as { city?: string };
+        }
+        return { city: undefined };
+      })
+      .query(async ({ input }) => {
+        const { getAllDistricts } = await import("./db");
+        return await getAllDistricts(input.city);
+      }),
     getById: publicProcedure
       .input((val: unknown) => {
         if (typeof val === "object" && val !== null && "id" in val) {
@@ -33,6 +41,13 @@ export const appRouter = router({
         const { getDistrictById } = await import("./db");
         return await getDistrictById(input.id);
       }),
+  }),
+
+  cities: router({
+    list: publicProcedure.query(async () => {
+      const { getCities } = await import("./db");
+      return await getCities();
+    }),
   }),
 
   demographics: router({

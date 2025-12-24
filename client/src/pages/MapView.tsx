@@ -72,7 +72,7 @@ export default function MapView() {
   const map = useRef<mapboxgl.Map | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
   
-  const { data: districts } = trpc.districts.list.useQuery();
+  const { data: districts } = trpc.districts.list.useQuery({ city: "Berlin" });
   const { data: infrastructure } = trpc.infrastructure.all.useQuery();
   
   useEffect(() => {

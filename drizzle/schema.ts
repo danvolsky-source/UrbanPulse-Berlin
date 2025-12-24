@@ -30,7 +30,8 @@ export type InsertUser = typeof users.$inferInsert;
  */
 export const districts = mysqlTable("districts", {
   id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 255 }).notNull().unique(),
+  city: varchar("city", { length: 100 }).notNull().default("Berlin"),
+  name: varchar("name", { length: 255 }).notNull(),
   nameEn: varchar("nameEn", { length: 255 }).notNull(),
   population: int("population").notNull(),
   area: int("area").notNull(), // in square kilometers
