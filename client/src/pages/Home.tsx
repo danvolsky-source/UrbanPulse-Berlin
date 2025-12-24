@@ -1,31 +1,327 @@
-import { useAuth } from "@/_core/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { getLoginUrl } from "@/const";
-import { Streamdown } from 'streamdown';
+import { trpc } from "@/lib/trpc";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TrendingUp, TrendingDown, Minus, Church, Building2, Star } from "lucide-react";
+import { Link } from "wouter";
 
-/**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Workflow, Frontend Best Practices, Design Guide and Common Pitfalls
- */
-export default function Home() {
-  // The userAuth hooks provides authentication state
-  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
-  let { user, loading, error, isAuthenticated, logout } = useAuth();
+interface CommunityData {
+  name: string;
+  latestPercentage: number;
+  progression: Array<{ year: number; population: number }>;
+}
 
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
-
+function SparklineGraph({ data }: { data: Array<{ year: number; population: number }> }) {
+  if (data.length === 0) return null;
+  
+  const values = data.map(d => d.population);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  
+  // Create SVG path
+  const points = data.map((d, i) => {
+    const x = (i / (data.length - 1)) * 100;
+    const y = 100 - ((d.population - min) / range) * 100;
+    return `${x},${y}`;
+  });
+  
+  const pathData = `M ${points.join(" L ")}`;
+  
+  // Determine color based on trend
+  const firstValue = values[0];
+  const lastValue = values[values.length - 1];
+  const isIncreasing = lastValue > firstValue;
+  const isDecreasing = lastValue < firstValue;
+  
+  const strokeColor = isIncreasing 
+    ? "rgb(34 197 94)" // green
+    : isDecreasing 
+    ? "rgb(239 68 68)" // red
+    : "rgb(156 163 175)"; // gray
+  
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
+    <svg viewBox="0 0 100 100" className="w-24 h-8" preserveAspectRatio="none">
+      <path
+        d={pathData}
+        fill="none"
+        stroke={strokeColor}
+        strokeWidth="3"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+function ProgressionIndicator({ data }: { data: Array<{ year: number; population: number }> }) {
+  if (data.length < 2) return null;
+  
+  const firstValue = data[0].population;
+  const lastValue = data[data.length - 1].population;
+  const change = ((lastValue - firstValue) / firstValue) * 100;
+  
+  const isIncreasing = change > 0.5;
+  const isDecreasing = change < -0.5;
+  
+  const Icon = isIncreasing ? TrendingUp : isDecreasing ? TrendingDown : Minus;
+  const colorClass = isIncreasing 
+    ? "text-green-500" 
+    : isDecreasing 
+    ? "text-red-500" 
+    : "text-gray-400";
+  
+  return (
+    <div className={`flex items-center gap-1 ${colorClass}`}>
+      <Icon className="w-4 h-4" />
+      <span className="text-sm font-medium">
+        {change > 0 ? "+" : ""}{change.toFixed(1)}% in {data.length} years
+      </span>
+    </div>
+  );
+}
+
+export default function Home() {
+  const currentYear = 2024;
+  
+  const { data: summaryData, isLoading: summaryLoading } = trpc.demographics.citySummary.useQuery({
+    city: "Berlin",
+    year: currentYear,
+  });
+  
+  const { data: communities, isLoading: communitiesLoading } = trpc.demographics.communityComposition.useQuery({
+    city: "Berlin",
+  });
+  
+  const { data: districts, isLoading: districtsLoading } = trpc.districts.list.useQuery();
+  
+  // Calculate year-over-year changes
+  const mosquesChange = summaryData?.current && summaryData?.previous
+    ? ((summaryData.current.mosquesCount - summaryData.previous.mosquesCount) / summaryData.previous.mosquesCount) * 100
+    : 0;
+    
+  const churchesChange = summaryData?.current && summaryData?.previous
+    ? ((summaryData.current.churchesCount - summaryData.previous.churchesCount) / summaryData.previous.churchesCount) * 100
+    : 0;
+    
+  const synagoguesChange = summaryData?.current && summaryData?.previous
+    ? ((summaryData.current.synagoguesCount - summaryData.previous.synagoguesCount) / summaryData.previous.synagoguesCount) * 100
+    : 0;
+  
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+        <div className="container py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent">
+                Berlin Real Estate Analytics
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                Demographic insights and property market analysis
+              </p>
+            </div>
+            <nav className="flex gap-6">
+              <Link href="/" className="text-foreground hover:text-primary transition-colors font-medium">
+                Home
+              </Link>
+              <Link href="/map" className="text-muted-foreground hover:text-primary transition-colors">
+                Map
+              </Link>
+              <Link href="/districts" className="text-muted-foreground hover:text-primary transition-colors">
+                Districts
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
+      
+      <main className="container py-12">
+        {/* Demographic Snapshot */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Demographic Snapshot: Berlin</h2>
+          
+          {/* Religious Infrastructure */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Religious Infrastructure</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {summaryLoading ? (
+                <>
+                  <Skeleton className="h-32" />
+                  <Skeleton className="h-32" />
+                  <Skeleton className="h-32" />
+                </>
+              ) : (
+                <>
+                  <Card className="bg-card/50 border-border">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-lg bg-chart-1/20">
+                              <Building2 className="w-6 h-6 text-chart-1" />
+                            </div>
+                            <div>
+                              <p className="text-3xl font-bold">{summaryData?.current?.mosquesCount || 0}</p>
+                              <p className="text-sm text-muted-foreground">Mosques</p>
+                            </div>
+                          </div>
+                          <div className={`flex items-center gap-1 text-sm ${mosquesChange > 0 ? "text-green-500" : "text-gray-400"}`}>
+                            {mosquesChange > 0 && <TrendingUp className="w-4 h-4" />}
+                            {mosquesChange === 0 && <Minus className="w-4 h-4" />}
+                            <span>{mosquesChange > 0 ? "+" : ""}{mosquesChange.toFixed(1)}% vs. last year</span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-card/50 border-border">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-lg bg-chart-2/20">
+                              <Church className="w-6 h-6 text-chart-2" />
+                            </div>
+                            <div>
+                              <p className="text-3xl font-bold">{summaryData?.current?.churchesCount || 0}</p>
+                              <p className="text-sm text-muted-foreground">Churches</p>
+                            </div>
+                          </div>
+                          <div className={`flex items-center gap-1 text-sm ${churchesChange > 0 ? "text-green-500" : "text-gray-400"}`}>
+                            {churchesChange > 0 && <TrendingUp className="w-4 h-4" />}
+                            {churchesChange === 0 && <Minus className="w-4 h-4" />}
+                            <span>{churchesChange > 0 ? "+" : ""}{churchesChange.toFixed(1)}% vs. last year</span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-card/50 border-border">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-lg bg-chart-3/20">
+                              <Star className="w-6 h-6 text-chart-3" />
+                            </div>
+                            <div>
+                              <p className="text-3xl font-bold">{summaryData?.current?.synagoguesCount || 0}</p>
+                              <p className="text-sm text-muted-foreground">Synagogues</p>
+                            </div>
+                          </div>
+                          <div className={`flex items-center gap-1 text-sm text-gray-400`}>
+                            <Minus className="w-4 h-4" />
+                            <span>stable</span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
+            </div>
+          </div>
+          
+          {/* Community Composition */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Community Composition</h3>
+            <Card className="bg-card/50 border-border">
+              <CardContent className="pt-6">
+                {communitiesLoading ? (
+                  <div className="space-y-4">
+                    <Skeleton className="h-16" />
+                    <Skeleton className="h-16" />
+                    <Skeleton className="h-16" />
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <div className="grid grid-cols-[1fr_100px_200px_200px] gap-4 pb-3 border-b border-border text-sm text-muted-foreground font-medium">
+                      <div>Community Name</div>
+                      <div>Population %</div>
+                      <div>Trend</div>
+                      <div>Progression (Last 5 Years)</div>
+                    </div>
+                    {communities?.map((community: CommunityData) => (
+                      <div
+                        key={community.name}
+                        className="grid grid-cols-[1fr_100px_200px_200px] gap-4 py-4 border-b border-border/50 last:border-0 hover:bg-accent/30 transition-colors rounded-lg px-2"
+                      >
+                        <div className="font-medium">{community.name}</div>
+                        <div className="text-2xl font-bold">{community.latestPercentage.toFixed(1)}%</div>
+                        <div>
+                          <SparklineGraph data={community.progression} />
+                        </div>
+                        <div>
+                          <ProgressionIndicator data={community.progression} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+        
+        {/* Districts Overview */}
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Berlin Districts</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {districtsLoading ? (
+              <>
+                <Skeleton className="h-40" />
+                <Skeleton className="h-40" />
+                <Skeleton className="h-40" />
+              </>
+            ) : (
+              districts?.map((district) => (
+                <Link key={district.id} href={`/district/${district.id}`}>
+                  <Card className="bg-card/50 border-border hover:border-primary/50 transition-all cursor-pointer h-full">
+                    <CardHeader>
+                      <CardTitle>{district.nameEn}</CardTitle>
+                      <CardDescription>
+                        Population: {district.population.toLocaleString()}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Area:</span>
+                          <span className="font-medium">{district.area} km²</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Foreign residents:</span>
+                          <span className="font-medium">{district.foreignerPercentage}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Dominant community:</span>
+                          <span className="font-medium">{district.dominantCommunity}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))
+            )}
+          </div>
+        </section>
       </main>
+      
+      {/* Footer */}
+      <footer className="border-t border-border mt-20">
+        <div className="container py-8">
+          <div className="flex justify-between items-center text-sm text-muted-foreground">
+            <p>© 2024 Berlin Real Estate Analytics. Data visualization platform.</p>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-foreground transition-colors">About</a>
+              <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
+              <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

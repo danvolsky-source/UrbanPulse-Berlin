@@ -89,4 +89,110 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Demographic data queries
+
+export async function getAllDistricts() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { districts } = await import("../drizzle/schema");
+  return await db.select().from(districts);
+}
+
+export async function getDistrictById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const { districts } = await import("../drizzle/schema");
+  const result = await db.select().from(districts).where(eq(districts.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getCitySummary(city: string, year: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const { citySummary } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  const result = await db.select().from(citySummary)
+    .where(and(
+      eq(citySummary.city, city),
+      eq(citySummary.year, year)
+    ))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getCitySummaryHistory(city: string) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { citySummary } = await import("../drizzle/schema");
+  const { desc } = await import("drizzle-orm");
+  return await db.select().from(citySummary)
+    .where(eq(citySummary.city, city))
+    .orderBy(desc(citySummary.year));
+}
+
+export async function getCommunityComposition(city: string) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { demographics, districts } = await import("../drizzle/schema");
+  const { sql } = await import("drizzle-orm");
+  
+  // Get top 5 communities by total population across all districts
+  const result = await db.execute(sql`
+    SELECT 
+      d.community,
+      d.year,
+      SUM(d.population) as population,
+      ROUND(SUM(d.population) * 100.0 / (
+        SELECT SUM(population) FROM districts
+      ), 1) as percentage_of_total
+    FROM demographics d
+    GROUP BY d.community, d.year
+    ORDER BY d.community, d.year
+  `);
+  
+  return (result[0] || []) as unknown as any[];
+}
+
+export async function getDemographicsByDistrict(districtId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { demographics } = await import("../drizzle/schema");
+  const { desc } = await import("drizzle-orm");
+  return await db.select().from(demographics)
+    .where(eq(demographics.districtId, districtId))
+    .orderBy(desc(demographics.year));
+}
+
+export async function getInfrastructureByDistrict(districtId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { communityInfrastructure } = await import("../drizzle/schema");
+  return await db.select().from(communityInfrastructure)
+    .where(eq(communityInfrastructure.districtId, districtId));
+}
+
+export async function getAllInfrastructure() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { communityInfrastructure } = await import("../drizzle/schema");
+  return await db.select().from(communityInfrastructure);
+}
+
+export async function getPropertyPricesByDistrict(districtId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { propertyPrices } = await import("../drizzle/schema");
+  const { desc } = await import("drizzle-orm");
+  return await db.select().from(propertyPrices)
+    .where(eq(propertyPrices.districtId, districtId))
+    .orderBy(desc(propertyPrices.year), desc(propertyPrices.month));
+}

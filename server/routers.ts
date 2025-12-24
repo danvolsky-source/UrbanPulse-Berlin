@@ -17,12 +17,130 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  districts: router({
+    list: publicProcedure.query(async () => {
+      const { getAllDistricts } = await import("./db");
+      return await getAllDistricts();
+    }),
+    getById: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "id" in val) {
+          return val as { id: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getDistrictById } = await import("./db");
+        return await getDistrictById(input.id);
+      }),
+  }),
+
+  demographics: router({
+    citySummary: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "city" in val && "year" in val) {
+          return val as { city: string; year: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getCitySummary, getCitySummaryHistory } = await import("./db");
+        const currentYear = await getCitySummary(input.city, input.year);
+        const previousYear = await getCitySummary(input.city, input.year - 1);
+        const history = await getCitySummaryHistory(input.city);
+        
+        return {
+          current: currentYear,
+          previous: previousYear,
+          history,
+        };
+      }),
+    communityComposition: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "city" in val) {
+          return val as { city: string };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getCommunityComposition } = await import("./db");
+        const data = await getCommunityComposition(input.city);
+        
+        // Group by community and calculate progression
+        const communities = new Map<string, any>();
+        
+        data.forEach((row: any) => {
+          if (!communities.has(row.community)) {
+            communities.set(row.community, {
+              name: row.community,
+              progression: [],
+              latestPercentage: 0,
+            });
+          }
+          
+          const community = communities.get(row.community)!;
+          community.progression.push({
+            year: row.year,
+            population: Number(row.population),
+          });
+          community.latestPercentage = Number(row.percentage_of_total);
+        });
+        
+        // Convert to array and sort by latest percentage
+        const result = Array.from(communities.values())
+          .map(c => ({
+            ...c,
+            progression: c.progression.sort((a: any, b: any) => a.year - b.year),
+          }))
+          .sort((a, b) => b.latestPercentage - a.latestPercentage)
+          .slice(0, 5); // Top 5 communities
+        
+        return result;
+      }),
+    byDistrict: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "districtId" in val) {
+          return val as { districtId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getDemographicsByDistrict } = await import("./db");
+        return await getDemographicsByDistrict(input.districtId);
+      }),
+  }),
+
+  infrastructure: router({
+    all: publicProcedure.query(async () => {
+      const { getAllInfrastructure } = await import("./db");
+      return await getAllInfrastructure();
+    }),
+    byDistrict: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "districtId" in val) {
+          return val as { districtId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getInfrastructureByDistrict } = await import("./db");
+        return await getInfrastructureByDistrict(input.districtId);
+      }),
+  }),
+
+  propertyPrices: router({
+    byDistrict: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "districtId" in val) {
+          return val as { districtId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getPropertyPricesByDistrict } = await import("./db");
+        return await getPropertyPricesByDistrict(input.districtId);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
