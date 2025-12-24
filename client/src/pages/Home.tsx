@@ -1,7 +1,10 @@
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrendingUp, TrendingDown, Minus, Church, Building2, Star } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Church, Building2, Star, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { exportCityDataToCSV } from "@/lib/csvExport";
+import { toast } from "sonner";
 import { Link } from "wouter";
 import { useCity } from "@/contexts/CityContext";
 import CitySelector from "@/components/CitySelector";
@@ -90,12 +93,41 @@ export default function Home() {
     year: currentYear,
   });
   
-  const { data: communities, isLoading: communitiesLoading } = trpc.demographics.communityComposition.useQuery({
-    city: selectedCity,
-  });
+  const { data: communityData, isLoading: communityLoading } = trpc.demographics.communityComposition.useQuery({ city: selectedCity });
   
-  console.log("Communities data:", communities);
-  console.log("Communities loading:", communitiesLoading);
+  const handleExportCSV = () => {
+    if (!summaryData || !communityData) {
+      toast.error("Data not loaded yet. Please wait.");
+      return;
+    }
+    
+    exportCityDataToCSV({
+      cityName: selectedCity,
+      population: summaryData.current?.totalPopulation || 0,
+      communities: communityData.map(c => {
+        const firstYear = c.progression[0]?.population || 0;
+        const lastYear = c.progression[c.progression.length - 1]?.population || 0;
+        const trend = firstYear > 0 ? ((lastYear - firstYear) / firstYear) * 100 : 0;
+        
+        return {
+          name: c.name,
+          percentage: c.latestPercentage,
+          trend: trend,
+          year: c.progression[c.progression.length - 1]?.year || currentYear,
+        };
+      }),
+      infrastructure: [
+        { type: 'Mosques', count: summaryData.current?.mosquesCount || 0, yearOverYearChange: mosquesChange },
+        { type: 'Churches', count: summaryData.current?.churchesCount || 0, yearOverYearChange: churchesChange },
+        { type: 'Synagogues', count: summaryData.current?.synagoguesCount || 0, yearOverYearChange: synagoguesChange },
+      ],
+    });
+    
+    toast.success(`Exported ${selectedCity} demographic data to CSV`);
+  };
+  
+  console.log("Community data:", communityData);
+  console.log("Community loading:", communityLoading);
   
   const { data: districts, isLoading: districtsLoading } = trpc.districts.list.useQuery({ city: selectedCity });
   
@@ -126,13 +158,27 @@ export default function Home() {
                 Demographic insights and property market analysis
               </p>
             </div>
-            <CitySelector />
+            <div className="flex items-center gap-4">
+              <CitySelector />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportCSV}
+                disabled={!summaryData || !communityData}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export CSV
+              </Button>
+            </div>
             <nav className="flex gap-6">
               <Link href="/" className="text-foreground hover:text-primary transition-colors font-medium">
                 Home
               </Link>
               <Link href="/map" className="text-muted-foreground hover:text-primary transition-colors">
                 Map
+              </Link>
+              <Link href="/comparison" className="text-muted-foreground hover:text-primary transition-colors">
+                Compare Cities
               </Link>
               <Link href="/districts" className="text-muted-foreground hover:text-primary transition-colors">
                 Districts
@@ -236,7 +282,7 @@ export default function Home() {
             <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Community Composition</h3>
             <Card className="bg-card/50 border-border">
               <CardContent className="pt-6">
-                {communitiesLoading ? (
+                {communityLoading ? (
                   <div className="space-y-4">
                     <Skeleton className="h-16" />
                     <Skeleton className="h-16" />
@@ -250,7 +296,7 @@ export default function Home() {
                       <div>Trend</div>
                       <div>Progression (Last 5 Years)</div>
                     </div>
-                    {communities?.map((community: CommunityData) => (
+                    {communityData?.map((community: CommunityData) => (
                       <div
                         key={community.name}
                         className="grid grid-cols-[1fr_100px_200px_200px] gap-4 py-4 border-b border-border/50 last:border-0 hover:bg-accent/30 transition-colors rounded-lg px-2"

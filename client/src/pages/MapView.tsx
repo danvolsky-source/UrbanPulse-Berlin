@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Home, X } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 // Mapbox public token (you should replace this with your own token)
 mapboxgl.accessToken = "pk.eyJ1IjoibWFudXNhaS1kZW1vIiwiYSI6ImNtNTNzYnZvZjA0cGMya3M3N2RxNGl1OGQifQ.6Uw8vZxQzXqQzQqQzQqQzQ";
@@ -70,7 +72,13 @@ const communityColors: Record<string, string> = {
 export default function MapView() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<any>(null);
+  const [filters, setFilters] = useState({
+    mosques: true,
+    churches: true,
+    synagogues: true,
+    culturalCenters: true,
+  });
   
   const { data: districts } = trpc.districts.list.useQuery({ city: "Berlin" });
   const { data: infrastructure } = trpc.infrastructure.all.useQuery();
@@ -157,6 +165,10 @@ export default function MapView() {
   useEffect(() => {
     if (!map.current || !infrastructure) return;
     
+    // Clear existing markers
+    const existingMarkers = document.querySelectorAll('.infrastructure-marker');
+    existingMarkers.forEach(marker => marker.remove());
+    
     // Wait for map to load
     if (!map.current.isStyleLoaded()) {
       map.current.on("load", addMarkers);
@@ -168,6 +180,11 @@ export default function MapView() {
       if (!map.current || !infrastructure) return;
       
       infrastructure.forEach((item) => {
+        // Apply filters
+        if (item.type === 'mosque' && !filters.mosques) return;
+        if (item.type === 'church' && !filters.churches) return;
+        if (item.type === 'synagogue' && !filters.synagogues) return;
+        if (item.type === 'cultural_center' && !filters.culturalCenters) return;
         if (!item.latitude || !item.longitude) return;
         
         const lat = parseFloat(item.latitude);
@@ -210,7 +227,7 @@ export default function MapView() {
           .addTo(map.current!);
       });
     }
-  }, [infrastructure]);
+  }, [infrastructure, filters]);
   
   const selectedDistrictData = districts?.find(d => d.id === selectedDistrict);
   
@@ -256,23 +273,43 @@ export default function MapView() {
           </div>
           
           <div className="mt-4 pt-4 border-t border-border">
-            <h3 className="font-semibold mb-3 text-sm">Infrastructure</h3>
-            <div className="space-y-2">
+            <h3 className="font-semibold mb-3 text-sm">Infrastructure Filters</h3>
+            <div className="space-y-3">
               <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="mosques"
+                  checked={filters.mosques}
+                  onCheckedChange={(checked) => setFilters(prev => ({ ...prev, mosques: checked as boolean }))}
+                />
                 <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#3b82f6" }} />
-                <span className="text-sm">Mosque</span>
+                <Label htmlFor="mosques" className="text-sm cursor-pointer">Mosques</Label>
               </div>
               <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="churches"
+                  checked={filters.churches}
+                  onCheckedChange={(checked) => setFilters(prev => ({ ...prev, churches: checked as boolean }))}
+                />
                 <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#10b981" }} />
-                <span className="text-sm">Church</span>
+                <Label htmlFor="churches" className="text-sm cursor-pointer">Churches</Label>
               </div>
               <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="synagogues"
+                  checked={filters.synagogues}
+                  onCheckedChange={(checked) => setFilters(prev => ({ ...prev, synagogues: checked as boolean }))}
+                />
                 <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#f59e0b" }} />
-                <span className="text-sm">Synagogue</span>
+                <Label htmlFor="synagogues" className="text-sm cursor-pointer">Synagogues</Label>
               </div>
               <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="culturalCenters"
+                  checked={filters.culturalCenters}
+                  onCheckedChange={(checked) => setFilters(prev => ({ ...prev, culturalCenters: checked as boolean }))}
+                />
                 <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#8b5cf6" }} />
-                <span className="text-sm">Cultural Center</span>
+                <Label htmlFor="culturalCenters" className="text-sm cursor-pointer">Cultural Centers</Label>
               </div>
             </div>
           </div>

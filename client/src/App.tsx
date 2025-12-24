@@ -6,15 +6,16 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { CityProvider } from "./contexts/CityContext";
 import Home from "./pages/Home";
+import CityComparison from "./pages/CityComparison";
 import MapView from "./pages/MapView";
 import DistrictDetail from "./pages/DistrictDetail";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/map"} component={MapView} />
+    <Switch>      <Route path={"/"} component={Home} />
+      <Route path="/comparison" component={CityComparison} />
+      <Route path={"/404"} component={NotFound} />
       <Route path={"/district/:id"} component={DistrictDetail} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

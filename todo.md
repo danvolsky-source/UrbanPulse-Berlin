@@ -70,3 +70,13 @@
 - [x] Fix NaN% display in community composition table
 - [x] Fix communityComposition API endpoint input validation
 - [x] Remove duplicate data processing in communityComposition endpoint
+
+## New Features (Phase 2)
+- [x] Add map filters with checkboxes for infrastructure types (mosques, churches, synagogues, cultural centers)
+- [x] Implement CSV export button for demographic data
+- [x] Create city comparison page with side-by-side demographics
+- [x] Add legend to map with filter controls
+- [x] Implement infrastructure visibility toggle on map
+- [x] Create export utility for CSV generation
+- [x] Design comparison page layout with multiple cities
+- [x] Add comparison charts and tables
