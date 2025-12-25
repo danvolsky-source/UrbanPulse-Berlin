@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, TrendingUp, TrendingDown, Globe, DollarSign, AlertCircle, Home as HomeIcon, Building2, Car, Leaf } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect } from "react";
-import { LeafletMap } from "@/components/LeafletMap";
+import { DistrictHeatmap } from "@/components/DistrictHeatmap";
 
 export default function CityDetail() {
   const { city } = useParams();
@@ -279,11 +279,14 @@ export default function CityDetail() {
           {/* Map */}
           <Card className="bg-slate-900/50 border-slate-800 flex-1">
             <CardContent className="p-0 h-full relative">
-              <LeafletMap
-                center={[52.52, 13.405]}
-                zoom={11}
+              <DistrictHeatmap
                 className="w-full h-full"
-                districts={cityDistricts}
+                districts={cityDistricts?.map((d: any, idx: number) => ({
+                  id: d.id,
+                  name: d.name,
+                  priceLevel: ((idx % 7) + 1), // Mock price level based on index
+                }))}
+                cityName={cityName}
               />
               {/* Price Legend */}
               <div className="absolute bottom-4 left-4 bg-slate-900/90 p-3 rounded-lg border border-slate-700">

@@ -477,3 +477,20 @@
 - [x] Test district markers appear
 - [x] Run all tests - 30/32 passing (2 pre-existing failures)
 - [ ] Create checkpoint
+
+
+## Feature: Schematic District Heatmap (No Map Background)
+
+### Implementation
+- [x] Create DistrictHeatmap component with SVG polygons
+- [x] Generate simplified district shapes for Berlin (16 districts)
+- [x] Apply color gradient based on price levels (blue → green → yellow → orange → red)
+- [x] Add district labels on polygons
+- [x] Add hover tooltips and click interactions
+- [x] Replace LeafletMap with DistrictHeatmap in CityDetail
+
+### Testing
+- [x] Test visualization displays correctly - SVG heatmap renders with colored polygons
+- [x] Test colors match price levels - Gradient from blue (cheap) to red (expensive)
+- [x] Run all tests - 31/32 passing (1 pre-existing timeout)
+- [ ] Create checkpoint
