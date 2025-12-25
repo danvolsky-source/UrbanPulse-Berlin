@@ -99,3 +99,8 @@
 - [x] Top communities sections are empty for all cities - FIXED
 - [x] Database was missing data for Munich, Hamburg, Cologne - created optimized seed script with batch inserts
 - [x] All cities now have complete demographic data, infrastructure, and property prices
+
+## Icon Improvements
+- [x] Replace synagogue star icon with Magen David (Star of David) symbol ✡️
+- [x] Update icon on homepage religious infrastructure section
+- [x] Verify icon displays correctly on homepage

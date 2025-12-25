@@ -1,7 +1,7 @@
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrendingUp, TrendingDown, Minus, Church, Building2, Star, Download } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Church, Building2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { exportCityDataToCSV } from "@/lib/csvExport";
 import { toast } from "sonner";
@@ -257,7 +257,7 @@ export default function Home() {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <div className="p-2 rounded-lg bg-chart-3/20">
-                              <Star className="w-6 h-6 text-chart-3" />
+                              <span className="text-2xl" role="img" aria-label="Star of David">✡️</span>
                             </div>
                             <div>
                               <p className="text-3xl font-bold">{summaryData?.current?.synagoguesCount || 0}</p>
