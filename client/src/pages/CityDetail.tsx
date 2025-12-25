@@ -32,11 +32,14 @@ export default function CityDetail() {
     { enabled: !!currentCityId }
   );
 
-  // Removed Google Maps state
+  // Interactive state management
   const [activeChart, setActiveChart] = useState<"prices" | "quality" | "community">("prices");
+  const [selectedYear, setSelectedYear] = useState(2024);
+  const [selectedEventIndex, setSelectedEventIndex] = useState<number | null>(null);
+  const [highlightedDistricts, setHighlightedDistricts] = useState<number[]>([]);
   const [areaFilter, setAreaFilter] = useState([0, 200]);
-  const [airQualityFilter, setAirQualityFilter] = useState(true);
-  const [greeneryFilter, setGreeneryFilter] = useState(true);
+  const [airQualityFilter, setAirQualityFilter] = useState(false);
+  const [greeneryFilter, setGreeneryFilter] = useState(false);
 
   const currentCity = cityData?.find((c: any) => c.name === cityName);
   const cityEcology = ecologyData?.filter((e: any) => e.cityId === currentCity?.id && e.year === 2024)[0];
@@ -189,15 +192,38 @@ export default function CityDetail() {
       </div>
 
       {/* Three Column Layout */}
-      <div className="grid grid-cols-12 gap-4 p-4 h-[calc(100vh-100px)]">
+      <div className="flex gap-4 p-4 h-[calc(100vh-100px)] overflow-hidden">
         {/* Left Panel - Geopolitical Events */}
-        <div className="col-span-3 space-y-4 overflow-y-auto">
+        <div className="w-1/4 space-y-4 overflow-y-auto flex-shrink-0">
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-4">
               <h2 className="text-lg font-bold text-slate-100 mb-4">Geopolitical Events</h2>
               <div className="space-y-3">
                 {geopoliticalEvents.map((event, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-slate-800/50 rounded-lg">
+                  <div 
+                    key={index} 
+                    className={`flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-all ${
+                      selectedEventIndex === index 
+                        ? 'bg-amber-900/50 border-2 border-amber-500 shadow-lg shadow-amber-500/20' 
+                        : 'bg-slate-800/50 hover:bg-slate-800 border-2 border-transparent'
+                    }`}
+                    onClick={() => {
+                      if (selectedEventIndex === index) {
+                        setSelectedEventIndex(null);
+                        setHighlightedDistricts([]);
+                      } else {
+                        setSelectedEventIndex(index);
+                        // Define which districts are affected by each event
+                        const affectedDistricts: Record<number, number[]> = {
+                          0: [1, 2, 10, 15], // EU sanctions → Mitte, Prenzlauer Berg, Lichtenberg, Marzahn
+                          1: [5, 6, 14], // USD/EUR → Charlottenburg, Wilmersdorf, Steglitz
+                          2: [1, 2, 3, 4], // Capital migration → Central districts
+                          3: [9, 10, 15], // Investment reduction → Neukölln, Lichtenberg, Marzahn
+                        };
+                        setHighlightedDistricts(affectedDistricts[index] || []);
+                      }
+                    }}
+                  >
                     <div className="text-blue-400 mt-1">{event.icon}</div>
                     <div className="flex-1">
                       <p className="text-sm text-slate-200 leading-tight">
@@ -275,18 +301,23 @@ export default function CityDetail() {
         </div>
 
         {/* Center Panel - Map and Charts */}
-        <div className="col-span-6 flex flex-col gap-4">
+        <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
           {/* Map */}
-          <Card className="bg-slate-900/50 border-slate-800 flex-1">
-            <CardContent className="p-0 h-full relative">
+          <Card className="bg-slate-900/50 border-slate-800 flex-1" style={{ minHeight: "500px" }}>
+            <CardContent className="p-0 h-full relative" style={{ minHeight: "500px" }}>
               <DistrictHeatmap
                 className="w-full h-full"
                 districts={cityDistricts?.map((d: any, idx: number) => ({
                   id: d.id,
                   name: d.name,
-                  priceLevel: ((idx % 7) + 1), // Mock price level based on index
+                  priceLevel: ((idx % 7) + 1),
                 }))}
                 cityName={cityName}
+                selectedYear={selectedYear}
+                selectedEvent={selectedEventIndex}
+                highlightedDistricts={highlightedDistricts}
+                showAirQuality={airQualityFilter}
+                showGreenery={greeneryFilter}
               />
               {/* Price Legend */}
               <div className="absolute bottom-4 left-4 bg-slate-900/90 p-3 rounded-lg border border-slate-700">
@@ -310,6 +341,26 @@ export default function CityDetail() {
           {/* Charts */}
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-4">
+              {/* Year Selector */}
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-sm text-slate-400">Select Year:</p>
+                <div className="flex gap-2">
+                  {[2020, 2021, 2022, 2023, 2024].map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => setSelectedYear(year)}
+                      className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                        selectedYear === year
+                          ? 'bg-cyan-600 text-white'
+                          : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                      }`}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Chart Tabs */}
               <div className="flex gap-2 mb-4 border-b border-slate-700">
                 <button
@@ -403,7 +454,7 @@ export default function CityDetail() {
         </div>
 
         {/* Right Panel - Filters and Metrics */}
-        <div className="col-span-3 space-y-4 overflow-y-auto">
+        <div className="w-1/4 space-y-4 overflow-y-auto flex-shrink-0">
           {/* Geopolitics */}
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-4">

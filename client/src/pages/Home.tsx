@@ -45,55 +45,65 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       {/* Hero Section */}
-      <div className="container py-16 text-center">
-        <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent">
-          Real Estate Analytics Platform
-        </h1>
-        <p className="text-xl text-slate-300 mb-4 max-w-3xl mx-auto">
-          Explore demographic insights, religious infrastructure, and property market analysis across 15 major cities
-        </p>
-        <div className="flex items-center justify-center gap-8 text-slate-400 text-sm mb-8">
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4" />
-            <span>15 Cities</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4" />
-            <span>5 Communities</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4" />
-            <span>5 Years Data</span>
-          </div>
+      <div className="relative overflow-hidden">
+        {/* Animated Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-500 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
-        
-        {/* Quick Access Buttons */}
-        <div className="flex items-center justify-center gap-4">
-          <Link href="/ecology">
-            <button className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
-              <Leaf className="w-5 h-5" />
-              Environmental Analytics
-            </button>
-          </Link>
-          <Link href="/vehicles">
-            <button className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-              <Car className="w-5 h-5" />
-              Vehicle Analytics
-            </button>
-          </Link>
+
+        <div className="container relative py-20 text-center">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img 
+              src="/urbanpulse-logo.png" 
+              alt="UrbanPulse by SkyMind" 
+              className="h-32 w-auto drop-shadow-2xl"
+            />
+          </div>
+          
+          {/* Tagline */}
+          <p className="text-2xl md:text-3xl text-slate-300 mb-6 max-w-4xl mx-auto font-light leading-relaxed">
+            Feel the <span className="text-cyan-400 font-semibold">heartbeat</span> of cities.
+          </p>
+          <p className="text-lg text-slate-400 mb-12 max-w-3xl mx-auto">
+            Track how immigration, demographics, and community growth reshape urban landscapes across 15 major cities.
+          </p>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12">
+            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-6 hover:border-cyan-500/50 transition-all">
+              <MapPin className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
+              <p className="text-3xl font-bold text-white mb-1">15</p>
+              <p className="text-sm text-slate-400">Global Cities</p>
+            </div>
+            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-6 hover:border-purple-500/50 transition-all">
+              <Users className="w-8 h-8 text-purple-400 mx-auto mb-3" />
+              <p className="text-3xl font-bold text-white mb-1">5</p>
+              <p className="text-sm text-slate-400">Communities Tracked</p>
+            </div>
+            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-6 hover:border-teal-500/50 transition-all">
+              <TrendingUp className="w-8 h-8 text-teal-400 mx-auto mb-3" />
+              <p className="text-3xl font-bold text-white mb-1">2020-2024</p>
+              <p className="text-sm text-slate-400">Historical Data</p>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* City Gallery */}
       <div className="container pb-16">
-        <h2 className="text-3xl font-bold text-center mb-12 text-slate-100">
-          Select a City to Explore
-        </h2>
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-slate-100 mb-3">
+            Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">Berlin</span>
+          </h2>
+          <p className="text-slate-400">Interactive district analysis with real-time demographic insights</p>
+        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {cities?.map((city: any) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          {cities?.filter((city: any) => city.name === "Berlin").map((city: any) => (
             <Link key={city.id} href={`/city/${city.name}`}>
               <Card 
                 className="group relative overflow-hidden bg-slate-900/50 border-slate-800 hover:border-cyan-500/50 transition-all duration-300 cursor-pointer h-full"
