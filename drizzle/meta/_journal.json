@@ -22,6 +22,13 @@
       "when": 1766569735388,
       "tag": "0002_pink_siren",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1766683499685,
+      "tag": "0003_nebulous_firebrand",
+      "breakpoints": true
     }
   ]
 }

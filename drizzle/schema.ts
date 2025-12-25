@@ -110,3 +110,17 @@ export const propertyPrices = mysqlTable("propertyPrices", {
 
 export type PropertyPrice = typeof propertyPrices.$inferSelect;
 export type InsertPropertyPrice = typeof propertyPrices.$inferInsert;
+
+/**
+ * Cities table - stores city information
+ */
+export const cities = mysqlTable("cities", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  country: varchar("country", { length: 255 }).notNull(),
+  population: int("population").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type City = typeof cities.$inferSelect;
+export type InsertCity = typeof cities.$inferInsert;

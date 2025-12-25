@@ -24,9 +24,9 @@ export default function CitySelector() {
         <SelectValue placeholder="Select a city" />
       </SelectTrigger>
       <SelectContent>
-        {cities.map((city) => (
-          <SelectItem key={city} value={city}>
-            {city}
+        {cities.map((city: any) => (
+          <SelectItem key={city.name} value={city.name}>
+            {city.name}
           </SelectItem>
         ))}
       </SelectContent>

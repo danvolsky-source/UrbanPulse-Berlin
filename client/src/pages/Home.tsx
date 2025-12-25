@@ -1,409 +1,198 @@
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrendingUp, TrendingDown, Minus, Church, Building2, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { exportCityDataToCSV } from "@/lib/csvExport";
-import { toast } from "sonner";
+import { MapPin, Users, TrendingUp } from "lucide-react";
 import { Link } from "wouter";
-import { useCity } from "@/contexts/CityContext";
-import CitySelector from "@/components/CitySelector";
-import { TrendChartModal } from "@/components/TrendChartModal";
 import { useState } from "react";
 
-interface CommunityData {
-  name: string;
-  latestPercentage: number;
-  progression: Array<{ year: number; population: number }>;
-}
-
-function SparklineGraph({ data, onClick }: { data: Array<{ year: number; population: number }>; onClick?: () => void }) {
-  if (data.length === 0) return null;
-  
-  const values = data.map(d => d.population);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-  
-  // Create SVG path
-  const points = data.map((d, i) => {
-    const x = (i / (data.length - 1)) * 100;
-    const y = 100 - ((d.population - min) / range) * 100;
-    return `${x},${y}`;
-  });
-  
-  const pathData = `M ${points.join(" L ")}`;
-  
-  // Determine color based on trend
-  const firstValue = values[0];
-  const lastValue = values[values.length - 1];
-  const isIncreasing = lastValue > firstValue;
-  const isDecreasing = lastValue < firstValue;
-  
-  const strokeColor = isIncreasing 
-    ? "rgb(34 197 94)" // green
-    : isDecreasing 
-    ? "rgb(239 68 68)" // red
-    : "rgb(156 163 175)"; // gray
-  
-  return (
-    <svg 
-      viewBox="0 0 100 100" 
-      className="w-24 h-8 cursor-pointer hover:opacity-80 transition-opacity" 
-      preserveAspectRatio="none"
-      onClick={onClick}
-      role="button"
-      aria-label="Click to view detailed chart"
-    >
-      <path
-        d={pathData}
-        fill="none"
-        stroke={strokeColor}
-        strokeWidth="3"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
-  );
-}
-
-function ProgressionIndicator({ data }: { data: Array<{ year: number; population: number }> }) {
-  if (data.length < 2) return null;
-  
-  const firstValue = data[0].population;
-  const lastValue = data[data.length - 1].population;
-  const change = ((lastValue - firstValue) / firstValue) * 100;
-  
-  const isIncreasing = change > 0.5;
-  const isDecreasing = change < -0.5;
-  
-  const Icon = isIncreasing ? TrendingUp : isDecreasing ? TrendingDown : Minus;
-  const colorClass = isIncreasing 
-    ? "text-green-500" 
-    : isDecreasing 
-    ? "text-red-500" 
-    : "text-gray-400";
-  
-  return (
-    <div className={`flex items-center gap-1 ${colorClass}`}>
-      <Icon className="w-4 h-4" />
-      <span className="text-sm font-medium">
-        {change > 0 ? "+" : ""}{change.toFixed(1)}% in {data.length} years
-      </span>
-    </div>
-  );
-}
+// City poster mapping
+const cityPosters: Record<string, string> = {
+  "Berlin": "/city-posters/berlin.png",
+  "Munich": "/city-posters/munich.png",
+  "Hamburg": "/city-posters/hamburg.png",
+  "Cologne": "/city-posters/cologne.png",
+  "Paris": "/city-posters/paris.png",
+  "Vienna": "/city-posters/vienna.png",
+  "Rome": "/city-posters/rome.png",
+  "Amsterdam": "/city-posters/amsterdam.png",
+  "Brussels": "/city-posters/brussels.png",
+  "London": "/city-posters/london.png",
+  "Washington D.C.": "/city-posters/washington-dc.png",
+  "New York": "/city-posters/new-york.png",
+  "Toronto": "/city-posters/toronto.png",
+  "Los Angeles": "/city-posters/los-angeles.png",
+  "Chicago": "/city-posters/chicago.png",
+};
 
 export default function Home() {
-  const { selectedCity } = useCity();
-  const currentYear = 2024;
-  const [selectedCommunity, setSelectedCommunity] = useState<{ name: string; data: Array<{ year: number; population: number }> } | null>(null);
-  
-  const { data: summaryData, isLoading: summaryLoading } = trpc.demographics.citySummary.useQuery({
-    city: selectedCity,
-    year: currentYear,
-  });
-  
-  const { data: communityData, isLoading: communityLoading } = trpc.demographics.communityComposition.useQuery({ city: selectedCity });
-  
-  const handleExportCSV = () => {
-    if (!summaryData || !communityData) {
-      toast.error("Data not loaded yet. Please wait.");
-      return;
-    }
-    
-    exportCityDataToCSV({
-      cityName: selectedCity,
-      population: summaryData.current?.totalPopulation || 0,
-      communities: communityData.map(c => {
-        const firstYear = c.progression[0]?.population || 0;
-        const lastYear = c.progression[c.progression.length - 1]?.population || 0;
-        const trend = firstYear > 0 ? ((lastYear - firstYear) / firstYear) * 100 : 0;
-        
-        return {
-          name: c.name,
-          percentage: c.latestPercentage,
-          trend: trend,
-          year: c.progression[c.progression.length - 1]?.year || currentYear,
-        };
-      }),
-      infrastructure: [
-        { type: 'Mosques', count: summaryData.current?.mosquesCount || 0, yearOverYearChange: mosquesChange },
-        { type: 'Churches', count: summaryData.current?.churchesCount || 0, yearOverYearChange: churchesChange },
-        { type: 'Synagogues', count: summaryData.current?.synagoguesCount || 0, yearOverYearChange: synagoguesChange },
-      ],
-    });
-    
-    toast.success(`Exported ${selectedCity} demographic data to CSV`);
-  };
-  
-  console.log("Community data:", communityData);
-  console.log("Community loading:", communityLoading);
-  
-  const { data: districts, isLoading: districtsLoading } = trpc.districts.list.useQuery({ city: selectedCity });
-  
-  // Calculate year-over-year changes
-  const mosquesChange = summaryData?.current && summaryData?.previous
-    ? ((summaryData.current.mosquesCount - summaryData.previous.mosquesCount) / summaryData.previous.mosquesCount) * 100
-    : 0;
-    
-  const churchesChange = summaryData?.current && summaryData?.previous
-    ? ((summaryData.current.churchesCount - summaryData.previous.churchesCount) / summaryData.previous.churchesCount) * 100
-    : 0;
-    
-  const synagoguesChange = summaryData?.current && summaryData?.previous
-    ? ((summaryData.current.synagoguesCount - summaryData.previous.synagoguesCount) / summaryData.previous.synagoguesCount) * 100
-    : 0;
-  
+  const { data: cities, isLoading } = trpc.cities.list.useQuery();
+  const [hoveredCity, setHoveredCity] = useState<string | null>(null);
+
+  if (isLoading) {
+    return (
+      <div className="container py-12">
+        <div className="text-center mb-12">
+          <Skeleton className="h-12 w-96 mx-auto mb-4" />
+          <Skeleton className="h-6 w-[600px] mx-auto" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 15 }).map((_, i) => (
+            <Skeleton key={i} className="h-96 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent">
-                Berlin Real Estate Analytics
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Demographic insights and property market analysis
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <CitySelector />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleExportCSV}
-                disabled={!summaryData || !communityData}
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      {/* Hero Section */}
+      <div className="container py-16 text-center">
+        <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent">
+          Real Estate Analytics Platform
+        </h1>
+        <p className="text-xl text-slate-300 mb-4 max-w-3xl mx-auto">
+          Explore demographic insights, religious infrastructure, and property market analysis across 15 major cities
+        </p>
+        <div className="flex items-center justify-center gap-8 text-slate-400 text-sm">
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4" />
+            <span>15 Cities</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            <span>5 Communities</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4" />
+            <span>5 Years Data</span>
+          </div>
+        </div>
+      </div>
+
+      {/* City Gallery */}
+      <div className="container pb-16">
+        <h2 className="text-3xl font-bold text-center mb-12 text-slate-100">
+          Select a City to Explore
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {cities?.map((city: any) => (
+            <Link key={city.id} href={`/city/${city.name}`}>
+              <Card 
+                className="group relative overflow-hidden bg-slate-900/50 border-slate-800 hover:border-cyan-500/50 transition-all duration-300 cursor-pointer h-full"
+                onMouseEnter={() => setHoveredCity(city.name)}
+                onMouseLeave={() => setHoveredCity(null)}
               >
-                <Download className="w-4 h-4 mr-2" />
-                Export CSV
-              </Button>
-            </div>
-            <nav className="flex gap-6">
-              <Link href="/" className="text-foreground hover:text-primary transition-colors font-medium">
-                Home
-              </Link>
-              <Link href="/map" className="text-muted-foreground hover:text-primary transition-colors">
-                Map
-              </Link>
-              <Link href="/comparison" className="text-muted-foreground hover:text-primary transition-colors">
-                Compare Cities
-              </Link>
-              <Link href="/districts" className="text-muted-foreground hover:text-primary transition-colors">
-                Districts
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-      
-      <main className="container py-12">
-        {/* Demographic Snapshot */}
-        <section className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Demographic Snapshot: {selectedCity}</h2>
-            <Link href={`/city/${encodeURIComponent(selectedCity)}`}>
-              <Button variant="outline" size="sm">
-                View Detailed City Profile →
-              </Button>
-            </Link>
-          </div>
-          
-          {/* Religious Infrastructure */}
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Religious Infrastructure</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {summaryLoading ? (
-                <>
-                  <Skeleton className="h-32" />
-                  <Skeleton className="h-32" />
-                  <Skeleton className="h-32" />
-                </>
-              ) : (
-                <>
-                  <Card className="bg-card/50 border-border">
-                    <CardContent className="pt-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 rounded-lg bg-chart-1/20">
-                              <img src="/mosque-icon.png" alt="Mosque" className="w-8 h-8" />
-                            </div>
-                            <div>
-                              <p className="text-3xl font-bold">{summaryData?.current?.mosquesCount || 0}</p>
-                              <p className="text-sm text-muted-foreground">Mosques</p>
-                            </div>
-                          </div>
-                          <div className={`flex items-center gap-1 text-sm ${mosquesChange > 0 ? "text-green-500" : "text-gray-400"}`}>
-                            {mosquesChange > 0 && <TrendingUp className="w-4 h-4" />}
-                            {mosquesChange === 0 && <Minus className="w-4 h-4" />}
-                            <span>{mosquesChange > 0 ? "+" : ""}{mosquesChange.toFixed(1)}% vs. last year</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-card/50 border-border">
-                    <CardContent className="pt-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 rounded-lg bg-chart-2/20">
-                              <img src="/church-icon.png" alt="Church" className="w-8 h-8" />
-                            </div>
-                            <div>
-                              <p className="text-3xl font-bold">{summaryData?.current?.churchesCount || 0}</p>
-                              <p className="text-sm text-muted-foreground">Churches</p>
-                            </div>
-                          </div>
-                          <div className={`flex items-center gap-1 text-sm ${churchesChange > 0 ? "text-green-500" : "text-gray-400"}`}>
-                            {churchesChange > 0 && <TrendingUp className="w-4 h-4" />}
-                            {churchesChange === 0 && <Minus className="w-4 h-4" />}
-                            <span>{churchesChange > 0 ? "+" : ""}{churchesChange.toFixed(1)}% vs. last year</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-card/50 border-border">
-                    <CardContent className="pt-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 rounded-lg bg-chart-3/20">
-                              <img src="/synagogue-icon.png" alt="Synagogue" className="w-8 h-8" />
-                            </div>
-                            <div>
-                              <p className="text-3xl font-bold">{summaryData?.current?.synagoguesCount || 0}</p>
-                              <p className="text-sm text-muted-foreground">Synagogues</p>
-                            </div>
-                          </div>
-                          <div className={`flex items-center gap-1 text-sm text-gray-400`}>
-                            <Minus className="w-4 h-4" />
-                            <span>stable</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </>
-              )}
-            </div>
-          </div>
-          
-          {/* Community Composition */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Community Composition</h3>
-            <Card className="bg-card/50 border-border">
-              <CardContent className="pt-6">
-                {communityLoading ? (
-                  <div className="space-y-4">
-                    <Skeleton className="h-16" />
-                    <Skeleton className="h-16" />
-                    <Skeleton className="h-16" />
-                  </div>
-                ) : (
-                  <div className="space-y-1">
-                    <div className="grid grid-cols-[1fr_100px_200px_200px] gap-4 pb-3 border-b border-border text-sm text-muted-foreground font-medium">
-                      <div>Community Name</div>
-                      <div>Population %</div>
-                      <div>Trend</div>
-                      <div>Progression (Last 5 Years)</div>
+                <CardContent className="p-0">
+                  {/* City Poster Image */}
+                  <div className="relative aspect-square overflow-hidden">
+                    <img
+                      src={cityPosters[city.name]}
+                      alt={`${city.name} floating island`}
+                      className={`w-full h-full object-cover transition-transform duration-500 ${
+                        hoveredCity === city.name ? "scale-110" : "scale-100"
+                      }`}
+                    />
+                    
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                    
+                    {/* City Name Badge */}
+                    <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-sm px-4 py-2 rounded-full border border-cyan-500/30">
+                      <h3 className="text-lg font-bold text-cyan-400">{city.name}</h3>
                     </div>
-                    {communityData?.map((community: CommunityData) => (
-                      <div
-                        key={community.name}
-                        className="grid grid-cols-[1fr_100px_200px_200px] gap-4 py-4 border-b border-border/50 last:border-0 hover:bg-accent/30 transition-colors rounded-lg px-2"
-                      >
-                        <div className="font-medium">{community.name}</div>
-                        <div className="text-2xl font-bold">{community.latestPercentage.toFixed(1)}%</div>
+
+                    {/* Stats Overlay - Shows on Hover */}
+                    <div className={`absolute inset-0 bg-slate-950/95 backdrop-blur-sm flex flex-col items-center justify-center gap-4 transition-opacity duration-300 ${
+                      hoveredCity === city.name ? "opacity-100" : "opacity-0"
+                    }`}>
+                      <div className="text-center space-y-3">
                         <div>
-                          <SparklineGraph 
-                            data={community.progression} 
-                            onClick={() => setSelectedCommunity({ name: community.name, data: community.progression })}
-                          />
+                          <p className="text-slate-400 text-sm">Population</p>
+                          <p className="text-2xl font-bold text-cyan-400">
+                            {city.population.toLocaleString()}
+                          </p>
                         </div>
                         <div>
-                          <ProgressionIndicator data={community.progression} />
+                          <p className="text-slate-400 text-sm">Districts</p>
+                          <p className="text-xl font-semibold text-slate-200">
+                            {city.districtCount}
+                          </p>
+                        </div>
+                        <div className="pt-2">
+                          <span className="text-cyan-400 text-sm font-medium group-hover:underline">
+                            View Details →
+                          </span>
                         </div>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-        
-        {/* Trend Chart Modal */}
-        <TrendChartModal
-          open={!!selectedCommunity}
-          onOpenChange={(open) => !open && setSelectedCommunity(null)}
-          communityName={selectedCommunity?.name || ''}
-          data={selectedCommunity?.data || []}
-          cityName={selectedCity}
-        />
-        
-        {/* Districts Overview */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">Berlin Districts</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {districtsLoading ? (
-              <>
-                <Skeleton key="skeleton-1" className="h-40" />
-                <Skeleton key="skeleton-2" className="h-40" />
-                <Skeleton key="skeleton-3" className="h-40" />
-              </>
-            ) : (
-              districts?.map((district) => (
-                <Link key={district.id} href={`/district/${district.id}`}>
-                  <Card className="bg-card/50 border-border hover:border-primary/50 transition-all cursor-pointer h-full">
-                    <CardHeader>
-                      <CardTitle>{district.nameEn}</CardTitle>
-                      <CardDescription>
-                        Population: {district.population.toLocaleString()}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Area:</span>
-                          <span className="font-medium">{district.area} km²</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Foreign residents:</span>
-                          <span className="font-medium">{district.foreignerPercentage}%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Dominant community:</span>
-                          <span className="font-medium">{district.dominantCommunity}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))
-            )}
-          </div>
-        </section>
-      </main>
-      
-      {/* Footer */}
-      <footer className="border-t border-border mt-20">
-        <div className="container py-8">
-          <div className="flex justify-between items-center text-sm text-muted-foreground">
-            <p>© 2024 Berlin Real Estate Analytics. Data visualization platform.</p>
-            <div className="flex gap-6">
-              <a href="#" className="hover:text-foreground transition-colors">About</a>
-              <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-              <a href="#" className="hover:text-foreground transition-colors">Contact</a>
-            </div>
-          </div>
+
+                  {/* Bottom Info Bar */}
+                  <div className="p-4 bg-slate-900/80 backdrop-blur-sm border-t border-slate-800">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-400">
+                        {city.country}
+                      </span>
+                      <span className="text-cyan-400 font-medium">
+                        Explore →
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
         </div>
-      </footer>
+      </div>
+
+      {/* Features Section */}
+      <div className="container pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-blue-500/10 rounded-lg">
+                  <MapPin className="w-6 h-6 text-blue-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-100">Interactive Maps</h3>
+              </div>
+              <p className="text-slate-400 text-sm">
+                Explore districts with color-coded community dominance and infrastructure markers
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-cyan-500/10 rounded-lg">
+                  <Users className="w-6 h-6 text-cyan-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-100">Demographic Analysis</h3>
+              </div>
+              <p className="text-slate-400 text-sm">
+                Track community composition trends with 5 years of historical data
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-teal-500/10 rounded-lg">
+                  <TrendingUp className="w-6 h-6 text-teal-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-100">Market Insights</h3>
+              </div>
+              <p className="text-slate-400 text-sm">
+                Property price trends and investment recommendations powered by AI
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

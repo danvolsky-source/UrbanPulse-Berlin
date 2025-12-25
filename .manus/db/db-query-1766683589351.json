@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO cities (name, country, population) VALUES\n('Berlin', 'Germany', 3850809),\n('Munich', 'Germany', 1488202),\n('Hamburg', 'Germany', 1906411),\n('Cologne', 'Germany', 1087863),\n('Paris', 'France', 2161000),\n('Vienna', 'Austria', 1920949),\n('Rome', 'Italy', 2860009),\n('Amsterdam', 'Netherlands', 872680),\n('Brussels', 'Belgium', 1218255),\n('London', 'United Kingdom', 8982000),\n('Washington D.C.', 'United States', 689545),\n('New York', 'United States', 8336817),\n('Toronto', 'Canada', 2930000),\n('Los Angeles', 'United States', 3979576),\n('Chicago', 'United States', 2746388)\nON DUPLICATE KEY UPDATE \n  country = VALUES(country),\n  population = VALUES(population);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute INSERT INTO cities (name, country, population) VALUES\n('Berlin', 'Germany', 3850809),\n('Munich', 'Germany', 1488202),\n('Hamburg', 'Germany', 1906411),\n('Cologne', 'Germany', 1087863),\n('Paris', 'France', 2161000),\n('Vienna', 'Austria', 1920949),\n('Rome', 'Italy', 2860009),\n('Amsterdam', 'Netherlands', 872680),\n('Brussels', 'Belgium', 1218255),\n('London', 'United Kingdom', 8982000),\n('Washington D.C.', 'United States', 689545),\n('New York', 'United States', 8336817),\n('Toronto', 'Canada', 2930000),\n('Los Angeles', 'United States', 3979576),\n('Chicago', 'United States', 2746388)\nON DUPLICATE KEY UPDATE \n  country = VALUES(country),\n  population = VALUES(population);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 6367
+}

@@ -195,4 +195,28 @@
 - [x] Run seed script and populate database - 99 boroughs, 2,475 demographics, 3,885 infrastructure, 5,940 prices
 - [x] Optimized seed script with batch inserts for faster execution
 - [x] Test all features with London - All 10 tests passing
-- [ ] Create checkpoint
+- [x] Create checkpoint (version: d3121493)
+
+## Feature: 3D City Posters Gallery on Homepage
+
+- [x] Generate 15 unique 3D floating island posters (1080x1080 format)
+  - [x] Berlin - Brandenburg Gate, TV Tower, Reichstag
+  - [x] Munich - Frauenkirche, Allianz Arena, Marienplatz
+  - [x] Hamburg - Elbphilharmonie, Harbor, Michel
+  - [x] Cologne - Cathedral, Rhine River, Hohenzollern Bridge
+  - [x] Paris - Eiffel Tower, Arc de Triomphe, Notre-Dame
+  - [x] Vienna - St. Stephen's Cathedral, Schönbrunn Palace
+  - [x] Rome - Colosseum, St. Peter's Basilica, Trevi Fountain
+  - [x] Amsterdam - Canals, Rijksmuseum, Anne Frank House
+  - [x] Brussels - Atomium, Grand Place, Manneken Pis
+  - [x] London - Big Ben, Tower Bridge, London Eye
+  - [x] Washington D.C. - Capitol, White House, Washington Monument
+  - [x] New York - Statue of Liberty, Empire State Building, Brooklyn Bridge
+  - [x] Toronto - CN Tower, Casa Loma, Rogers Centre
+  - [x] Los Angeles - Hollywood Sign, Griffith Observatory, Santa Monica Pier
+  - [x] Chicago - Willis Tower, Cloud Gate, Navy Pier
+- [x] Redesign Home.tsx with interactive city gallery
+- [x] Add hover effects and animations to city cards
+- [x] Integrate navigation to detailed city pages
+- [x] Test all city cards and navigation - Homepage displaying correctly with all 15 city posters
+- [x] Create checkpoint

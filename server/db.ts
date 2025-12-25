@@ -95,9 +95,19 @@ export async function getCities() {
   const db = await getDb();
   if (!db) return [];
   
-  const { districts } = await import("../drizzle/schema");
-  const result = await db.selectDistinct({ city: districts.city }).from(districts);
-  return result.map(r => r.city);
+  const { districts, cities } = await import("../drizzle/schema");
+  const { sql } = await import("drizzle-orm");
+  
+  // Get all cities with their stats
+  const result = await db.select({
+    id: cities.id,
+    name: cities.name,
+    country: cities.country,
+    population: cities.population,
+    districtCount: sql<number>`(SELECT COUNT(*) FROM ${districts} WHERE ${districts.city} = ${cities.name})`
+  }).from(cities);
+  
+  return result;
 }
 
 export async function getAllDistricts(city?: string) {
