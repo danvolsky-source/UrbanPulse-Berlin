@@ -1,154 +1,180 @@
 import { useParams, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, TrendingUp, TrendingDown, AlertCircle, DollarSign, Home, Layers, Users } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { ArrowLeft, TrendingUp, TrendingDown, Globe, DollarSign, AlertCircle, Home as HomeIcon, Building2, Car, Leaf } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect } from "react";
 import { MapView } from "@/components/Map";
-
-// Geopolitical events data
-const geopoliticalEvents = [
-  {
-    id: 1,
-    title: "EU imposes new sanctions on",
-    highlight: "Russia",
-    impacts: [
-      { label: "19%", trend: "down" },
-      { label: "10%", trend: "down" }
-    ]
-  },
-  {
-    id: 2,
-    title: "USD/EUR exchange rate moved down by",
-    highlight: "5",
-    impacts: [
-      { label: "20%", trend: "down" },
-      { label: "10%", trend: "down" }
-    ]
-  },
-  {
-    id: 3,
-    title: "USD/EUR exchange nowes up up",
-    highlight: "1.8%",
-    impacts: [
-      { label: "20%", trend: "down" },
-      { label: "10%", trend: "down" }
-    ]
-  },
-  {
-    id: 4,
-    title: "Reports on increasing capital migration to",
-    highlight: "Germany",
-    impacts: [
-      { label: "24%", trend: "down" },
-      { label: "10%", trend: "down" }
-    ]
-  },
-  {
-    id: 5,
-    title: "Reduced investment in the euro",
-    highlight: "",
-    impacts: []
-  }
-];
 
 export default function CityDetail() {
   const { city } = useParams();
   const cityName = city ? decodeURIComponent(city) : "";
   
   const { data: cityData, isLoading: cityLoading } = trpc.cities.list.useQuery();
-  const { data: districtsData, isLoading: districtsLoading } = trpc.districts.list.useQuery({ city: cityName });
-  const { data: pricesData } = trpc.propertyPrices.byDistrict.useQuery({ districtId: 1 });
+  const { data: districtsData, isLoading: districtsLoading } = trpc.districts.list.useQuery({});
+  const { data: demographicsData } = trpc.demographics.citySummary.useQuery(
+    { city: cityName, year: 2024 },
+    { enabled: !!cityName }
+  );
   const { data: ecologyData } = trpc.ecology.getAll.useQuery();
   const { data: vehiclesData } = trpc.vehicles.getAll.useQuery();
+  const currentCityId = cityData?.find((c: any) => c.name === cityName)?.id;
+  const { data: communityGrowthData } = trpc.communityGrowth.getByCity.useQuery(
+    { cityId: currentCityId || 1 },
+    { enabled: !!currentCityId }
+  );
+  const { data: migrationEventsData } = trpc.migrationEvents.getByCity.useQuery(
+    { cityId: currentCityId || 1 },
+    { enabled: !!currentCityId }
+  );
 
   const [mapReady, setMapReady] = useState(false);
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [activeChart, setActiveChart] = useState<"prices" | "quality" | "community">("prices");
+  const [areaFilter, setAreaFilter] = useState([0, 200]);
+  const [airQualityFilter, setAirQualityFilter] = useState(true);
+  const [greeneryFilter, setGreeneryFilter] = useState(true);
 
   const currentCity = cityData?.find((c: any) => c.name === cityName);
   const cityEcology = ecologyData?.filter((e: any) => e.cityId === currentCity?.id && e.year === 2024)[0];
   const cityVehicles = vehiclesData?.filter((v: any) => v.cityId === currentCity?.id && v.year === 2024)[0];
+  const cityDistricts = districtsData?.filter((d: any) => d.cityId === currentCity?.id) || [];
 
-  // Property price trend data (mock for now)
-  const propertyPriceTrend = [
-    { month: "Aug 2023", apartment: 4500, house: 5200, land: 3800 },
-    { month: "Nov 2023", apartment: 4600, house: 5300, land: 3900 },
-    { month: "Feb 2024", apartment: 4700, house: 5400, land: 4000 },
-    { month: "May 2024", apartment: 4800, house: 5500, land: 4100 },
-    { month: "Aug 2024", apartment: 4900, house: 5600, land: 4200 },
-    { month: "Nov 2024", apartment: 5000, house: 5700, land: 4300 },
-    { month: "Feb 2025", apartment: 5100, house: 5800, land: 4400 },
-    { month: "May 2025", apartment: 5200, house: 5900, land: 4500 },
-    { month: "Aug 2025", apartment: 5300, house: 6000, land: 4600 },
+  // Mock geopolitical events
+  const geopoliticalEvents = migrationEventsData && migrationEventsData.length > 0 ? migrationEventsData.slice(0, 4).map((event: any) => ({
+    icon: <Globe className="w-5 h-5" />,
+    title: event.title || event.description,
+    description: event.description || "",
+    impact: event.impactScore ? `${event.impactScore}%` : "",
+    trend: event.impactScore && event.impactScore > 50 ? "up" : "down",
+  })) : [
+    {
+      icon: <Globe className="w-5 h-5" />,
+      title: "EU imposes new sanctions on Russia",
+      description: "",
+      impact: "19%",
+      trend: "down",
+    },
+    {
+      icon: <DollarSign className="w-5 h-5" />,
+      title: "USD/EUR exchange rate moved down by 5",
+      description: "",
+      impact: "10%",
+      trend: "down",
+    },
+    {
+      icon: <TrendingUp className="w-5 h-5" />,
+      title: "Reports on increasing capital migration to Germany",
+      description: "",
+      impact: "24%",
+      trend: "up",
+    },
+    {
+      icon: <AlertCircle className="w-5 h-5" />,
+      title: "Reduced investment in the euro",
+      description: "",
+      impact: "",
+      trend: "neutral",
+    },
   ];
 
-  // Quality and Transport indices (mock)
-  const qualityIndex = [
-    { month: "Aug 2023", value: 72 },
-    { month: "Nov 2023", value: 74 },
-    { month: "Feb 2024", value: 73 },
-    { month: "May 2024", value: 75 },
-    { month: "Aug 2024", value: 76 },
-    { month: "Nov 2024", value: 77 },
-    { month: "Feb 2025", value: 78 },
-    { month: "May 2025", value: 79 },
-    { month: "Aug 2025", value: 80 },
+  // Mock property data
+  const propertyData = {
+    location: cityName,
+    district: cityDistricts[0]?.name || "Gesundbrunnen",
+    price: "€ 4,230",
+    area: "23 m²",
+    fibors: "4",
+  };
+
+  // Property prices chart data
+  const priceChartData = [
+    { month: "Aug 2023", line1: 4500, line2: 5200, line3: 5800 },
+    { month: "Oct 2023", line1: 4600, line2: 5100, line3: 5700 },
+    { month: "Dec 2023", line1: 4700, line2: 5300, line3: 5900 },
+    { month: "Feb 2024", line1: 4550, line2: 5250, line3: 5750 },
+    { month: "Apr 2024", line1: 4800, line2: 5400, line3: 6000 },
+    { month: "Jun 2024", line1: 4900, line2: 5500, line3: 6100 },
+    { month: "Aug 2025", line1: 5000, line2: 5600, line3: 6200 },
   ];
 
-  const transportIndex = [
-    { month: "Aug 2023", value: 65 },
-    { month: "Nov 2023", value: 66 },
-    { month: "Feb 2024", value: 67 },
-    { month: "May 2024", value: 68 },
-    { month: "Aug 2024", value: 69 },
-    { month: "Nov 2024", value: 70 },
-    { month: "Feb 2025", value: 71 },
-    { month: "May 2025", value: 72 },
-    { month: "Aug 2025", value: 73 },
+  // Quality index chart data
+  const qualityChartData = [
+    { month: "Aug 2023", quality: 75 },
+    { month: "Oct 2023", quality: 78 },
+    { month: "Dec 2023", quality: 76 },
+    { month: "Feb 2024", quality: 80 },
+    { month: "Apr 2024", quality: 82 },
+    { month: "Jun 2024", quality: 81 },
+    { month: "Aug 2025", quality: 85 },
   ];
 
-  // Properties income price (mock donut chart data)
+  // Community growth chart data
+  const communityChartData = communityGrowthData?.reduce((acc: any, item: any) => {
+    const existing = acc.find((x: any) => x.year === item.year);
+    if (existing) {
+      existing[item.communityType] = item.percentage;
+    } else {
+      acc.push({
+        year: item.year.toString(),
+        [item.communityType]: item.percentage,
+      });
+    }
+    return acc;
+  }, []) || [];
+
+  // Income price donut chart
   const incomeData = [
     { name: "Air quality", value: 32, color: "#3b82f6" },
-    { name: "Geopolitic", value: 10, color: "#f59e0b" },
     { name: "Ecology", value: 13, color: "#22c55e" },
+    { name: "Geopolitic", value: 10, color: "#f59e0b" },
     { name: "Transport", value: 8, color: "#8b5cf6" },
     { name: "Other", value: 37, color: "#64748b" },
   ];
 
-  // Initialize district markers when map is ready
+  // Initialize map with district markers
   useEffect(() => {
-    if (!mapReady || !map || !districtsData || districtsData.length === 0) return;
+    if (!mapReady || !map || !cityDistricts || cityDistricts.length === 0) return;
 
-    // Add district markers
-    districtsData.forEach((district: any) => {
-      // Use approximate coordinates for now
+    cityDistricts.forEach((district: any, index: number) => {
       const lat = 52.52 + (Math.random() - 0.5) * 0.2;
       const lng = 13.405 + (Math.random() - 0.5) * 0.3;
+      
+      // Color based on price (mock calculation)
+      const priceLevel = (index % 7) + 1; // 1-7 scale
+      const colors = ["#0ea5e9", "#22c55e", "#84cc16", "#eab308", "#f97316", "#ef4444", "#dc2626"];
       
       new google.maps.Marker({
         position: { lat, lng },
         map: map,
         title: district.name,
+        label: {
+          text: district.name,
+          color: "#ffffff",
+          fontSize: "12px",
+          fontWeight: "bold",
+        },
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          scale: 8,
-          fillColor: "#3b82f6",
-          fillOpacity: 0.6,
-          strokeColor: "#1e40af",
+          scale: 15,
+          fillColor: colors[priceLevel - 1],
+          fillOpacity: 0.8,
+          strokeColor: "#1e293b",
           strokeWeight: 2,
         },
       });
     });
-  }, [mapReady, map, districtsData]);
+  }, [mapReady, map, cityDistricts]);
 
   if (cityLoading || districtsLoading) {
     return (
       <div className="min-h-screen bg-slate-950 p-6">
         <Skeleton className="h-12 w-64 mb-6" />
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-12 gap-4">
           <Skeleton className="col-span-3 h-[800px]" />
           <Skeleton className="col-span-6 h-[800px]" />
           <Skeleton className="col-span-3 h-[800px]" />
@@ -170,10 +196,6 @@ export default function CityDetail() {
     );
   }
 
-  const evPercentage = cityVehicles 
-    ? ((cityVehicles.electricVehicles / cityVehicles.totalVehicles) * 100).toFixed(1)
-    : "0";
-
   return (
     <div className="min-h-screen bg-slate-950">
       {/* Header */}
@@ -193,228 +215,286 @@ export default function CityDetail() {
           </div>
           <Link href={`/city/${cityName}/impact`}>
             <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all">
-              <Users className="w-4 h-4" />
               Community Impact Analysis
             </button>
           </Link>
         </div>
       </div>
 
-      {/* Main Content - Three Column Layout */}
-      <div className="grid grid-cols-12 gap-6 p-6">
-        {/* Left Column - Geopolitical Events */}
-        <div className="col-span-12 lg:col-span-3 space-y-4">
+      {/* Three Column Layout */}
+      <div className="grid grid-cols-12 gap-4 p-4 h-[calc(100vh-100px)]">
+        {/* Left Panel - Geopolitical Events */}
+        <div className="col-span-3 space-y-4 overflow-y-auto">
           <Card className="bg-slate-900/50 border-slate-800">
-            <CardHeader>
-              <CardTitle className="text-slate-100 flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-yellow-400" />
-                Geopolitical Events
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {geopoliticalEvents.map((event) => (
-                <div key={event.id} className="border-l-2 border-slate-700 pl-3 py-2">
-                  <div className="flex items-start gap-2 mb-2">
-                    <AlertCircle className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-slate-300">
-                      {event.title}{" "}
-                      {event.highlight && (
-                        <span className="text-yellow-400 font-semibold">{event.highlight}</span>
+            <CardContent className="p-4">
+              <h2 className="text-lg font-bold text-slate-100 mb-4">Geopolitical Events</h2>
+              <div className="space-y-3">
+                {geopoliticalEvents.map((event, index) => (
+                  <div key={index} className="flex items-start gap-3 p-3 bg-slate-800/50 rounded-lg">
+                    <div className="text-blue-400 mt-1">{event.icon}</div>
+                    <div className="flex-1">
+                      <p className="text-sm text-slate-200 leading-tight">
+                        {event.title.split(".")[0]}
+                        {event.title.includes("Russia") && (
+                          <span className="text-yellow-400 ml-1">Russia</span>
+                        )}
+                      </p>
+                      {event.impact && (
+                        <div className="flex items-center gap-2 mt-2">
+                          <Badge variant="destructive" className="text-xs">
+                            {event.trend === "up" ? "▲" : "▼"} {event.impact}
+                          </Badge>
+                          {event.trend === "down" && event.title.includes("USD/EUR") && (
+                            <Badge variant="destructive" className="text-xs">▼ 10%</Badge>
+                          )}
+                        </div>
                       )}
-                    </p>
-                  </div>
-                  {event.impacts.length > 0 && (
-                    <div className="flex items-center gap-2 ml-6">
-                      {event.impacts.map((impact, idx) => (
-                        <Badge 
-                          key={idx}
-                          variant="outline" 
-                          className={`${
-                            impact.trend === "down" 
-                              ? "border-red-500/50 text-red-400" 
-                              : "border-green-500/50 text-green-400"
-                          }`}
-                        >
-                          {impact.trend === "down" ? <TrendingDown className="w-3 h-3 mr-1" /> : <TrendingUp className="w-3 h-3 mr-1" />}
-                          {impact.label}
-                        </Badge>
-                      ))}
                     </div>
-                  )}
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Location Summary */}
-          <Card className="bg-slate-900/50 border-slate-800">
-            <CardContent className="pt-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Location</span>
-                <span className="text-sm font-medium text-slate-100">{cityName}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Avg Price</span>
-                <span className="text-sm font-medium text-slate-100 flex items-center gap-1">
-                  <DollarSign className="w-3 h-3" />
-                  4,230
-                  <TrendingDown className="w-3 h-3 text-red-400" />
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Area</span>
-                <span className="text-sm font-medium text-slate-100 flex items-center gap-1">
-                  23 m²
-                  <TrendingUp className="w-3 h-3 text-green-400" />
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Floors</span>
-                <span className="text-sm font-medium text-slate-100">4</span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Center Column - Map */}
-        <div className="col-span-12 lg:col-span-6 space-y-6">
-          <Card className="bg-slate-900/50 border-slate-800 overflow-hidden">
-            <div className="h-[600px] relative">
-              <MapView
-                onMapReady={(mapInstance: google.maps.Map) => {
-                  setMap(mapInstance);
-                  setMapReady(true);
-                  
-                  // Center map on city
-                  const cityCoords = {
-                    "Berlin": { lat: 52.52, lng: 13.405 },
-                    "Munich": { lat: 48.1351, lng: 11.5820 },
-                    "Hamburg": { lat: 53.5511, lng: 9.9937 },
-                    "Cologne": { lat: 50.9375, lng: 6.9603 },
-                    "Paris": { lat: 48.8566, lng: 2.3522 },
-                    "Vienna": { lat: 48.2082, lng: 16.3738 },
-                    "Rome": { lat: 41.9028, lng: 12.4964 },
-                    "Amsterdam": { lat: 52.3676, lng: 4.9041 },
-                    "Brussels": { lat: 50.8503, lng: 4.3517 },
-                    "London": { lat: 51.5074, lng: -0.1278 },
-                    "Washington D.C.": { lat: 38.9072, lng: -77.0369 },
-                    "New York": { lat: 40.7128, lng: -74.0060 },
-                    "Toronto": { lat: 43.6532, lng: -79.3832 },
-                    "Los Angeles": { lat: 34.0522, lng: -118.2437 },
-                    "Chicago": { lat: 41.8781, lng: -87.6298 },
-                  };
-
-                  const coords = cityCoords[cityName as keyof typeof cityCoords] || { lat: 52.52, lng: 13.405 };
-                  mapInstance.setCenter(coords);
-                  mapInstance.setZoom(11);
-                }}
-              />
-              
-              {/* Price Legend */}
-              <div className="absolute bottom-4 left-4 bg-slate-900/90 backdrop-blur-sm border border-slate-700 rounded-lg p-3">
-                <div className="text-xs font-semibold text-slate-300 mb-2">Prices</div>
-                <div className="flex items-center gap-2">
-                  <div className="w-32 h-3 rounded" style={{
-                    background: 'linear-gradient(to right, #0ea5e9, #22c55e, #eab308, #f97316, #ef4444)'
-                  }}></div>
-                  <div className="flex justify-between w-full text-xs text-slate-400">
-                    <span>3</span>
-                    <span>5</span>
-                    <span>7</span>
                   </div>
-                </div>
+                ))}
               </div>
-            </div>
+            </CardContent>
           </Card>
 
-          {/* Charts Row */}
-          <div className="grid grid-cols-1 gap-6">
-            {/* Property Prices Chart */}
-            <Card className="bg-slate-900/50 border-slate-800">
-              <CardHeader>
-                <CardTitle className="text-slate-100">Property Prices in {cityName}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart data={propertyPriceTrend}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 12 }} />
-                    <YAxis stroke="#94a3b8" tick={{ fontSize: 12 }} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-                      labelStyle={{ color: '#e2e8f0' }}
-                    />
-                    <Legend />
-                    <Line type="monotone" dataKey="apartment" stroke="#3b82f6" strokeWidth={2} name="Apartment" />
-                    <Line type="monotone" dataKey="house" stroke="#22c55e" strokeWidth={2} name="House" />
-                    <Line type="monotone" dataKey="land" stroke="#f59e0b" strokeWidth={2} name="Land" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+          {/* Property Data */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardContent className="p-4 space-y-3">
+              <div>
+                <p className="text-xs text-slate-400">Location</p>
+                <p className="text-sm font-semibold text-slate-100">{propertyData.location}</p>
+                <p className="text-xs text-slate-300">{propertyData.district}</p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-400">Price</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-semibold text-slate-100">{propertyData.price}</p>
+                  <TrendingDown className="w-4 h-4 text-red-400" />
+                  <TrendingDown className="w-4 h-4 text-red-400" />
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-slate-400">Area</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-semibold text-slate-100">{propertyData.area}</p>
+                  <TrendingUp className="w-4 h-4 text-green-400" />
+                  <TrendingUp className="w-4 h-4 text-green-400" />
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-slate-400">Fibors</p>
+                <p className="text-sm font-semibold text-slate-100">{propertyData.fibors}</p>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Quality & Transport Indices */}
-            <div className="grid grid-cols-2 gap-6">
-              <Card className="bg-slate-900/50 border-slate-800">
-                <CardHeader>
-                  <CardTitle className="text-slate-100 text-base">Quality Index</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={150}>
-                    <LineChart data={qualityIndex}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 10 }} hide />
-                      <YAxis stroke="#94a3b8" tick={{ fontSize: 10 }} />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-                        labelStyle={{ color: '#e2e8f0' }}
-                      />
-                      <Line type="monotone" dataKey="value" stroke="#22c55e" strokeWidth={2} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-slate-900/50 border-slate-800">
-                <CardHeader>
-                  <CardTitle className="text-slate-100 text-base">Transport Index</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={150}>
-                    <LineChart data={transportIndex}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 10 }} hide />
-                      <YAxis stroke="#94a3b8" tick={{ fontSize: 10 }} />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-                        labelStyle={{ color: '#e2e8f0' }}
-                      />
-                      <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={2} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </div>
+          {/* Bottom Icons */}
+          <div className="flex justify-around items-center p-4 bg-slate-900/50 rounded-lg border border-slate-800">
+            <button className="text-slate-400 hover:text-blue-400 transition-colors">
+              <HomeIcon className="w-6 h-6" />
+            </button>
+            <button className="text-slate-400 hover:text-blue-400 transition-colors">
+              <Building2 className="w-6 h-6" />
+            </button>
+            <button className="text-blue-400">
+              <Globe className="w-6 h-6" />
+            </button>
+            <button className="text-slate-400 hover:text-blue-400 transition-colors">
+              <Car className="w-6 h-6" />
+            </button>
+            <button className="text-slate-400 hover:text-blue-400 transition-colors">
+              <Leaf className="w-6 h-6" />
+            </button>
           </div>
         </div>
 
-        {/* Right Column - Metrics */}
-        <div className="col-span-12 lg:col-span-3 space-y-4">
+        {/* Center Panel - Map and Charts */}
+        <div className="col-span-6 flex flex-col gap-4">
+          {/* Map */}
+          <Card className="bg-slate-900/50 border-slate-800 flex-1">
+            <CardContent className="p-0 h-full relative">
+              <MapView
+                onMapReady={(mapInstance) => {
+                  setMap(mapInstance);
+                  setMapReady(true);
+                }}
+              />
+              {/* Price Legend */}
+              <div className="absolute bottom-4 left-4 bg-slate-900/90 p-3 rounded-lg border border-slate-700">
+                <p className="text-xs text-slate-300 mb-2">Prices</p>
+                <div className="flex items-center gap-1">
+                  <div className="w-8 h-3 bg-gradient-to-r from-blue-500 via-green-500 via-yellow-500 via-orange-500 to-red-600 rounded"></div>
+                  <div className="flex justify-between w-full text-[10px] text-slate-400 ml-1">
+                    <span>3</span>
+                    <span>6</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>5</span>
+                    <span>7</span>
+                    <span>0</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Charts */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardContent className="p-4">
+              {/* Chart Tabs */}
+              <div className="flex gap-2 mb-4 border-b border-slate-700">
+                <button
+                  onClick={() => setActiveChart("prices")}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    activeChart === "prices"
+                      ? "text-blue-400 border-b-2 border-blue-400"
+                      : "text-slate-400 hover:text-slate-300"
+                  }`}
+                >
+                  Property / Prices in {cityName}
+                </button>
+                <button
+                  onClick={() => setActiveChart("quality")}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    activeChart === "quality"
+                      ? "text-blue-400 border-b-2 border-blue-400"
+                      : "text-slate-400 hover:text-slate-300"
+                  }`}
+                >
+                  Quality Index
+                </button>
+                <button
+                  onClick={() => setActiveChart("community")}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    activeChart === "community"
+                      ? "text-blue-400 border-b-2 border-blue-400"
+                      : "text-slate-400 hover:text-slate-300"
+                  }`}
+                >
+                  Community Growth
+                </button>
+              </div>
+
+              {/* Chart Content */}
+              <div className="h-[200px]">
+                {activeChart === "prices" && (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={priceChartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                      <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 11 }} />
+                      <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} domain={[4000, 6500]} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #334155" }}
+                        labelStyle={{ color: "#e2e8f0" }}
+                      />
+                      <Line type="monotone" dataKey="line1" stroke="#06b6d4" strokeWidth={2} dot={false} />
+                      <Line type="monotone" dataKey="line2" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                      <Line type="monotone" dataKey="line3" stroke="#ef4444" strokeWidth={2} dot={false} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
+
+                {activeChart === "quality" && (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={qualityChartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                      <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 11 }} />
+                      <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} domain={[70, 90]} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #334155" }}
+                        labelStyle={{ color: "#e2e8f0" }}
+                      />
+                      <Line type="monotone" dataKey="quality" stroke="#22c55e" strokeWidth={2} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
+
+                {activeChart === "community" && (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={communityChartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                      <XAxis dataKey="year" stroke="#94a3b8" tick={{ fontSize: 11 }} />
+                      <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} label={{ value: '%', angle: -90, position: 'insideLeft' }} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #334155" }}
+                        labelStyle={{ color: "#e2e8f0" }}
+                      />
+                      <Legend />
+                      <Line type="monotone" dataKey="Muslim" stroke="#3b82f6" strokeWidth={2} />
+                      <Line type="monotone" dataKey="Hindu" stroke="#22c55e" strokeWidth={2} />
+                      <Line type="monotone" dataKey="Buddhist" stroke="#f59e0b" strokeWidth={2} />
+                      <Line type="monotone" dataKey="Sikh" stroke="#8b5cf6" strokeWidth={2} />
+                      <Line type="monotone" dataKey="Jewish" stroke="#ec4899" strokeWidth={2} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Panel - Filters and Metrics */}
+        <div className="col-span-3 space-y-4 overflow-y-auto">
+          {/* Geopolitics */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardContent className="p-4">
+              <h3 className="text-sm font-bold text-slate-100 mb-4">GEOPOLITICS</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Leaf className="w-4 h-4 text-cyan-400" />
+                    <span className="text-sm text-slate-300">Air quality</span>
+                  </div>
+                  <Switch checked={airQualityFilter} onCheckedChange={setAirQualityFilter} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-cyan-400" />
+                    <span className="text-sm text-slate-300">Greenery proximity</span>
+                  </div>
+                  <Switch checked={greeneryFilter} onCheckedChange={setGreeneryFilter} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Transport */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardContent className="p-4">
+              <h3 className="text-sm font-bold text-slate-100 mb-4">TRANSPORT</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Car className="w-4 h-4 text-cyan-400" />
+                    <span className="text-sm text-slate-300">Gasoline / EV</span>
+                  </div>
+                  <span className="text-sm font-semibold text-slate-100">
+                    {cityVehicles ? Math.round((cityVehicles.electricVehicles / cityVehicles.totalVehicles) * 100) : 30}%
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-cyan-400" />
+                    <span className="text-sm text-slate-300">Transport index</span>
+                  </div>
+                  <span className="text-sm font-semibold text-slate-100">10%</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Properties Income Price */}
           <Card className="bg-slate-900/50 border-slate-800">
-            <CardHeader>
-              <CardTitle className="text-slate-100 text-base">Properties Income price</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center">
-                <ResponsiveContainer width="100%" height={180}>
+            <CardContent className="p-4">
+              <h3 className="text-sm font-bold text-slate-100 mb-2">Properties Inco price</h3>
+              <div className="flex items-center justify-center h-[150px]">
+                <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={incomeData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={50}
-                      outerRadius={80}
+                      innerRadius={40}
+                      outerRadius={60}
                       paddingAngle={2}
                       dataKey="value"
                     >
@@ -422,63 +502,78 @@ export default function CityDetail() {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-                      labelStyle={{ color: '#e2e8f0' }}
-                    />
+                    <Tooltip />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="grid grid-cols-2 gap-2 w-full mt-4">
-                  {incomeData.map((item) => (
-                    <div key={item.name} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                      <span className="text-xs text-slate-400">{item.name}</span>
-                    </div>
-                  ))}
+              </div>
+              <div className="space-y-1 mt-2">
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-400">{cityName}</span>
+                  <span className="text-slate-100">€ 4,250</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-400">Arow 4</span>
+                  <span className="text-slate-100">75 m²</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-400">Fibors</span>
+                  <span className="text-slate-100">4</span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Metrics Cards */}
+          {/* Bottom Metrics */}
           <Card className="bg-slate-900/50 border-slate-800">
-            <CardContent className="pt-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Air quality</span>
-                <span className="text-lg font-bold text-blue-400">
-                  {cityEcology ? `${100 - Math.round(cityEcology.aqi / 5)}%` : "N/A"}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Ecology</span>
-                <span className="text-lg font-bold text-green-400">
-                  {cityEcology ? `${cityEcology.ecoRating}%` : "N/A"}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Geopolitic</span>
-                <span className="text-lg font-bold text-yellow-400">10%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Transport</span>
-                <span className="text-lg font-bold text-purple-400">8%</span>
+            <CardContent className="p-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-xs text-slate-400">Air quality</p>
+                  <p className="text-lg font-bold text-slate-100">
+                    {cityEcology ? Math.round((cityEcology.aqi / 500) * 100) : 32}%
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Geopolitic</p>
+                  <p className="text-lg font-bold text-slate-100">10%</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Ecology</p>
+                  <p className="text-lg font-bold text-slate-100">
+                    {cityEcology ? cityEcology.ecoRating : 13}%
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Transport</p>
+                  <p className="text-lg font-bold text-slate-100">8%</p>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Transport Details */}
+          {/* Property Card */}
           <Card className="bg-slate-900/50 border-slate-800">
-            <CardHeader>
-              <CardTitle className="text-slate-100 text-base">Transport</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Gasoline / EV</span>
-                <span className="text-sm font-medium text-slate-100">{evPercentage}%</span>
+            <CardContent className="p-0">
+              <div className="aspect-video bg-slate-800 rounded-t-lg overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop"
+                  alt="Property"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Transport index</span>
-                <span className="text-sm font-medium text-slate-100">10%</span>
+              <div className="p-3">
+                <h4 className="text-sm font-semibold text-slate-100">{cityName}</h4>
+                <p className="text-xs text-slate-400">{propertyData.district}</p>
+                <div className="mt-2 space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-slate-400">Air</span>
+                    <span className="text-slate-100">4,420</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-slate-400">Fibors</span>
+                    <span className="text-slate-100">4</span>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
