@@ -29,6 +29,13 @@
       "when": 1766683499685,
       "tag": "0003_nebulous_firebrand",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1766684093306,
+      "tag": "0004_clammy_lady_vermin",
+      "breakpoints": true
     }
   ]
 }

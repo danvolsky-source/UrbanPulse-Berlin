@@ -11,6 +11,8 @@ import MapView from "./pages/MapView";
 import DistrictDetail from "./pages/DistrictDetail";
 import Districts from "./pages/Districts";
 import CityDetail from "./pages/CityDetail";
+import Ecology from "./pages/Ecology";
+import Vehicles from "./pages/Vehicles";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -19,6 +21,8 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path="/map" component={MapView} />
       <Route path="/comparison" component={CityComparison} />
+      <Route path="/ecology" component={Ecology} />
+      <Route path="/vehicles" component={Vehicles} />
       <Route path="/districts" component={Districts} />
       <Route path={"/city/:city"} component={CityDetail} />
       <Route path={"/district/:id"} component={DistrictDetail} />

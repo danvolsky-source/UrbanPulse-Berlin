@@ -1,7 +1,7 @@
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Users, TrendingUp } from "lucide-react";
+import { MapPin, Users, TrendingUp, Leaf, Car } from "lucide-react";
 import { Link } from "wouter";
 import { useState } from "react";
 
@@ -54,7 +54,7 @@ export default function Home() {
         <p className="text-xl text-slate-300 mb-4 max-w-3xl mx-auto">
           Explore demographic insights, religious infrastructure, and property market analysis across 15 major cities
         </p>
-        <div className="flex items-center justify-center gap-8 text-slate-400 text-sm">
+        <div className="flex items-center justify-center gap-8 text-slate-400 text-sm mb-8">
           <div className="flex items-center gap-2">
             <MapPin className="w-4 h-4" />
             <span>15 Cities</span>
@@ -67,6 +67,22 @@ export default function Home() {
             <TrendingUp className="w-4 h-4" />
             <span>5 Years Data</span>
           </div>
+        </div>
+        
+        {/* Quick Access Buttons */}
+        <div className="flex items-center justify-center gap-4">
+          <Link href="/ecology">
+            <button className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+              <Leaf className="w-5 h-5" />
+              Environmental Analytics
+            </button>
+          </Link>
+          <Link href="/vehicles">
+            <button className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+              <Car className="w-5 h-5" />
+              Vehicle Analytics
+            </button>
+          </Link>
         </div>
       </div>
 

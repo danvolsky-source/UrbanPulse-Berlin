@@ -331,3 +331,63 @@ export async function getPropertyPricesByCity(city: string) {
     .where(eq(districts.city, city))
     .orderBy(propertyPrices.year, propertyPrices.month);
 }
+
+// Ecology data queries
+
+export async function getEcologyByCity(cityId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.ecology) {
+    console.error("ecology table not found in schema");
+    return [];
+  }
+  return await db
+    .select()
+    .from(schema.ecology)
+    .where(eq(schema.ecology.cityId, cityId))
+    .orderBy(schema.ecology.year);
+}
+
+export async function getAllEcology() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.ecology) {
+    console.error("ecology table not found in schema");
+    return [];
+  }
+  return await db.select().from(schema.ecology).orderBy(schema.ecology.cityId, schema.ecology.year);
+}
+
+// Vehicle data queries
+
+export async function getVehiclesByCity(cityId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.vehicles) {
+    console.error("vehicles table not found in schema");
+    return [];
+  }
+  return await db
+    .select()
+    .from(schema.vehicles)
+    .where(eq(schema.vehicles.cityId, cityId))
+    .orderBy(schema.vehicles.year);
+}
+
+export async function getAllVehicles() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.vehicles) {
+    console.error("vehicles table not found in schema");
+    return [];
+  }
+  return await db.select().from(schema.vehicles).orderBy(schema.vehicles.cityId, schema.vehicles.year);
+}

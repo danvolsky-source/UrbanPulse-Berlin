@@ -220,3 +220,43 @@
 - [x] Integrate navigation to detailed city pages
 - [x] Test all city cards and navigation - Homepage displaying correctly with all 15 city posters
 - [x] Create checkpoint
+
+## Feature: Ecology and Vehicle Statistics
+
+### Database Schema
+- [x] Create ecology table (cityId, year, aqi, co2Emissions, greenSpaceArea, ecoRating)
+- [x] Create vehicles table (cityId, year, totalVehicles, electricVehicles, gasolineVehicles, chargingStations)
+- [x] Run database migration
+
+### Data Population
+- [x] Add ecology data for all 15 cities (2020-2024) - 75 records inserted
+- [x] Add vehicle statistics for all 15 cities (2020-2024) - 75 records inserted
+- [x] Calculate electric vehicle growth rates
+
+### 3D Poster Updates
+- [x] Regenerate Berlin poster with green zones and electric vehicles
+- [x] Regenerate Munich poster with ecological elements
+- [x] Regenerate Hamburg poster with ecological elements
+- [x] Regenerate Cologne poster with ecological elements
+- [x] Regenerate Paris poster with ecological elements
+- [x] Regenerate Vienna poster with ecological elements
+- [x] Regenerate Rome poster with ecological elements
+- [x] Regenerate Amsterdam poster with ecological elements
+- [x] Regenerate Brussels poster with ecological elements
+- [x] Regenerate London poster with ecological elements
+- [x] Regenerate Washington D.C. poster with ecological elements
+- [x] Regenerate New York poster with ecological elements
+- [x] Regenerate Toronto poster with ecological elements
+- [x] Regenerate Los Angeles poster with ecological elements
+- [x] Regenerate Chicago poster with ecological eleme### Frontend Pages
+- [x] Create Ecology page with AQI charts, CO2 emissions trends, green space comparison
+- [x] Create Vehicles page with electric vs gasoline charts, charging stations map, growth trends
+- [x] Add navigation links to new pages from Home
+- [x] Test all visualizations and data display
+- [x] Verify ecology and vehicle tabs work correctly
+
+### Testing
+- [x] Write vitest tests for ecology API endpoints
+- [x] Write vitest tests for vehicles API endpoints
+- [x] Run all tests and ensure they pass (23/23 passing)
+- [ ] Create checkpoint

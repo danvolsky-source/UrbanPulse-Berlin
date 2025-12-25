@@ -43,6 +43,42 @@ export const appRouter = router({
       }),
   }),
 
+  ecology: router({
+    getByCity: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getEcologyByCity } = await import("./db");
+        return await getEcologyByCity(input.cityId);
+      }),
+    getAll: publicProcedure.query(async () => {
+      const { getAllEcology } = await import("./db");
+      return await getAllEcology();
+    }),
+  }),
+
+  vehicles: router({
+    getByCity: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getVehiclesByCity } = await import("./db");
+        return await getVehiclesByCity(input.cityId);
+      }),
+    getAll: publicProcedure.query(async () => {
+      const { getAllVehicles } = await import("./db");
+      return await getAllVehicles();
+    }),
+  }),
+
   cities: router({
     list: publicProcedure.query(async () => {
       const { getCities } = await import("./db");

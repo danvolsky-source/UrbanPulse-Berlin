@@ -124,3 +124,37 @@ export const cities = mysqlTable("cities", {
 
 export type City = typeof cities.$inferSelect;
 export type InsertCity = typeof cities.$inferInsert;
+
+/**
+ * Ecology table - stores environmental data for cities
+ */
+export const ecology = mysqlTable("ecology", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId").notNull(),
+  year: int("year").notNull(),
+  aqi: int("aqi").notNull(), // Air Quality Index (0-500)
+  co2Emissions: int("co2Emissions").notNull(), // tons per capita
+  greenSpaceArea: int("greenSpaceArea").notNull(), // square kilometers
+  ecoRating: int("ecoRating").notNull(), // 1-100 scale
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Ecology = typeof ecology.$inferSelect;
+export type InsertEcology = typeof ecology.$inferInsert;
+
+/**
+ * Vehicles table - stores vehicle statistics for cities
+ */
+export const vehicles = mysqlTable("vehicles", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId").notNull(),
+  year: int("year").notNull(),
+  totalVehicles: int("totalVehicles").notNull(),
+  electricVehicles: int("electricVehicles").notNull(),
+  gasolineVehicles: int("gasolineVehicles").notNull(),
+  chargingStations: int("chargingStations").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Vehicle = typeof vehicles.$inferSelect;
+export type InsertVehicle = typeof vehicles.$inferInsert;
