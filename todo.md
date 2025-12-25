@@ -394,3 +394,9 @@
 - [x] Write vitest tests for migration events endpoints
 - [x] Write vitest tests for correlation analysis
 - [x] All 32 tests passing
+- [x] Create final checkpoint (version: 160b5f86)
+
+
+## Bug Fix: HeatmapLayer Error
+- [x] Fix Google Maps HeatmapLayer error in CityDetail.tsx
+- [x] Replaced heatmap with district markers to avoid visualization library dependency

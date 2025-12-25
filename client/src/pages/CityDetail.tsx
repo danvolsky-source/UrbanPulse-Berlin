@@ -66,7 +66,6 @@ export default function CityDetail() {
 
   const [mapReady, setMapReady] = useState(false);
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [heatmapLayer, setHeatmapLayer] = useState<google.maps.visualization.HeatmapLayer | null>(null);
 
   const currentCity = cityData?.find((c: any) => c.name === cityName);
   const cityEcology = ecologyData?.filter((e: any) => e.cityId === currentCity?.id && e.year === 2024)[0];
@@ -119,52 +118,30 @@ export default function CityDetail() {
     { name: "Other", value: 37, color: "#64748b" },
   ];
 
-  // Initialize heatmap when map is ready
+  // Initialize district markers when map is ready
   useEffect(() => {
     if (!mapReady || !map || !districtsData || districtsData.length === 0) return;
 
-    // Clear existing heatmap
-    if (heatmapLayer) {
-      heatmapLayer.setMap(null);
-    }
-
-    // Create heatmap data points from districts
-    const heatmapData = districtsData.map((district: any) => {
-      // Use district coordinates (you'll need to add these to your data)
-      // For now, using approximate Berlin coordinates with random offsets
+    // Add district markers
+    districtsData.forEach((district: any) => {
+      // Use approximate coordinates for now
       const lat = 52.52 + (Math.random() - 0.5) * 0.2;
       const lng = 13.405 + (Math.random() - 0.5) * 0.3;
       
-      return {
-        location: new google.maps.LatLng(lat, lng),
-        weight: district.population / 10000 // Weight based on population
-      };
+      new google.maps.Marker({
+        position: { lat, lng },
+        map: map,
+        title: district.name,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: "#3b82f6",
+          fillOpacity: 0.6,
+          strokeColor: "#1e40af",
+          strokeWeight: 2,
+        },
+      });
     });
-
-    const newHeatmap = new google.maps.visualization.HeatmapLayer({
-      data: heatmapData,
-      map: map,
-      radius: 30,
-      opacity: 0.6,
-      gradient: [
-        'rgba(0, 255, 255, 0)',
-        'rgba(0, 255, 255, 1)',
-        'rgba(0, 191, 255, 1)',
-        'rgba(0, 127, 255, 1)',
-        'rgba(0, 63, 255, 1)',
-        'rgba(0, 0, 255, 1)',
-        'rgba(0, 0, 223, 1)',
-        'rgba(0, 0, 191, 1)',
-        'rgba(0, 0, 159, 1)',
-        'rgba(0, 0, 127, 1)',
-        'rgba(63, 0, 91, 1)',
-        'rgba(127, 0, 63, 1)',
-        'rgba(191, 0, 31, 1)',
-        'rgba(255, 0, 0, 1)'
-      ]
-    });
-
-    setHeatmapLayer(newHeatmap);
   }, [mapReady, map, districtsData]);
 
   if (cityLoading || districtsLoading) {
