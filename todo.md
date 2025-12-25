@@ -186,3 +186,13 @@
 - [x] Add missing database functions (getAllDemographics, getPropertyPricesByCity)
 - [x] Test all city detail pages - All 10 tests passing
 - [ ] Create checkpoint
+
+## London Expansion
+- [x] Create seed script for London with 33 boroughs
+- [x] Add demographic data with UK communities (Pakistani, Indian, Bangladeshi, Caribbean, Polish)
+- [x] Add infrastructure data (mosques, churches, synagogues)
+- [x] Add property price data (5 years historical)
+- [x] Run seed script and populate database - 99 boroughs, 2,475 demographics, 3,885 infrastructure, 5,940 prices
+- [x] Optimized seed script with batch inserts for faster execution
+- [x] Test all features with London - All 10 tests passing
+- [ ] Create checkpoint
