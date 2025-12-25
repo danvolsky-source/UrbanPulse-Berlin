@@ -5,33 +5,25 @@ import { Link } from "wouter";
 import { Home, TrendingUp, TrendingDown } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-const CITIES = ["Berlin", "Munich", "Hamburg", "Cologne"];
+const CITIES = ["Berlin", "Munich", "Hamburg", "Cologne", "Paris", "Vienna", "Rome", "Amsterdam", "Brussels"];
 const currentYear = 2024;
 
 export default function CityComparison() {
   // Fetch data for all cities
-  const berlinSummary = trpc.demographics.citySummary.useQuery({ city: "Berlin", year: currentYear });
-  const munichSummary = trpc.demographics.citySummary.useQuery({ city: "Munich", year: currentYear });
-  const hamburgSummary = trpc.demographics.citySummary.useQuery({ city: "Hamburg", year: currentYear });
-  const cologneSummary = trpc.demographics.citySummary.useQuery({ city: "Cologne", year: currentYear });
+  // Fetch data for all cities dynamically
+  const citySummaries = CITIES.map(city => ({
+    city,
+    summary: trpc.demographics.citySummary.useQuery({ city, year: currentYear }),
+    community: trpc.demographics.communityComposition.useQuery({ city }),
+  }));
 
-  const berlinCommunity = trpc.demographics.communityComposition.useQuery({ city: "Berlin" });
-  const munichCommunity = trpc.demographics.communityComposition.useQuery({ city: "Munich" });
-  const hamburgCommunity = trpc.demographics.communityComposition.useQuery({ city: "Hamburg" });
-  const cologneCommunity = trpc.demographics.communityComposition.useQuery({ city: "Cologne" });
+  const isLoading = citySummaries.some(c => c.summary.isLoading || c.community.isLoading);
 
-  const isLoading =
-    berlinSummary.isLoading ||
-    munichSummary.isLoading ||
-    hamburgSummary.isLoading ||
-    cologneSummary.isLoading;
-
-  const summaries = [
-    { city: "Berlin", data: berlinSummary.data, community: berlinCommunity.data },
-    { city: "Munich", data: munichSummary.data, community: munichCommunity.data },
-    { city: "Hamburg", data: hamburgSummary.data, community: hamburgCommunity.data },
-    { city: "Cologne", data: cologneSummary.data, community: cologneCommunity.data },
-  ];
+  const summaries = citySummaries.map(c => ({
+    city: c.city,
+    data: c.summary.data,
+    community: c.community.data,
+  }));
 
   // Prepare data for infrastructure comparison chart
   const infrastructureData = summaries.map((s) => ({
@@ -57,7 +49,7 @@ export default function CityComparison() {
             <div>
               <h1 className="text-3xl font-bold">City Comparison</h1>
               <p className="text-muted-foreground mt-1">
-                Compare demographic data across major German cities
+                Compare demographic data across major European cities
               </p>
             </div>
             <Link href="/">

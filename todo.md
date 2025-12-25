@@ -151,3 +151,15 @@
 - [x] Document custom domain setup for sky-mind.com
 - [x] Document DNS configuration steps (docs/DNS_SETUP.md)
 - [x] Create final checkpoint
+
+## European Cities Expansion
+- [x] Create seed script for Paris, Vienna, Rome, Amsterdam, Brussels
+- [x] Add districts for each city (Paris: 20, Vienna: 20, Rome: 18, Amsterdam: 8, Brussels: 19)
+- [x] Add demographic data (5 communities × 5 years × districts)
+- [x] Add infrastructure data (mosques, churches, synagogues)
+- [x] Add property price data (5 years historical)
+- [x] Run seed script and populate database
+- [x] Update city selector UI - already dynamic, automatically includes new cities
+- [x] Update CityComparison page to support all 9 cities
+- [x] Test all features with new cities - All 10 tests passing
+- [ ] Create checkpoint
