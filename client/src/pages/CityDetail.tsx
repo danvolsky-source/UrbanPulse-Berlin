@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, TrendingUp, TrendingDown, Globe, DollarSign, AlertCircle, Home as HomeIcon, Building2, Car, Leaf } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect } from "react";
-import { MapView } from "@/components/Map";
+import { LeafletMap } from "@/components/LeafletMap";
 
 export default function CityDetail() {
   const { city } = useParams();
@@ -32,8 +32,7 @@ export default function CityDetail() {
     { enabled: !!currentCityId }
   );
 
-  const [mapReady, setMapReady] = useState(false);
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  // Removed Google Maps state
   const [activeChart, setActiveChart] = useState<"prices" | "quality" | "community">("prices");
   const [areaFilter, setAreaFilter] = useState([0, 200]);
   const [airQualityFilter, setAirQualityFilter] = useState(true);
@@ -136,45 +135,7 @@ export default function CityDetail() {
     { name: "Other", value: 37, color: "#64748b" },
   ];
 
-  // Initialize map with district markers
-  useEffect(() => {
-    if (!mapReady || !map || !cityDistricts || cityDistricts.length === 0) return;
-
-    console.log("Creating markers for", cityDistricts.length, "districts");
-
-    cityDistricts.forEach((district: any, index: number) => {
-      const lat = 52.52 + (Math.random() - 0.5) * 0.2;
-      const lng = 13.405 + (Math.random() - 0.5) * 0.3;
-      
-      // Color based on price (mock calculation)
-      const priceLevel = (index % 7) + 1; // 1-7 scale
-      const colors = ["#0ea5e9", "#22c55e", "#84cc16", "#eab308", "#f97316", "#ef4444", "#dc2626"];
-      
-      try {
-        new window.google.maps.Marker({
-          position: { lat, lng },
-          map: map,
-          title: district.name,
-          label: {
-            text: district.name,
-            color: "#ffffff",
-            fontSize: "12px",
-            fontWeight: "bold",
-          },
-          icon: {
-            path: window.google.maps.SymbolPath.CIRCLE,
-            scale: 15,
-            fillColor: colors[priceLevel - 1],
-            fillOpacity: 0.8,
-            strokeColor: "#1e293b",
-            strokeWeight: 2,
-          },
-        });
-      } catch (error) {
-        console.error("Error creating marker:", error);
-      }
-    });
-  }, [mapReady, map, cityDistricts]);
+  // District markers are now handled by LeafletMap component
 
   if (cityLoading || districtsLoading) {
     return (
@@ -318,14 +279,11 @@ export default function CityDetail() {
           {/* Map */}
           <Card className="bg-slate-900/50 border-slate-800 flex-1">
             <CardContent className="p-0 h-full relative">
-              <MapView
-                initialCenter={{ lat: 52.52, lng: 13.405 }}
-                initialZoom={11}
-                className="w-full h-full rounded-lg"
-                onMapReady={(mapInstance) => {
-                  setMap(mapInstance);
-                  setMapReady(true);
-                }}
+              <LeafletMap
+                center={[52.52, 13.405]}
+                zoom={11}
+                className="w-full h-full"
+                districts={cityDistricts}
               />
               {/* Price Legend */}
               <div className="absolute bottom-4 left-4 bg-slate-900/90 p-3 rounded-lg border border-slate-700">
