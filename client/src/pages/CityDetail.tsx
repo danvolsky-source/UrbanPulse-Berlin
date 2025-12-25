@@ -140,6 +140,8 @@ export default function CityDetail() {
   useEffect(() => {
     if (!mapReady || !map || !cityDistricts || cityDistricts.length === 0) return;
 
+    console.log("Creating markers for", cityDistricts.length, "districts");
+
     cityDistricts.forEach((district: any, index: number) => {
       const lat = 52.52 + (Math.random() - 0.5) * 0.2;
       const lng = 13.405 + (Math.random() - 0.5) * 0.3;
@@ -148,25 +150,29 @@ export default function CityDetail() {
       const priceLevel = (index % 7) + 1; // 1-7 scale
       const colors = ["#0ea5e9", "#22c55e", "#84cc16", "#eab308", "#f97316", "#ef4444", "#dc2626"];
       
-      new google.maps.Marker({
-        position: { lat, lng },
-        map: map,
-        title: district.name,
-        label: {
-          text: district.name,
-          color: "#ffffff",
-          fontSize: "12px",
-          fontWeight: "bold",
-        },
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 15,
-          fillColor: colors[priceLevel - 1],
-          fillOpacity: 0.8,
-          strokeColor: "#1e293b",
-          strokeWeight: 2,
-        },
-      });
+      try {
+        new window.google.maps.Marker({
+          position: { lat, lng },
+          map: map,
+          title: district.name,
+          label: {
+            text: district.name,
+            color: "#ffffff",
+            fontSize: "12px",
+            fontWeight: "bold",
+          },
+          icon: {
+            path: window.google.maps.SymbolPath.CIRCLE,
+            scale: 15,
+            fillColor: colors[priceLevel - 1],
+            fillOpacity: 0.8,
+            strokeColor: "#1e293b",
+            strokeWeight: 2,
+          },
+        });
+      } catch (error) {
+        console.error("Error creating marker:", error);
+      }
     });
   }, [mapReady, map, cityDistricts]);
 
@@ -313,6 +319,9 @@ export default function CityDetail() {
           <Card className="bg-slate-900/50 border-slate-800 flex-1">
             <CardContent className="p-0 h-full relative">
               <MapView
+                initialCenter={{ lat: 52.52, lng: 13.405 }}
+                initialZoom={11}
+                className="w-full h-full rounded-lg"
                 onMapReady={(mapInstance) => {
                   setMap(mapInstance);
                   setMapReady(true);
