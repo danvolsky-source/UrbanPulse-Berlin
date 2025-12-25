@@ -259,4 +259,138 @@
 - [x] Write vitest tests for ecology API endpoints
 - [x] Write vitest tests for vehicles API endpoints
 - [x] Run all tests and ensure they pass (23/23 passing)
+- [x] Create checkpoint (version: b3bcb23b)
+
+## Feature: Detailed City Exploration Page
+
+### Layout & Structure
+- [ ] Create three-column layout (left: events, center: map, right: metrics)
+- [ ] Design responsive layout for mobile/tablet
+- [ ] Add city header with name, country, population
+
+### Geopolitical Events Panel (Left)
+- [ ] Create events feed component
+- [ ] Add event types (sanctions, exchange rates, migration, investment)
+- [ ] Show impact percentages with up/down indicators
+- [ ] Style with icons and color coding
+
+### Interactive District Heatmap (Center)
+- [ ] Integrate Google Maps with district boundaries
+- [ ] Implement heatmap visualization (blue to red color scale)
+- [ ] Add price legend and scale
+- [ ] Show district names on hover
+- [ ] Add infrastructure icons on map
+
+### Property Price Charts (Bottom)
+- [ ] Create Property Prices timeline chart (multi-line)
+- [ ] Add Quality Index chart
+- [ ] Add Transport Index chart
+- [ ] Implement time range selector (Aug 2023 - Aug 2025)
+
+### Metrics Panel (Right)
+- [ ] Add Location/Price/Area/Floors summary card
+- [ ] Create Properties Income price donut chart
+- [ ] Add Air quality percentage indicator
+- [ ] Add Ecology percentage indicator
+- [ ] Add Geopolitic impact percentage
+- [ ] Add Transport index percentage
+- [ ] Show Gasoline/EV ratio
+
+### Data Integration
+- [ ] Connect to existing ecology data
+- [ ] Connect to existing vehicles data
+- [ ] Connect to property prices data
+- [ ] Connect to districts data
+- [ ] Add mock geopolitical events data
+
+### Testing
+- [ ] Test map interactions and heatmap rendering
+- [ ] Test all charts and data visualization
+- [ ] Test responsive layout on different screen sizes
+- [ ] Write vitest tests for new components
 - [ ] Create checkpoint
+
+## Feature: Community Impact Analysis System
+
+### Core Concept
+**Show how immigrant community growth directly impacts property prices, infrastructure, ecology, transport, and quality of life**
+
+### Database Extensions
+- [x] Add communityGrowth table (cityId, districtId, year, communityType, percentage, growthRate)
+- [x] Add migrationEvents table (cityId, year, eventType, description, impactScore)
+- [ ] Add correlationMetrics table (cityId, year, metric, correlationWithCommunityGrowth)
+- [x] Populate historical community growth data (2020-2024) for all cities - 375 records
+- [x] Populate migration events data - 16 key events across cities
+- [ ] Calculate correlation coefficients between community growth and all metrics
+
+### Correlation Analysis
+- [x] Community Growth → Property Prices correlation
+- [x] Community Growth → Infrastructure (mosques, temples, cultural centers) correlation
+- [x] Community Growth → Ecology metrics correlation
+- [x] Community Growth → Transport patterns (EV adoption) correlation
+- [x] Community Growth → Quality of Life Index correlation
+- [x] API endpoints created for correlation data
+
+### Community Impact Dashboard
+- [x] Create main correlation overview panel
+- [x] Add "Community Growth vs Prices" scatter plot with trend line
+- [x] Add "Community Growth vs Rental Prices" scatter plot
+- [x] Add "Migration Events Impact" timeline (2020-2024)
+- [x] Show correlation radar chart for all metrics
+- [x] Add community growth trends by type (2020-2024)
+
+### District-Level Analysis
+- [ ] Show community percentage by district on map
+- [ ] Color-code districts by community dominance
+- [ ] Show infrastructure icons (mosques, temples) on map
+- [ ] Add district comparison: high immigration vs low immigration areas
+- [ ] Show price change correlation with community growth rate
+
+### Temporal Visualization (2020-2024)
+- [ ] Animated timeline showing community growth over 5 years
+- [ ] Parallel changes in prices, infrastructure, ecology
+- [ ] Key migration events markers on timeline
+- [ ] Before/After comparison for major migration waves
+
+### Key Insights to Highlight
+- [ ] "Districts with 10%+ Muslim community growth saw X% price increase"
+- [ ] "Each new mosque correlates with Y% increase in local property values"
+- [ ] "Areas with diverse communities show Z% better ecology scores"
+- [ ] "High immigration districts have W% more EV adoption"
+
+### Data Integration
+- [ ] Connect to existing demographics data
+- [ ] Connect to existing infrastructure data
+- [ ] Connect to existing property prices data
+- [ ] Connect to existing ecology data
+- [ ] Connect to existing vehicles data
+- [ ] Calculate all cross-correlations
+
+### Testing
+- [ ] Verify correlation calculations are accurate
+- [ ] Test all visualization components
+- [ ] Write vitest tests for correlation analysis
+- [ ] Create final checkpoint
+
+## Feature: Rental Prices
+
+### Database
+- [x] Add rentalPrices table (cityId, districtId, year, apartmentType, monthlyRent)
+- [x] Populate rental prices data (2020-2024) for all cities - 300 records
+- [ ] Calculate rental price correlations with community growth
+
+### API
+- [x] Add rental prices endpoints to routers.ts
+- [x] Add rental prices query functions to db.ts
+
+### Visualization
+- [x] Add rental prices to property price charts
+- [x] Show rental price trends by apartment type
+- [x] Show correlation: community growth → rental prices
+
+### Testing
+- [x] Write vitest tests for rental prices endpoints - 9 tests passing
+- [x] Write vitest tests for community growth endpoints
+- [x] Write vitest tests for migration events endpoints
+- [x] Write vitest tests for correlation analysis
+- [x] All 32 tests passing

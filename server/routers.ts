@@ -206,6 +206,74 @@ export const appRouter = router({
         return await getPropertyPricesByDistrict(input.districtId);
       }),
   }),
+
+  communityGrowth: router({
+    getAll: publicProcedure.query(async () => {
+      const { getAllCommunityGrowth } = await import("./db");
+      return await getAllCommunityGrowth();
+    }),
+    getByCity: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getCommunityGrowthByCity } = await import("./db");
+        return await getCommunityGrowthByCity(input.cityId);
+      }),
+  }),
+
+  migrationEvents: router({
+    getAll: publicProcedure.query(async () => {
+      const { getAllMigrationEvents } = await import("./db");
+      return await getAllMigrationEvents();
+    }),
+    getByCity: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getMigrationEventsByCity } = await import("./db");
+        return await getMigrationEventsByCity(input.cityId);
+      }),
+  }),
+
+  correlations: router({
+    getCommunityImpact: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { calculateCommunityImpactCorrelations } = await import("./db");
+        return await calculateCommunityImpactCorrelations(input.cityId);
+      }),
+  }),
+
+  rentalPrices: router({
+    getAll: publicProcedure.query(async () => {
+      const { getAllRentalPrices } = await import("./db");
+      return await getAllRentalPrices();
+    }),
+    getByCity: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getRentalPricesByCity } = await import("./db");
+        return await getRentalPricesByCity(input.cityId);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

@@ -13,6 +13,7 @@ import Districts from "./pages/Districts";
 import CityDetail from "./pages/CityDetail";
 import Ecology from "./pages/Ecology";
 import Vehicles from "./pages/Vehicles";
+import CommunityImpact from "./pages/CommunityImpact";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/comparison" component={CityComparison} />
       <Route path="/ecology" component={Ecology} />
       <Route path="/vehicles" component={Vehicles} />
+      <Route path="/city/:city/impact" component={CommunityImpact} />
       <Route path="/districts" component={Districts} />
       <Route path={"/city/:city"} component={CityDetail} />
       <Route path={"/district/:id"} component={DistrictDetail} />

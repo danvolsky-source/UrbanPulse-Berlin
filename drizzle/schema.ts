@@ -158,3 +158,55 @@ export const vehicles = mysqlTable("vehicles", {
 
 export type Vehicle = typeof vehicles.$inferSelect;
 export type InsertVehicle = typeof vehicles.$inferInsert;
+
+/**
+ * Community Growth table - tracks immigrant community percentage changes over time
+ */
+export const communityGrowth = mysqlTable("communityGrowth", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId").notNull(),
+  districtId: int("districtId"),
+  year: int("year").notNull(),
+  communityType: varchar("communityType", { length: 100 }).notNull(), // Muslim, Hindu, Buddhist, etc.
+  percentage: int("percentage").notNull(), // percentage of population
+  growthRate: int("growthRate").notNull(), // year-over-year growth rate
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type CommunityGrowth = typeof communityGrowth.$inferSelect;
+export type InsertCommunityGrowth = typeof communityGrowth.$inferInsert;
+
+/**
+ * Migration Events table - records significant migration events and their impacts
+ */
+export const migrationEvents = mysqlTable("migrationEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId").notNull(),
+  year: int("year").notNull(),
+  month: int("month").notNull(),
+  eventType: varchar("eventType", { length: 100 }).notNull(), // refugee_wave, policy_change, economic_migration
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  impactScore: int("impactScore").notNull(), // 1-100 scale
+  affectedCommunity: varchar("affectedCommunity", { length: 100 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MigrationEvent = typeof migrationEvents.$inferSelect;
+export type InsertMigrationEvent = typeof migrationEvents.$inferInsert;
+
+/**
+ * Rental Prices table - tracks monthly rental prices over time
+ */
+export const rentalPrices = mysqlTable("rentalPrices", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId").notNull(),
+  districtId: int("districtId"),
+  year: int("year").notNull(),
+  apartmentType: varchar("apartmentType", { length: 50 }).notNull(), // 1-bedroom, 2-bedroom, 3-bedroom, house
+  monthlyRent: int("monthlyRent").notNull(), // in local currency
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RentalPrice = typeof rentalPrices.$inferSelect;
+export type InsertRentalPrice = typeof rentalPrices.$inferInsert;
