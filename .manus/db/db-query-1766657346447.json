@@ -1,0 +1,122 @@
+{
+  "query": "SELECT city, year, totalPopulation, mosquesCount, churchesCount, synagoguesCount FROM citySummary ORDER BY city, year;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute SELECT city, year, totalPopulation, mosquesCount, churchesCount, synagoguesCount FROM citySummary ORDER BY city, year;",
+  "rows": [
+    {
+      "city": "Berlin",
+      "year": "2023",
+      "totalPopulation": "3755251",
+      "mosquesCount": "99",
+      "churchesCount": "534",
+      "synagoguesCount": "12"
+    },
+    {
+      "city": "Berlin",
+      "year": "2024",
+      "totalPopulation": "3850000",
+      "mosquesCount": "102",
+      "churchesCount": "540",
+      "synagoguesCount": "12"
+    },
+    {
+      "city": "Cologne",
+      "year": "2023",
+      "totalPopulation": "1087863",
+      "mosquesCount": "38",
+      "churchesCount": "350",
+      "synagoguesCount": "4"
+    },
+    {
+      "city": "Cologne",
+      "year": "2023",
+      "totalPopulation": "1087863",
+      "mosquesCount": "38",
+      "churchesCount": "245",
+      "synagoguesCount": "2"
+    },
+    {
+      "city": "Cologne",
+      "year": "2024",
+      "totalPopulation": "1100000",
+      "mosquesCount": "40",
+      "churchesCount": "248",
+      "synagoguesCount": "2"
+    },
+    {
+      "city": "Cologne",
+      "year": "2024",
+      "totalPopulation": "1109620",
+      "mosquesCount": "38",
+      "churchesCount": "357",
+      "synagoguesCount": "4"
+    },
+    {
+      "city": "Hamburg",
+      "year": "2023",
+      "totalPopulation": "1906411",
+      "mosquesCount": "52",
+      "churchesCount": "278",
+      "synagoguesCount": "3"
+    },
+    {
+      "city": "Hamburg",
+      "year": "2023",
+      "totalPopulation": "1906411",
+      "mosquesCount": "55",
+      "churchesCount": "420",
+      "synagoguesCount": "5"
+    },
+    {
+      "city": "Hamburg",
+      "year": "2024",
+      "totalPopulation": "1950000",
+      "mosquesCount": "54",
+      "churchesCount": "280",
+      "synagoguesCount": "3"
+    },
+    {
+      "city": "Hamburg",
+      "year": "2024",
+      "totalPopulation": "1944539",
+      "mosquesCount": "56",
+      "churchesCount": "428",
+      "synagoguesCount": "5"
+    },
+    {
+      "city": "Munich",
+      "year": "2023",
+      "totalPopulation": "1512491",
+      "mosquesCount": "45",
+      "churchesCount": "312",
+      "synagoguesCount": "5"
+    },
+    {
+      "city": "Munich",
+      "year": "2023",
+      "totalPopulation": "1488202",
+      "mosquesCount": "45",
+      "churchesCount": "380",
+      "synagoguesCount": "9"
+    },
+    {
+      "city": "Munich",
+      "year": "2024",
+      "totalPopulation": "1560000",
+      "mosquesCount": "47",
+      "churchesCount": "315",
+      "synagoguesCount": "5"
+    },
+    {
+      "city": "Munich",
+      "year": "2024",
+      "totalPopulation": "1517966",
+      "mosquesCount": "45",
+      "churchesCount": "387",
+      "synagoguesCount": "9"
+    }
+  ],
+  "messages": [],
+  "stdout": "city\tyear\ttotalPopulation\tmosquesCount\tchurchesCount\tsynagoguesCount\nBerlin\t2023\t3755251\t99\t534\t12\nBerlin\t2024\t3850000\t102\t540\t12\nCologne\t2023\t1087863\t38\t350\t4\nCologne\t2023\t1087863\t38\t245\t2\nCologne\t2024\t1100000\t40\t248\t2\nCologne\t2024\t1109620\t38\t357\t4\nHamburg\t2023\t1906411\t52\t278\t3\nHamburg\t2023\t1906411\t55\t420\t5\nHamburg\t2024\t1950000\t54\t280\t3\nHamburg\t2024\t1944539\t56\t428\t5\nMunich\t2023\t1512491\t45\t312\t5\nMunich\t2023\t1488202\t45\t380\t9\nMunich\t2024\t1560000\t47\t315\t5\nMunich\t2024\t1517966\t45\t387\t9\n",
+  "stderr": "",
+  "execution_time_ms": 1554
+}

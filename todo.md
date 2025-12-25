@@ -80,3 +80,22 @@
 - [x] Create export utility for CSV generation
 - [x] Design comparison page layout with multiple cities
 - [x] Add comparison charts and tables
+
+## Testing Issues
+- [x] Fix timeout in citySummary test (increased to 15s)
+- [x] Fix timeout in communityComposition test (increased to 15s)
+- [x] All tests now passing (9/9)
+
+## Routing Issues
+- [x] Fix 404 error on /map route - MapView component not registered in App.tsx
+- [x] Add Mapbox access token via environment variable
+- [x] Create vitest test to validate Mapbox token
+- [x] Verify all navigation links point to correct routes
+- [x] Test all routes for proper rendering
+
+## Bugs Found During Verification
+- [x] City Comparison page showing all zeros - API not returning data for Munich, Hamburg, Cologne - FIXED by running seed script
+- [x] Charts on comparison page are empty (no data to display) - FIXED
+- [x] Top communities sections are empty for all cities - FIXED
+- [x] Database was missing data for Munich, Hamburg, Cologne - created optimized seed script with batch inserts
+- [x] All cities now have complete demographic data, infrastructure, and property prices

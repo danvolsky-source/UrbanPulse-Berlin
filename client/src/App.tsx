@@ -13,9 +13,10 @@ import DistrictDetail from "./pages/DistrictDetail";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
-    <Switch>      <Route path={"/"} component={Home} />
+    <Switch>
+      <Route path={"/"} component={Home} />
+      <Route path="/map" component={MapView} />
       <Route path="/comparison" component={CityComparison} />
-      <Route path={"/404"} component={NotFound} />
       <Route path={"/district/:id"} component={DistrictDetail} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

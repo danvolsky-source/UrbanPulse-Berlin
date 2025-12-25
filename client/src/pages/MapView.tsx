@@ -9,8 +9,8 @@ import { Home, X } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
-// Mapbox public token (you should replace this with your own token)
-mapboxgl.accessToken = "pk.eyJ1IjoibWFudXNhaS1kZW1vIiwiYSI6ImNtNTNzYnZvZjA0cGMya3M3N2RxNGl1OGQifQ.6Uw8vZxQzXqQzQqQzQqQzQ";
+// Mapbox public token from environment variable
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || "";
 
 // Berlin districts GeoJSON (simplified boundaries)
 const berlinDistrictsGeoJSON = {

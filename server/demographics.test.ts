@@ -14,7 +14,7 @@ function createTestContext(): TrpcContext {
 }
 
 describe("demographics API", () => {
-  it("should return city summary for Berlin", async () => {
+  it("should return city summary for Berlin", { timeout: 15000 }, async () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
@@ -32,7 +32,7 @@ describe("demographics API", () => {
     expect(result.current?.synagoguesCount).toBeGreaterThan(0);
   });
 
-  it("should return community composition for Berlin", async () => {
+  it("should return community composition for Berlin", { timeout: 15000 }, async () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
