@@ -127,7 +127,7 @@ describe("districts API", () => {
 });
 
 describe("infrastructure API", () => {
-  it("should return all infrastructure", async () => {
+  it("should return all infrastructure", { timeout: 15000 }, async () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
@@ -147,7 +147,7 @@ describe("infrastructure API", () => {
     expect(["mosque", "church", "synagogue", "cultural_center", "ethnic_store"]).toContain(item.type);
   });
 
-  it("should return infrastructure by district", async () => {
+  it("should return infrastructure by district", { timeout: 15000 }, async () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 

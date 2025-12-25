@@ -10,6 +10,7 @@ import CityComparison from "./pages/CityComparison";
 import MapView from "./pages/MapView";
 import DistrictDetail from "./pages/DistrictDetail";
 import Districts from "./pages/Districts";
+import CityDetail from "./pages/CityDetail";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/map" component={MapView} />
       <Route path="/comparison" component={CityComparison} />
       <Route path="/districts" component={Districts} />
+      <Route path={"/city/:city"} component={CityDetail} />
       <Route path={"/district/:id"} component={DistrictDetail} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

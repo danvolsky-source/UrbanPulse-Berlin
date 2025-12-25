@@ -228,11 +228,29 @@ export async function getDemographicsByDistrict(districtId: number) {
     .orderBy(demographics.year, demographics.community);
 }
 
-export async function getAllInfrastructure() {
+export async function getAllInfrastructure(city?: string) {
   const db = await getDb();
   if (!db) return [];
   
-  const { communityInfrastructure } = await import("../drizzle/schema");
+  const { communityInfrastructure, districts } = await import("../drizzle/schema");
+  
+  if (city) {
+    return await db
+      .select({
+        id: communityInfrastructure.id,
+        districtId: communityInfrastructure.districtId,
+        type: communityInfrastructure.type,
+        name: communityInfrastructure.name,
+        community: communityInfrastructure.community,
+        latitude: communityInfrastructure.latitude,
+        longitude: communityInfrastructure.longitude,
+        address: communityInfrastructure.address,
+      })
+      .from(communityInfrastructure)
+      .innerJoin(districts, eq(communityInfrastructure.districtId, districts.id))
+      .where(eq(districts.city, city));
+  }
+  
   return await db.select().from(communityInfrastructure);
 }
 
@@ -256,5 +274,50 @@ export async function getPropertyPricesByDistrict(districtId: number) {
     .select()
     .from(propertyPrices)
     .where(eq(propertyPrices.districtId, districtId))
+    .orderBy(propertyPrices.year, propertyPrices.month);
+}
+
+export async function getAllDemographics(city?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { demographics, districts } = await import("../drizzle/schema");
+  
+  if (city) {
+    // Get demographics for specific city by joining with districts
+    return await db
+      .select({
+        id: demographics.id,
+        districtId: demographics.districtId,
+        community: demographics.community,
+        population: demographics.population,
+        year: demographics.year,
+        percentageOfDistrict: demographics.percentageOfDistrict,
+      })
+      .from(demographics)
+      .innerJoin(districts, eq(demographics.districtId, districts.id))
+      .where(eq(districts.city, city));
+  }
+  
+  return await db.select().from(demographics);
+}
+
+export async function getPropertyPricesByCity(city: string) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { propertyPrices, districts } = await import("../drizzle/schema");
+  
+  return await db
+    .select({
+      id: propertyPrices.id,
+      districtId: propertyPrices.districtId,
+      year: propertyPrices.year,
+      month: propertyPrices.month,
+      averagePricePerSqm: propertyPrices.averagePricePerSqm,
+    })
+    .from(propertyPrices)
+    .innerJoin(districts, eq(propertyPrices.districtId, districts.id))
+    .where(eq(districts.city, city))
     .orderBy(propertyPrices.year, propertyPrices.month);
 }

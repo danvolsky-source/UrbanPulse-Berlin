@@ -201,7 +201,14 @@ export default function Home() {
       <main className="container py-12">
         {/* Demographic Snapshot */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Demographic Snapshot: {selectedCity}</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Demographic Snapshot: {selectedCity}</h2>
+            <Link href={`/city/${encodeURIComponent(selectedCity)}`}>
+              <Button variant="outline" size="sm">
+                View Detailed City Profile →
+              </Button>
+            </Link>
+          </div>
           
           {/* Religious Infrastructure */}
           <div className="mb-8">

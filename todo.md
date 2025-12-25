@@ -162,4 +162,27 @@
 - [x] Update city selector UI - already dynamic, automatically includes new cities
 - [x] Update CityComparison page to support all 9 cities
 - [x] Test all features with new cities - All 10 tests passing
+- [x] Create checkpoint (version: 3d550298)
+
+## Nor## North American Cities Expansion
+- [x] Create seed script for Washington D.C., New York, Toronto, Los Angeles, Chicago
+- [x] Add districts for each city (Washington D.C.: 15, New York: 20, Toronto: 15, Los Angeles: 18, Chicago: 16)
+- [x] Add demographic data with North American communities (Hispanic, African American, Asian, European, Middle Eastern)
+- [x] Add infrastructure data (mosques, churches, synagogues)
+- [x] Add property price data (5 years historical)
+- [x] Run seed script and populate database
+- [x] All 14 cities now in database (4 German + 5 European + 5 North American)
+
+## City Detail Pages
+- [x] Create CityDetail component with tabs (Overview, Demographics, Infrastructure, Investment)
+- [x] Add city history and cultural features section for all 14 cities
+- [x] Add investment insights and recommendations
+- [x] Add property price trend charts with 5-year appreciation
+- [x] Add demographic trend charts by community
+- [x] Add infrastructure growth charts (mosques, churches, synagogues)
+- [x] Add routing for /city/:name in App.tsx
+- [x] Add navigation links from Home page
+- [x] Create missing API endpoints (getCitySummary, getDemographics, getInfrastructure, getPropertyPrices)
+- [x] Add missing database functions (getAllDemographics, getPropertyPricesByCity)
+- [x] Test all city detail pages - All 10 tests passing
 - [ ] Create checkpoint

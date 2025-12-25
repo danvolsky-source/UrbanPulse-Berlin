@@ -48,6 +48,50 @@ export const appRouter = router({
       const { getCities } = await import("./db");
       return await getCities();
     }),
+    getCitySummary: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "city" in val) {
+          return val as { city: string };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getCitySummaryHistory } = await import("./db");
+        return await getCitySummaryHistory(input.city);
+      }),
+    getDemographics: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "city" in val) {
+          return val as { city: string };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getAllDemographics } = await import("./db");
+        return await getAllDemographics(input.city);
+      }),
+    getInfrastructure: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "city" in val) {
+          return val as { city: string };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getAllInfrastructure } = await import("./db");
+        return await getAllInfrastructure(input.city);
+      }),
+    getPropertyPrices: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "city" in val) {
+          return val as { city: string };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getPropertyPricesByCity } = await import("./db");
+        return await getPropertyPricesByCity(input.city);
+      }),
   }),
 
   demographics: router({
