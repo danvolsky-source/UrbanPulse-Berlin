@@ -50,3 +50,15 @@
 - [ ] Final testing
 - [ ] Save checkpoint
 - [ ] Deliver to user
+
+## CRITICAL FIXES (Pre-Launch - Must Do)
+- [x] Fix Government Impact data calculations (unemployment, social benefits, tax rate)
+- [x] Translate all Russian content to English
+- [x] Improve homepage hero with shocking statistics
+- [ ] Add country filter to Government Impact page
+- [ ] Move AI Insights section higher on page
+- [x] Fix typo: "Fibors" → "Floors"
+- [ ] Add country detection and personalization
+- [ ] Improve AI Insights critical question (more personal)
+- [ ] Add social proof to homepage
+- [ ] Add share buttons to Government Impact

@@ -64,16 +64,26 @@ export default function Home() {
             />
           </div>
           
-          {/* Tagline */}
-          <p className="text-2xl md:text-3xl text-slate-300 mb-6 max-w-4xl mx-auto font-light leading-relaxed">
-            Feel the <span className="text-cyan-400 font-semibold">heartbeat</span> of cities.
-          </p>
-          <p className="text-lg text-slate-400 mb-12 max-w-3xl mx-auto">
-            Track how immigration, demographics, and community growth reshape urban landscapes across 15 major cities.
-          </p>
+          {/* Tagline with Shocking Stats */}
+          <div className="mb-8">
+            <p className="text-3xl md:text-4xl text-white font-bold mb-4 max-w-4xl mx-auto leading-tight">
+              <span className="text-rose-400">+52% Immigration</span> → <span className="text-orange-400">+35% Property Prices</span>
+            </p>
+            <p className="text-xl md:text-2xl text-slate-300 mb-6 max-w-4xl mx-auto font-light">
+              Discover how <span className="text-cyan-400 font-semibold">government decisions</span> reshaped your neighborhood's value
+            </p>
+          </div>
+          
+          {/* CTA Button */}
+          <Link href="/government">
+            <button className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white font-semibold px-8 py-4 rounded-lg text-lg mb-12 transition-all shadow-lg hover:shadow-xl hover:scale-105">
+              <AlertTriangle className="inline-block w-5 h-5 mr-2 -mt-1" />
+              See Government Impact Analysis →
+            </button>
+          </Link>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
             <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-6 hover:border-cyan-500/50 transition-all">
               <MapPin className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
               <p className="text-3xl font-bold text-white mb-1">15</p>

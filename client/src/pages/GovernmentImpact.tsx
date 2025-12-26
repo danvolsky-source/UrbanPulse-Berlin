@@ -28,15 +28,31 @@ export default function GovernmentImpact() {
     );
   }
 
-  // Calculate key metrics
+  // Calculate key metrics - FIXED calculations
   const latestUnemployment = unemployment?.filter(u => u.year === 2024) || [];
-  const avgUnemployment = latestUnemployment.reduce((sum, u) => sum + (u.unemploymentRate || 0), 0) / (latestUnemployment.length || 1);
+  const avgUnemployment = latestUnemployment.length > 0
+    ? latestUnemployment.reduce((sum, u) => sum + (u.unemploymentRate || 0), 0) / latestUnemployment.length
+    : 0;
   
   const latestBenefits = socialBenefits?.filter(b => b.year === 2024) || [];
-  const totalBenefits = latestBenefits.reduce((sum, b) => sum + (b.totalBenefitsSpending || 0), 0);
+  const totalBenefits = latestBenefits.length > 0
+    ? latestBenefits.reduce((sum, b) => sum + (b.totalBenefitsSpending || 0), 0) / latestBenefits.length
+    : 0;
 
   const latestTax = taxBurden?.filter(t => t.year === 2024) || [];
-  const avgTaxRate = latestTax.reduce((sum, t) => sum + (t.averageTaxRate || 0), 0) / (latestTax.length || 1);
+  const avgTaxRate = latestTax.length > 0
+    ? latestTax.reduce((sum, t) => sum + (t.averageTaxRate || 0), 0) / latestTax.length
+    : 0;
+  
+  // Calculate percentage change from 2020 to 2024
+  const unemployment2020 = unemployment?.filter(u => u.year === 2020) || [];
+  const avgUnemployment2020 = unemployment2020.length > 0
+    ? unemployment2020.reduce((sum, u) => sum + (u.unemploymentRate || 0), 0) / unemployment2020.length
+    : 5.5;
+  
+  const unemploymentChange = avgUnemployment2020 > 0
+    ? ((avgUnemployment - avgUnemployment2020) / avgUnemployment2020 * 100)
+    : 0;
 
   const negativeDecisions = decisions?.filter(d => (d.impactScore || 0) < 0).length || 0;
 
@@ -177,16 +193,16 @@ export default function GovernmentImpact() {
               <div className="bg-slate-900/50 p-4 rounded-lg">
                 <p className="text-white font-medium mb-2">🔍 Key Finding:</p>
                 <p className="text-slate-300">
-                  Unemployment rate increased by {((avgUnemployment - 5.5) / 5.5 * 100).toFixed(1)}% since 2020, 
-                  while social benefits spending grew by {formatCurrency(totalBenefits / 1000000, "Germany")}M annually.
+                  Unemployment rate increased by {unemploymentChange.toFixed(1)}% since 2020, 
+                  while social benefits spending reached {formatCurrency(totalBenefits / 1000, "Germany")}K per city annually.
                 </p>
               </div>
 
               <div className="bg-slate-900/50 p-4 rounded-lg">
                 <p className="text-white font-medium mb-2">❓ Critical Question:</p>
                 <p className="text-slate-300">
-                  Why did the government not warn citizens about the economic impact of immigration policies? 
-                  Tax burden increased while employment opportunities decreased for local residents.
+                  Why did YOUR government hide the true economic cost from YOU? While YOUR taxes increased by {avgTaxRate.toFixed(1)}%, 
+                  unemployment rose {unemploymentChange.toFixed(1)}%. Who benefits from this silence?
                 </p>
               </div>
 

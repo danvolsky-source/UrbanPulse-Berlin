@@ -90,7 +90,7 @@ export default function CityDetail() {
     district: cityDistricts[0]?.name || "Gesundbrunnen",
     price: "€ 4,230",
     area: "23 m²",
-    fibors: "4",
+    floors: "4",
   };
 
   // Property prices chart data
@@ -274,8 +274,8 @@ export default function CityDetail() {
                 </div>
               </div>
               <div>
-                <p className="text-xs text-slate-400">Fibors</p>
-                <p className="text-sm font-semibold text-slate-100">{propertyData.fibors}</p>
+                <p className="text-xs text-slate-400">Floors</p>
+                <p className="text-sm font-semibold text-slate-100">{propertyData.floors}</p>
               </div>
             </CardContent>
           </Card>
@@ -537,7 +537,7 @@ export default function CityDetail() {
                   <span className="text-slate-100">75 m²</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-400">Fibors</span>
+                  <span className="text-slate-400">Floors</span>
                   <span className="text-slate-100">4</span>
                 </div>
               </div>
@@ -591,7 +591,7 @@ export default function CityDetail() {
                     <span className="text-slate-100">4,420</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-400">Fibors</span>
+                    <span className="text-slate-400">Floors</span>
                     <span className="text-slate-100">4</span>
                   </div>
                 </div>
