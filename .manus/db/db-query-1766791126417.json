@@ -1,0 +1,35 @@
+{
+  "query": "SELECT DISTINCT pp.year, pp.month, COUNT(*) as records FROM propertyPrices pp JOIN districts d ON pp.districtId = d.id WHERE d.city = 'Berlin' GROUP BY pp.year, pp.month ORDER BY pp.year, pp.month;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute SELECT DISTINCT pp.year, pp.month, COUNT(*) as records FROM propertyPrices pp JOIN districts d ON pp.districtId = d.id WHERE d.city = 'Berlin' GROUP BY pp.year, pp.month ORDER BY pp.year, pp.month;",
+  "rows": [
+    {
+      "year": "2020",
+      "month": "1",
+      "records": "3"
+    },
+    {
+      "year": "2021",
+      "month": "1",
+      "records": "3"
+    },
+    {
+      "year": "2022",
+      "month": "1",
+      "records": "3"
+    },
+    {
+      "year": "2023",
+      "month": "1",
+      "records": "3"
+    },
+    {
+      "year": "2024",
+      "month": "1",
+      "records": "3"
+    }
+  ],
+  "messages": [],
+  "stdout": "year\tmonth\trecords\n2020\t1\t3\n2021\t1\t3\n2022\t1\t3\n2023\t1\t3\n2024\t1\t3\n",
+  "stderr": "",
+  "execution_time_ms": 1610
+}

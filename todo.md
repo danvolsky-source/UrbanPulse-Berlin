@@ -45,3 +45,15 @@
 - [x] Test toggle switches show/hide overlays
 - [x] Test all interactions work smoothly
 - [ ] Create checkpoint
+
+## Feature: Professional Berlin Grid Heatmap
+- [x] Replace childish SVG map with professional grid visualization
+- [x] Implement 80x57 fine-grained grid with gradient color palette
+- [x] Add d3-scale and d3-scale-chromatic for Turbo color interpolation
+- [x] Create berlinGrid API endpoint in server/routers.ts
+- [x] Create getBerlinGridData function in server/db.ts
+- [x] Build BerlinGridMap component with hover tooltips
+- [x] Add beautiful gradient legend with price range
+- [x] Implement hover interactivity showing district name and price
+- [x] Optimize performance by removing heavy glow filters
+- [x] Test hover tooltips display correct district and price data

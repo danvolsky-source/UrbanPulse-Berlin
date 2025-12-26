@@ -207,6 +207,23 @@ export const appRouter = router({
       }),
   }),
 
+  berlinGrid: publicProcedure
+    .input((val: unknown) => {
+      const defaults = { year: 2024, month: 6, cellsPerRow: 80 };
+      if (typeof val === "object" && val !== null) {
+        return {
+          year: "year" in val && typeof val.year === "number" ? val.year : defaults.year,
+          month: "month" in val && typeof val.month === "number" ? val.month : defaults.month,
+          cellsPerRow: "cellsPerRow" in val && typeof val.cellsPerRow === "number" ? val.cellsPerRow : defaults.cellsPerRow,
+        };
+      }
+      return defaults;
+    })
+    .query(async ({ input }) => {
+      const { getBerlinGridData } = await import("./db");
+      return await getBerlinGridData(input.year, input.month, input.cellsPerRow);
+    }),
+
   communityGrowth: router({
     getAll: publicProcedure.query(async () => {
       const { getAllCommunityGrowth } = await import("./db");

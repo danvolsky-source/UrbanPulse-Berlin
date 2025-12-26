@@ -9,6 +9,7 @@ import { ArrowLeft, TrendingUp, TrendingDown, Globe, DollarSign, AlertCircle, Ho
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect } from "react";
 import { DistrictHeatmap } from "@/components/DistrictHeatmap";
+import { BerlinGridMap } from "@/components/BerlinGridMap";
 
 export default function CityDetail() {
   const { city } = useParams();
@@ -305,20 +306,24 @@ export default function CityDetail() {
           {/* Map */}
           <Card className="bg-slate-900/50 border-slate-800 flex-1" style={{ minHeight: "500px" }}>
             <CardContent className="p-0 h-full relative" style={{ minHeight: "500px" }}>
-              <DistrictHeatmap
-                className="w-full h-full"
-                districts={cityDistricts?.map((d: any, idx: number) => ({
-                  id: d.id,
-                  name: d.name,
-                  priceLevel: ((idx % 7) + 1),
-                }))}
-                cityName={cityName}
-                selectedYear={selectedYear}
-                selectedEvent={selectedEventIndex}
-                highlightedDistricts={highlightedDistricts}
-                showAirQuality={airQualityFilter}
-                showGreenery={greeneryFilter}
-              />
+              {cityName === "Berlin" ? (
+                <BerlinGridMap year={selectedYear} month={1} />
+              ) : (
+                <DistrictHeatmap
+                  className="w-full h-full"
+                  districts={cityDistricts?.map((d: any, idx: number) => ({
+                    id: d.id,
+                    name: d.name,
+                    priceLevel: ((idx % 7) + 1),
+                  }))}
+                  cityName={cityName}
+                  selectedYear={selectedYear}
+                  selectedEvent={selectedEventIndex}
+                  highlightedDistricts={highlightedDistricts}
+                  showAirQuality={airQualityFilter}
+                  showGreenery={greeneryFilter}
+                />
+              )}
               {/* Price Legend */}
               <div className="absolute bottom-4 left-4 bg-slate-900/90 p-3 rounded-lg border border-slate-700">
                 <p className="text-xs text-slate-300 mb-2">Prices</p>

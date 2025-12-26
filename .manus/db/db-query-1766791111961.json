@@ -1,0 +1,150 @@
+{
+  "query": "SELECT d.name, d.city, pp.year, pp.month, pp.averagePricePerSqm FROM districts d LEFT JOIN propertyPrices pp ON d.id = pp.districtId WHERE d.city = 'Berlin' LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute SELECT d.name, d.city, pp.year, pp.month, pp.averagePricePerSqm FROM districts d LEFT JOIN propertyPrices pp ON d.id = pp.districtId WHERE d.city = 'Berlin' LIMIT 20;",
+  "rows": [
+    {
+      "name": "Neukölln",
+      "city": "Berlin",
+      "year": "2020",
+      "month": "1",
+      "averagePricePerSqm": "4200"
+    },
+    {
+      "name": "Neukölln",
+      "city": "Berlin",
+      "year": "2021",
+      "month": "1",
+      "averagePricePerSqm": "4500"
+    },
+    {
+      "name": "Neukölln",
+      "city": "Berlin",
+      "year": "2022",
+      "month": "1",
+      "averagePricePerSqm": "4800"
+    },
+    {
+      "name": "Neukölln",
+      "city": "Berlin",
+      "year": "2023",
+      "month": "1",
+      "averagePricePerSqm": "5100"
+    },
+    {
+      "name": "Neukölln",
+      "city": "Berlin",
+      "year": "2024",
+      "month": "1",
+      "averagePricePerSqm": "5400"
+    },
+    {
+      "name": "Charlottenburg-Wilmersdorf",
+      "city": "Berlin",
+      "year": "2020",
+      "month": "1",
+      "averagePricePerSqm": "6500"
+    },
+    {
+      "name": "Charlottenburg-Wilmersdorf",
+      "city": "Berlin",
+      "year": "2021",
+      "month": "1",
+      "averagePricePerSqm": "6700"
+    },
+    {
+      "name": "Charlottenburg-Wilmersdorf",
+      "city": "Berlin",
+      "year": "2022",
+      "month": "1",
+      "averagePricePerSqm": "6900"
+    },
+    {
+      "name": "Charlottenburg-Wilmersdorf",
+      "city": "Berlin",
+      "year": "2023",
+      "month": "1",
+      "averagePricePerSqm": "7100"
+    },
+    {
+      "name": "Charlottenburg-Wilmersdorf",
+      "city": "Berlin",
+      "year": "2024",
+      "month": "1",
+      "averagePricePerSqm": "7300"
+    },
+    {
+      "name": "Marzahn-Hellersdorf",
+      "city": "Berlin",
+      "year": "2020",
+      "month": "1",
+      "averagePricePerSqm": "2800"
+    },
+    {
+      "name": "Marzahn-Hellersdorf",
+      "city": "Berlin",
+      "year": "2021",
+      "month": "1",
+      "averagePricePerSqm": "2900"
+    },
+    {
+      "name": "Marzahn-Hellersdorf",
+      "city": "Berlin",
+      "year": "2022",
+      "month": "1",
+      "averagePricePerSqm": "3000"
+    },
+    {
+      "name": "Marzahn-Hellersdorf",
+      "city": "Berlin",
+      "year": "2023",
+      "month": "1",
+      "averagePricePerSqm": "3100"
+    },
+    {
+      "name": "Marzahn-Hellersdorf",
+      "city": "Berlin",
+      "year": "2024",
+      "month": "1",
+      "averagePricePerSqm": "3200"
+    },
+    {
+      "name": "Mitte",
+      "city": "Berlin",
+      "year": "NULL",
+      "month": "NULL",
+      "averagePricePerSqm": "NULL"
+    },
+    {
+      "name": "Friedrichshain-Kreuzberg",
+      "city": "Berlin",
+      "year": "NULL",
+      "month": "NULL",
+      "averagePricePerSqm": "NULL"
+    },
+    {
+      "name": "Pankow",
+      "city": "Berlin",
+      "year": "NULL",
+      "month": "NULL",
+      "averagePricePerSqm": "NULL"
+    },
+    {
+      "name": "Spandau",
+      "city": "Berlin",
+      "year": "NULL",
+      "month": "NULL",
+      "averagePricePerSqm": "NULL"
+    },
+    {
+      "name": "Steglitz-Zehlendorf",
+      "city": "Berlin",
+      "year": "NULL",
+      "month": "NULL",
+      "averagePricePerSqm": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\tcity\tyear\tmonth\taveragePricePerSqm\nNeukölln\tBerlin\t2020\t1\t4200\nNeukölln\tBerlin\t2021\t1\t4500\nNeukölln\tBerlin\t2022\t1\t4800\nNeukölln\tBerlin\t2023\t1\t5100\nNeukölln\tBerlin\t2024\t1\t5400\nCharlottenburg-Wilmersdorf\tBerlin\t2020\t1\t6500\nCharlottenburg-Wilmersdorf\tBerlin\t2021\t1\t6700\nCharlottenburg-Wilmersdorf\tBerlin\t2022\t1\t6900\nCharlottenburg-Wilmersdorf\tBerlin\t2023\t1\t7100\nCharlottenburg-Wilmersdorf\tBerlin\t2024\t1\t7300\nMarzahn-Hellersdorf\tBerlin\t2020\t1\t2800\nMarzahn-Hellersdorf\tBerlin\t2021\t1\t2900\nMarzahn-Hellersdorf\tBerlin\t2022\t1\t3000\nMarzahn-Hellersdorf\tBerlin\t2023\t1\t3100\nMarzahn-Hellersdorf\tBerlin\t2024\t1\t3200\nMitte\tBerlin\tNULL\tNULL\tNULL\nFriedrichshain-Kreuzberg\tBerlin\tNULL\tNULL\tNULL\nPankow\tBerlin\tNULL\tNULL\tNULL\nSpandau\tBerlin\tNULL\tNULL\tNULL\nSteglitz-Zehlendorf\tBerlin\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1654
+}

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -661,4 +661,68 @@ export async function getAllGovernmentDecisions() {
     return [];
   }
   return await db.select().from(schema.governmentDecisions).orderBy(schema.governmentDecisions.country, schema.governmentDecisions.year);
+}
+
+// Berlin Grid Map data
+
+export async function getBerlinGridData(year: number, month: number, cellsPerRow: number) {
+  const db = await getDb();
+  if (!db) return { cellsPerRow, districts: [] };
+  
+  const schema = await import("../drizzle/schema");
+  const { districts, propertyPrices } = schema;
+  
+  // 1. Get all Berlin districts
+  const berlinDistricts = await db
+    .select()
+    .from(districts)
+    .where(eq(districts.city, "Berlin"));
+  
+  if (berlinDistricts.length === 0) {
+    return { cellsPerRow, districts: [] };
+  }
+  
+  const districtIds = berlinDistricts.map((d) => d.id);
+  
+  // 2. Get average prices by district for the specified year/month
+  const priceRecords = await db
+    .select({
+      districtId: propertyPrices.districtId,
+      avgPrice: propertyPrices.averagePricePerSqm,
+    })
+    .from(propertyPrices)
+    .where(
+      and(
+        inArray(propertyPrices.districtId, districtIds),
+        eq(propertyPrices.year, year),
+        eq(propertyPrices.month, month)
+      )
+    );
+  
+  // 3. Calculate average price per district
+  const priceByDistrict: Record<number, number> = {};
+  const districtPrices: Record<number, number[]> = {};
+  
+  priceRecords.forEach((p) => {
+    if (!districtPrices[p.districtId]) {
+      districtPrices[p.districtId] = [];
+    }
+    districtPrices[p.districtId].push(p.avgPrice);
+  });
+  
+  Object.keys(districtPrices).forEach((districtIdStr) => {
+    const districtId = Number(districtIdStr);
+    const prices = districtPrices[districtId];
+    const avg = prices.reduce((sum, p) => sum + p, 0) / prices.length;
+    priceByDistrict[districtId] = Math.round(avg);
+  });
+  
+  return {
+    cellsPerRow,
+    districts: berlinDistricts.map((d) => ({
+      id: d.id,
+      name: d.name,
+      avgPrice: priceByDistrict[d.id] ?? null,
+    })),
+  };
 }

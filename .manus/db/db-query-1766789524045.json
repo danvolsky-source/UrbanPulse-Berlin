@@ -1,0 +1,85 @@
+{
+  "query": "SELECT name, country, population FROM cities ORDER BY country, name;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute SELECT name, country, population FROM cities ORDER BY country, name;",
+  "rows": [
+    {
+      "name": "Vienna",
+      "country": "Austria",
+      "population": "1920949"
+    },
+    {
+      "name": "Brussels",
+      "country": "Belgium",
+      "population": "1218255"
+    },
+    {
+      "name": "Toronto",
+      "country": "Canada",
+      "population": "2930000"
+    },
+    {
+      "name": "Paris",
+      "country": "France",
+      "population": "2161000"
+    },
+    {
+      "name": "Berlin",
+      "country": "Germany",
+      "population": "3850809"
+    },
+    {
+      "name": "Cologne",
+      "country": "Germany",
+      "population": "1087863"
+    },
+    {
+      "name": "Hamburg",
+      "country": "Germany",
+      "population": "1906411"
+    },
+    {
+      "name": "Munich",
+      "country": "Germany",
+      "population": "1488202"
+    },
+    {
+      "name": "Rome",
+      "country": "Italy",
+      "population": "2860009"
+    },
+    {
+      "name": "Amsterdam",
+      "country": "Netherlands",
+      "population": "872680"
+    },
+    {
+      "name": "London",
+      "country": "United Kingdom",
+      "population": "8982000"
+    },
+    {
+      "name": "Chicago",
+      "country": "United States",
+      "population": "2746388"
+    },
+    {
+      "name": "Los Angeles",
+      "country": "United States",
+      "population": "3979576"
+    },
+    {
+      "name": "New York",
+      "country": "United States",
+      "population": "8336817"
+    },
+    {
+      "name": "Washington D.C.",
+      "country": "United States",
+      "population": "689545"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\tcountry\tpopulation\nVienna\tAustria\t1920949\nBrussels\tBelgium\t1218255\nToronto\tCanada\t2930000\nParis\tFrance\t2161000\nBerlin\tGermany\t3850809\nCologne\tGermany\t1087863\nHamburg\tGermany\t1906411\nMunich\tGermany\t1488202\nRome\tItaly\t2860009\nAmsterdam\tNetherlands\t872680\nLondon\tUnited Kingdom\t8982000\nChicago\tUnited States\t2746388\nLos Angeles\tUnited States\t3979576\nNew York\tUnited States\t8336817\nWashington D.C.\tUnited States\t689545\n",
+  "stderr": "",
+  "execution_time_ms": 1656
+}
