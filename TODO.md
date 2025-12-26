@@ -110,3 +110,13 @@
 - [x] Add hover tooltips showing city name and stats
 - [x] Add legend showing marker types
 - [x] Test all city markers clickable (Hamburg tested successfully)
+
+## Custom SVG Europe Map (CRITICAL - NO COPYRIGHTED IMAGES)
+- [x] Remove Shutterstock copyrighted image
+- [x] Create custom SVG Europe map with country paths
+- [x] Add Germany, France, UK, Spain, Italy, Poland, Scandinavia paths
+- [x] Style countries with subtle colors (blue, yellow, red, green, purple, indigo)
+- [x] Add pulsing city markers on top of SVG
+- [ ] Test all city markers clickable
+- [x] Ensure responsive design
+- [ ] Test in browser
