@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MapPin, Users, TrendingUp, Leaf, Car, AlertTriangle } from "lucide-react";
 import { Link } from "wouter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // City poster mapping
 const cityPosters: Record<string, string> = {
@@ -27,6 +27,43 @@ const cityPosters: Record<string, string> = {
 export default function Home() {
   const { data: cities, isLoading } = trpc.cities.list.useQuery();
   const [hoveredCity, setHoveredCity] = useState<string | null>(null);
+  const [userCountry, setUserCountry] = useState<string | null>(null);
+
+  // Detect user's country via IP geolocation
+  useEffect(() => {
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        const country = data.country_name;
+        setUserCountry(country);
+        console.log('Detected country:', country);
+      })
+      .catch(err => {
+        console.error('Failed to detect country:', err);
+        setUserCountry('Germany'); // Default to Germany
+      });
+  }, []);
+
+  // Sort cities: user's country first, then others
+  const sortedCities = cities ? [...cities].sort((a, b) => {
+    if (!userCountry) return 0; // No sorting if country not detected
+    
+    const aIsUserCountry = 
+      (userCountry === 'Germany' && a.country === 'Germany') ||
+      (userCountry === 'France' && a.country === 'France') ||
+      ((userCountry === 'United Kingdom' || userCountry === 'UK') && a.country === 'United Kingdom') ||
+      ((userCountry === 'United States' || userCountry === 'USA') && a.country === 'United States');
+    
+    const bIsUserCountry = 
+      (userCountry === 'Germany' && b.country === 'Germany') ||
+      (userCountry === 'France' && b.country === 'France') ||
+      ((userCountry === 'United Kingdom' || userCountry === 'UK') && b.country === 'United Kingdom') ||
+      ((userCountry === 'United States' || userCountry === 'USA') && b.country === 'United States');
+    
+    if (aIsUserCountry && !bIsUserCountry) return -1;
+    if (!aIsUserCountry && bIsUserCountry) return 1;
+    return 0;
+  }) : [];
 
   if (isLoading) {
     return (
@@ -107,13 +144,14 @@ export default function Home() {
       <div className="container pb-16">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-slate-100 mb-3">
-            Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">Berlin</span>
+            Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">Cities</span>
+            {userCountry && <span className="text-slate-400 text-2xl ml-2">in {userCountry}</span>}
           </h2>
           <p className="text-slate-400">Interactive district analysis with real-time demographic insights</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {cities?.filter((city: any) => city.name === "Berlin").map((city: any) => (
+          {sortedCities.map((city: any) => (
             <Link key={city.id} href={`/city/${city.name}`}>
               <Card 
                 className="group relative overflow-hidden bg-slate-900/50 border-slate-800 hover:border-cyan-500/50 transition-all duration-300 cursor-pointer h-full"

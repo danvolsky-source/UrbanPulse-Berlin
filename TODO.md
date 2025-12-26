@@ -89,3 +89,14 @@
 - [x] Fixed unemployment rate calculations (divide by 10)
 - [x] Added dataSource field to schema
 - [x] Display data sources on government decisions
+
+## Auto Country Detection (MUST DO)
+- [x] Add geolocation API to detect user's country by IP
+- [x] Show ALL 15 cities on homepage
+- [x] Sort cities: user's country FIRST, then others
+- [x] Update title to show detected country
+- [x] German cities first if user from Germany
+- [x] French cities first if user from France
+- [x] UK cities first if user from UK
+- [x] US cities first if user from USA
+- [ ] Test with VPN/different locations
