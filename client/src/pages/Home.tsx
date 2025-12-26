@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MapPin, Users, TrendingUp, Leaf, Car, AlertTriangle } from "lucide-react";
 import { Link } from "wouter";
+import InteractiveEuropeMap from "@/components/InteractiveEuropeMap";
 import { useState, useEffect } from "react";
 
 // City poster mapping
@@ -150,75 +151,8 @@ export default function Home() {
           <p className="text-slate-400">Interactive district analysis with real-time demographic insights</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {sortedCities.map((city: any) => (
-            <Link key={city.id} href={`/city/${city.name}`}>
-              <Card 
-                className="group relative overflow-hidden bg-slate-900/50 border-slate-800 hover:border-cyan-500/50 transition-all duration-300 cursor-pointer h-full"
-                onMouseEnter={() => setHoveredCity(city.name)}
-                onMouseLeave={() => setHoveredCity(null)}
-              >
-                <CardContent className="p-0">
-                  {/* City Poster Image */}
-                  <div className="relative aspect-square overflow-hidden">
-                    <img
-                      src={cityPosters[city.name]}
-                      alt={`${city.name} floating island`}
-                      className={`w-full h-full object-cover transition-transform duration-500 ${
-                        hoveredCity === city.name ? "scale-110" : "scale-100"
-                      }`}
-                    />
-                    
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                    
-                    {/* City Name Badge */}
-                    <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-sm px-4 py-2 rounded-full border border-cyan-500/30">
-                      <h3 className="text-lg font-bold text-cyan-400">{city.name}</h3>
-                    </div>
-
-                    {/* Stats Overlay - Shows on Hover */}
-                    <div className={`absolute inset-0 bg-slate-950/95 backdrop-blur-sm flex flex-col items-center justify-center gap-4 transition-opacity duration-300 ${
-                      hoveredCity === city.name ? "opacity-100" : "opacity-0"
-                    }`}>
-                      <div className="text-center space-y-3">
-                        <div>
-                          <p className="text-slate-400 text-sm">Population</p>
-                          <p className="text-2xl font-bold text-cyan-400">
-                            {city.population.toLocaleString()}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-slate-400 text-sm">Districts</p>
-                          <p className="text-xl font-semibold text-slate-200">
-                            {city.districtCount}
-                          </p>
-                        </div>
-                        <div className="pt-2">
-                          <span className="text-cyan-400 text-sm font-medium group-hover:underline">
-                            View Details →
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bottom Info Bar */}
-                  <div className="p-4 bg-slate-900/80 backdrop-blur-sm border-t border-slate-800">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-400">
-                        {city.country}
-                      </span>
-                      <span className="text-cyan-400 font-medium">
-                        Explore →
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {/* Interactive Europe Map */}
+        <InteractiveEuropeMap cities={cities || []} userCountry={userCountry} />
       </div>
 
       {/* Critical Analysis Banner */}

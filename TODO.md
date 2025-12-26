@@ -100,3 +100,13 @@
 - [x] UK cities first if user from UK
 - [x] US cities first if user from USA
 - [ ] Test with VPN/different locations
+
+## Interactive Europe Map (CRITICAL)
+- [x] Create Europe map component with image background
+- [x] Add 15 city markers at correct coordinates
+- [x] Add pulsing animation to markers
+- [x] Make user's country cities pulse brighter/larger (cyan vs blue)
+- [x] Add click handlers to navigate to city detail pages
+- [x] Add hover tooltips showing city name and stats
+- [x] Add legend showing marker types
+- [ ] Test all city markers clickable
