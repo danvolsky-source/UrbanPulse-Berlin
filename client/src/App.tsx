@@ -14,6 +14,7 @@ import CityDetail from "./pages/CityDetail";
 import Ecology from "./pages/Ecology";
 import Vehicles from "./pages/Vehicles";
 import CommunityImpact from "./pages/CommunityImpact";
+import GovernmentImpact from "./pages/GovernmentImpact";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -22,6 +23,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path="/map" component={MapView} />
       <Route path="/comparison" component={CityComparison} />
+      <Route path="/government" component={GovernmentImpact} />
       <Route path="/ecology" component={Ecology} />
       <Route path="/vehicles" component={Vehicles} />
       <Route path="/city/:city/impact" component={CommunityImpact} />

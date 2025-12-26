@@ -512,3 +512,153 @@ export async function getAllRentalPrices() {
   }
   return await db.select().from(schema.rentalPrices).orderBy(schema.rentalPrices.cityId, schema.rentalPrices.year);
 }
+
+// Unemployment queries
+
+export async function getUnemploymentByCity(cityId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.unemployment) {
+    console.error("unemployment table not found in schema");
+    return [];
+  }
+  return await db
+    .select()
+    .from(schema.unemployment)
+    .where(eq(schema.unemployment.cityId, cityId))
+    .orderBy(schema.unemployment.year);
+}
+
+export async function getAllUnemployment() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.unemployment) {
+    console.error("unemployment table not found in schema");
+    return [];
+  }
+  return await db.select().from(schema.unemployment).orderBy(schema.unemployment.cityId, schema.unemployment.year);
+}
+
+// Social Benefits queries
+
+export async function getSocialBenefitsByCity(cityId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.socialBenefits) {
+    console.error("socialBenefits table not found in schema");
+    return [];
+  }
+  return await db
+    .select()
+    .from(schema.socialBenefits)
+    .where(eq(schema.socialBenefits.cityId, cityId))
+    .orderBy(schema.socialBenefits.year);
+}
+
+export async function getAllSocialBenefits() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.socialBenefits) {
+    console.error("socialBenefits table not found in schema");
+    return [];
+  }
+  return await db.select().from(schema.socialBenefits).orderBy(schema.socialBenefits.cityId, schema.socialBenefits.year);
+}
+
+// Average Income queries
+
+export async function getAverageIncomeByCity(cityId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.averageIncome) {
+    console.error("averageIncome table not found in schema");
+    return [];
+  }
+  return await db
+    .select()
+    .from(schema.averageIncome)
+    .where(eq(schema.averageIncome.cityId, cityId))
+    .orderBy(schema.averageIncome.year);
+}
+
+export async function getAllAverageIncome() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.averageIncome) {
+    console.error("averageIncome table not found in schema");
+    return [];
+  }
+  return await db.select().from(schema.averageIncome).orderBy(schema.averageIncome.cityId, schema.averageIncome.year);
+}
+
+// Tax Burden queries
+
+export async function getTaxBurdenByCity(cityId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.taxBurden) {
+    console.error("taxBurden table not found in schema");
+    return [];
+  }
+  return await db
+    .select()
+    .from(schema.taxBurden)
+    .where(eq(schema.taxBurden.cityId, cityId))
+    .orderBy(schema.taxBurden.year);
+}
+
+export async function getAllTaxBurden() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.taxBurden) {
+    console.error("taxBurden table not found in schema");
+    return [];
+  }
+  return await db.select().from(schema.taxBurden).orderBy(schema.taxBurden.cityId, schema.taxBurden.year);
+}
+
+// Government Decisions queries
+
+export async function getGovernmentDecisionsByCountry(country: string) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.governmentDecisions) {
+    console.error("governmentDecisions table not found in schema");
+    return [];
+  }
+  return await db
+    .select()
+    .from(schema.governmentDecisions)
+    .where(eq(schema.governmentDecisions.country, country))
+    .orderBy(schema.governmentDecisions.year, schema.governmentDecisions.month);
+}
+
+export async function getAllGovernmentDecisions() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.governmentDecisions) {
+    console.error("governmentDecisions table not found in schema");
+    return [];
+  }
+  return await db.select().from(schema.governmentDecisions).orderBy(schema.governmentDecisions.country, schema.governmentDecisions.year);
+}

@@ -210,3 +210,100 @@ export const rentalPrices = mysqlTable("rentalPrices", {
 
 export type RentalPrice = typeof rentalPrices.$inferSelect;
 export type InsertRentalPrice = typeof rentalPrices.$inferInsert;
+
+/**
+ * Unemployment table - tracks unemployment rates by city and district
+ */
+export const unemployment = mysqlTable("unemployment", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId").notNull(),
+  districtId: int("districtId"),
+  year: int("year").notNull(),
+  unemploymentRate: int("unemploymentRate").notNull(), // percentage (e.g., 85 for 8.5%)
+  youthUnemploymentRate: int("youthUnemploymentRate").notNull(), // percentage for under 25
+  longTermUnemployed: int("longTermUnemployed").notNull(), // percentage unemployed >1 year
+  foreignerUnemploymentRate: int("foreignerUnemploymentRate").notNull(), // percentage among foreigners
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Unemployment = typeof unemployment.$inferSelect;
+export type InsertUnemployment = typeof unemployment.$inferInsert;
+
+/**
+ * Social Benefits table - tracks social welfare spending
+ */
+export const socialBenefits = mysqlTable("socialBenefits", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId").notNull(),
+  year: int("year").notNull(),
+  totalBenefitsSpending: int("totalBenefitsSpending").notNull(), // millions of euros
+  unemploymentBenefits: int("unemploymentBenefits").notNull(), // millions
+  housingBenefits: int("housingBenefits").notNull(), // millions
+  childBenefits: int("childBenefits").notNull(), // millions
+  refugeeBenefits: int("refugeeBenefits").notNull(), // millions
+  beneficiariesCount: int("beneficiariesCount").notNull(), // number of people
+  foreignerBeneficiariesPercent: int("foreignerBeneficiariesPercent").notNull(), // percentage
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SocialBenefit = typeof socialBenefits.$inferSelect;
+export type InsertSocialBenefit = typeof socialBenefits.$inferInsert;
+
+/**
+ * Average Income table - tracks income levels by city and district
+ */
+export const averageIncome = mysqlTable("averageIncome", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId").notNull(),
+  districtId: int("districtId"),
+  year: int("year").notNull(),
+  averageMonthlyIncome: int("averageMonthlyIncome").notNull(), // euros
+  medianMonthlyIncome: int("medianMonthlyIncome").notNull(), // euros
+  foreignerAverageIncome: int("foreignerAverageIncome").notNull(), // euros
+  incomeGrowthRate: int("incomeGrowthRate").notNull(), // percentage YoY
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AverageIncome = typeof averageIncome.$inferSelect;
+export type InsertAverageIncome = typeof averageIncome.$inferInsert;
+
+/**
+ * Tax Burden table - tracks taxation levels
+ */
+export const taxBurden = mysqlTable("taxBurden", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId").notNull(),
+  year: int("year").notNull(),
+  averageTaxRate: int("averageTaxRate").notNull(), // percentage of income
+  socialSecurityRate: int("socialSecurityRate").notNull(), // percentage
+  totalTaxRevenue: int("totalTaxRevenue").notNull(), // millions of euros
+  taxRevenuePerCapita: int("taxRevenuePerCapita").notNull(), // euros per person
+  socialSpendingPercent: int("socialSpendingPercent").notNull(), // % of budget on social programs
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TaxBurden = typeof taxBurden.$inferSelect;
+export type InsertTaxBurden = typeof taxBurden.$inferInsert;
+
+/**
+ * Government Decisions table - records policy decisions and their consequences
+ */
+export const governmentDecisions = mysqlTable("governmentDecisions", {
+  id: int("id").autoincrement().primaryKey(),
+  cityId: int("cityId"),
+  country: varchar("country", { length: 100 }).notNull(),
+  year: int("year").notNull(),
+  month: int("month").notNull(),
+  decisionType: varchar("decisionType", { length: 100 }).notNull(), // immigration_policy, welfare_reform, housing_policy, etc.
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  officialPromise: text("officialPromise").notNull(), // what government said would happen
+  actualOutcome: text("actualOutcome").notNull(), // what actually happened
+  impactScore: int("impactScore").notNull(), // 1-100 scale (negative or positive)
+  economicImpact: text("economicImpact"), // specific economic consequences
+  socialImpact: text("socialImpact"), // specific social consequences
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GovernmentDecision = typeof governmentDecisions.$inferSelect;
+export type InsertGovernmentDecision = typeof governmentDecisions.$inferInsert;

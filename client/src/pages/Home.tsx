@@ -1,7 +1,7 @@
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Users, TrendingUp, Leaf, Car } from "lucide-react";
+import { MapPin, Users, TrendingUp, Leaf, Car, AlertTriangle } from "lucide-react";
 import { Link } from "wouter";
 import { useState } from "react";
 
@@ -173,9 +173,34 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Critical Analysis Banner */}
+      <div className="container pb-8">
+        <Link href="/government">
+          <Card className="bg-gradient-to-r from-rose-500/10 via-orange-500/10 to-yellow-500/10 border-rose-500/30 hover:border-rose-500/50 transition-all cursor-pointer">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-4">
+                <div className="p-4 bg-rose-500/20 rounded-lg shrink-0">
+                  <AlertTriangle className="w-8 h-8 text-rose-400" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-2">Влияние решений правительства</h3>
+                  <p className="text-gray-300 text-sm">
+                    Что обещали vs что получили: анализ экономических последствий иммиграционной политики. 
+                    Безработица, налоги, социальные выплаты - цифры говорят сами за себя.
+                  </p>
+                </div>
+                <div className="text-rose-400 font-semibold shrink-0">
+                  Посмотреть →
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+
       {/* Features Section */}
       <div className="container pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-3">
@@ -214,6 +239,20 @@ export default function Home() {
               </div>
               <p className="text-slate-400 text-sm">
                 Property price trends and investment recommendations powered by AI
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900/50 border-slate-800 border-rose-500/30">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-rose-500/10 rounded-lg">
+                  <AlertTriangle className="w-6 h-6 text-rose-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-100">Government Impact</h3>
+              </div>
+              <p className="text-slate-400 text-sm">
+                Critical analysis of policy decisions and their real economic consequences
               </p>
             </CardContent>
           </Card>

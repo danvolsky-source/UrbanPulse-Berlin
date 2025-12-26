@@ -274,6 +274,96 @@ export const appRouter = router({
         return await getRentalPricesByCity(input.cityId);
       }),
   }),
+
+  unemployment: router({
+    getAll: publicProcedure.query(async () => {
+      const { getAllUnemployment } = await import("./db");
+      return await getAllUnemployment();
+    }),
+    getByCity: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getUnemploymentByCity } = await import("./db");
+        return await getUnemploymentByCity(input.cityId);
+      }),
+  }),
+
+  socialBenefits: router({
+    getAll: publicProcedure.query(async () => {
+      const { getAllSocialBenefits } = await import("./db");
+      return await getAllSocialBenefits();
+    }),
+    getByCity: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getSocialBenefitsByCity } = await import("./db");
+        return await getSocialBenefitsByCity(input.cityId);
+      }),
+  }),
+
+  averageIncome: router({
+    getAll: publicProcedure.query(async () => {
+      const { getAllAverageIncome } = await import("./db");
+      return await getAllAverageIncome();
+    }),
+    getByCity: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getAverageIncomeByCity } = await import("./db");
+        return await getAverageIncomeByCity(input.cityId);
+      }),
+  }),
+
+  taxBurden: router({
+    getAll: publicProcedure.query(async () => {
+      const { getAllTaxBurden } = await import("./db");
+      return await getAllTaxBurden();
+    }),
+    getByCity: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "cityId" in val) {
+          return val as { cityId: number };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getTaxBurdenByCity } = await import("./db");
+        return await getTaxBurdenByCity(input.cityId);
+      }),
+  }),
+
+  governmentDecisions: router({
+    getAll: publicProcedure.query(async () => {
+      const { getAllGovernmentDecisions } = await import("./db");
+      return await getAllGovernmentDecisions();
+    }),
+    getByCountry: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "country" in val) {
+          return val as { country: string };
+        }
+        throw new Error("Invalid input");
+      })
+      .query(async ({ input }) => {
+        const { getGovernmentDecisionsByCountry } = await import("./db");
+        return await getGovernmentDecisionsByCountry(input.country);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
