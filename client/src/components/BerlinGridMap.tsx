@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { trpc } from "../lib/trpc";
 import { scaleSequential } from "d3-scale";
 import { interpolateTurbo } from "d3-scale-chromatic";
+import { BERLIN_OUTLINE_PATH } from "../lib/berlinOutline";
 
 type BerlinGridMapProps = {
   year: number;
@@ -90,6 +91,13 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
         viewBox={`0 0 ${width} ${height}`}
         className="rounded-xl overflow-hidden"
       >
+        <defs>
+          {/* Berlin city outline as clipPath */}
+          <clipPath id="berlin-clip">
+            <path d={BERLIN_OUTLINE_PATH} />
+          </clipPath>
+        </defs>
+
         <rect
           x={0}
           y={0}
@@ -98,23 +106,32 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
           fill="#020617"
         />
 
-        {cells.map((c, idx) => (
-          <rect
-            key={idx}
-            x={c.x}
-            y={c.y}
-            width={c.w + 0.5}
-            height={c.h + 0.5}
-            fill={colorScale(c.value) as string}
-            opacity={hoveredCell && Math.abs(hoveredCell.x - c.x) < 5 && Math.abs(hoveredCell.y - c.y) < 5 ? 1 : 0.85}
-            style={{ transition: 'opacity 0.1s' }}
-            onMouseEnter={() => setHoveredCell({ x: c.x, y: c.y, value: c.value, district: c.districtName })}
-            onMouseLeave={() => setHoveredCell(null)}
-          />
-        ))}
+        {/* Grid cells clipped to Berlin shape */}
+        <g clipPath="url(#berlin-clip)">
+          {cells.map((c, idx) => (
+            <rect
+              key={idx}
+              x={c.x}
+              y={c.y}
+              width={c.w + 0.5}
+              height={c.h + 0.5}
+              fill={colorScale(c.value) as string}
+              opacity={hoveredCell && Math.abs(hoveredCell.x - c.x) < 5 && Math.abs(hoveredCell.y - c.y) < 5 ? 1 : 0.85}
+              style={{ transition: 'opacity 0.1s' }}
+              onMouseEnter={() => setHoveredCell({ x: c.x, y: c.y, value: c.value, district: c.districtName })}
+              onMouseLeave={() => setHoveredCell(null)}
+            />
+          ))}
+        </g>
 
-        {/* Berlin outline can be added on top later,
-            when you connect real SVG with boundaries */}
+        {/* Berlin outline stroke */}
+        <path
+          d={BERLIN_OUTLINE_PATH}
+          fill="none"
+          stroke="#475569"
+          strokeWidth="1.5"
+          opacity="0.6"
+        />
       </svg>
 
       {/* Hover Tooltip */}

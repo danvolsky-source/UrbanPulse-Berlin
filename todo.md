@@ -57,3 +57,10 @@
 - [x] Implement hover interactivity showing district name and price
 - [x] Optimize performance by removing heavy glow filters
 - [x] Test hover tooltips display correct district and price data
+
+## Feature: Berlin City Outline
+- [x] Find Berlin city boundary GeoJSON or SVG
+- [x] Convert to SVG path coordinates
+- [x] Add clipPath to BerlinGridMap component
+- [x] Clip gradient grid to Berlin city shape
+- [x] Test outline renders correctly
