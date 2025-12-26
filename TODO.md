@@ -62,3 +62,13 @@
 - [ ] Improve AI Insights critical question (more personal)
 - [ ] Add social proof to homepage
 - [ ] Add share buttons to Government Impact
+
+## Psychological Improvements + Minimalist Charts
+- [x] Redesign Government Impact charts to minimalist style
+- [x] Add country filter to Government Impact page
+- [x] Add social sharing buttons (Twitter, Facebook, WhatsApp)
+- [x] Create "Your Tax Calculator" component
+- [x] Move AI Insights section higher on page
+- [x] Improve AI Insights questions (more personal)
+- [ ] Redesign City Detail charts to minimalist style (skipped - focus on Government Impact)
+- [x] Test all changes
