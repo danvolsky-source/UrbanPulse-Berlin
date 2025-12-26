@@ -1,0 +1,1 @@
+ALTER TABLE `governmentDecisions` ADD `dataSource` text;

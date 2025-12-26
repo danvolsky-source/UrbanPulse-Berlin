@@ -1,0 +1,28 @@
+{
+  "query": "SELECT cityId, year, unemploymentRate, youthUnemploymentRate FROM unemployment WHERE year = 2024 LIMIT 3",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute SELECT cityId, year, unemploymentRate, youthUnemploymentRate FROM unemployment WHERE year = 2024 LIMIT 3",
+  "rows": [
+    {
+      "cityId": "1",
+      "year": "2024",
+      "unemploymentRate": "7",
+      "youthUnemploymentRate": "13"
+    },
+    {
+      "cityId": "2",
+      "year": "2024",
+      "unemploymentRate": "7",
+      "youthUnemploymentRate": "13"
+    },
+    {
+      "cityId": "3",
+      "year": "2024",
+      "unemploymentRate": "8",
+      "youthUnemploymentRate": "14"
+    }
+  ],
+  "messages": [],
+  "stdout": "cityId\tyear\tunemploymentRate\tyouthUnemploymentRate\n1\t2024\t7\t13\n2\t2024\t7\t13\n3\t2024\t8\t14\n",
+  "stderr": "",
+  "execution_time_ms": 1581
+}

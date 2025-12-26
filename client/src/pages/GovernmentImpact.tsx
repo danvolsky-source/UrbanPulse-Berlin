@@ -47,7 +47,7 @@ export default function GovernmentImpact() {
   // Calculate key metrics
   const latestUnemployment = countryUnemployment.filter(u => u.year === 2024);
   const avgUnemployment = latestUnemployment.length > 0
-    ? latestUnemployment.reduce((sum, u) => sum + (u.unemploymentRate || 0), 0) / latestUnemployment.length
+    ? latestUnemployment.reduce((sum, u) => sum + (u.unemploymentRate || 0), 0) / latestUnemployment.length / 10
     : 0;
   
   const latestBenefits = countryBenefits.filter(b => b.year === 2024);
@@ -63,7 +63,7 @@ export default function GovernmentImpact() {
   // Calculate percentage change from 2020 to 2024
   const unemployment2020 = countryUnemployment.filter(u => u.year === 2020);
   const avgUnemployment2020 = unemployment2020.length > 0
-    ? unemployment2020.reduce((sum, u) => sum + (u.unemploymentRate || 0), 0) / unemployment2020.length
+    ? unemployment2020.reduce((sum, u) => sum + (u.unemploymentRate || 0), 0) / unemployment2020.length / 10
     : 5.5;
   
   const unemploymentChange = avgUnemployment2020 > 0
@@ -76,7 +76,7 @@ export default function GovernmentImpact() {
   const unemploymentTrendData = [2020, 2021, 2022, 2023, 2024].map(year => {
     const yearData = countryUnemployment.filter(u => u.year === year);
     const avg = yearData.length > 0
-      ? yearData.reduce((sum, u) => sum + (u.unemploymentRate || 0), 0) / yearData.length
+      ? yearData.reduce((sum, u) => sum + (u.unemploymentRate || 0), 0) / yearData.length / 10
       : 0;
     return { year: year.toString(), value: avg };
   });
@@ -213,9 +213,9 @@ export default function GovernmentImpact() {
           </div>
           
           <div className="text-center">
-            <p className="text-4xl font-bold text-orange-600">{formatCurrency(totalBenefits / 1000, selectedCountry)}K</p>
+            <p className="text-4xl font-bold text-orange-600">{formatCurrency(totalBenefits, selectedCountry)}M</p>
             <p className="text-sm text-slate-600 mt-1">Social Benefits</p>
-            <p className="text-xs text-orange-600 font-medium mt-1">per city/year</p>
+            <p className="text-xs text-orange-600 font-medium mt-1">millions per city/year</p>
           </div>
           
           <div className="text-center">
@@ -356,12 +356,26 @@ export default function GovernmentImpact() {
                           <span className="font-semibold text-rose-700">Social:</span> {decision.socialImpact}
                         </p>
                       )}
+                      {decision.dataSource && (
+                        <p className="text-xs text-slate-500 mt-3 italic">
+                          Source: {decision.dataSource}
+                        </p>
+                      )}
                     </div>
                   )}
                 </CardContent>
               </Card>
             );
           })}
+        </div>
+
+        {/* Disclaimer */}
+        <div className="mt-12 pt-8 border-t border-slate-200">
+          <p className="text-xs text-slate-500 text-center">
+            <strong>Disclaimer:</strong> This analysis is based on publicly available data from government statistical offices, Eurostat, OECD, and academic research. 
+            Data sources are cited for each government decision. While we strive for accuracy, users should verify critical information independently. 
+            This platform presents data for informational and educational purposes.
+          </p>
         </div>
       </div>
     </div>

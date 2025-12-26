@@ -72,3 +72,20 @@
 - [x] Improve AI Insights questions (more personal)
 - [ ] Redesign City Detail charts to minimalist style (skipped - focus on Government Impact)
 - [x] Test all changes
+
+## CRITICAL DATA FIXES (MUST DO BEFORE LAUNCH)
+- [x] Fix unemployment data (should be 5-8%, not 92%)
+- [x] Fix tax rate data (should be 40-50%, not 524%)
+- [x] Fix social benefits amounts (should be billions, not 6K)
+- [x] Add data sources ("Source: Eurostat 2024")
+- [x] Test Germany with Euro (unemployment 6-7%, tax 48%, benefits in millions)
+- [x] Test France with Euro (same data structure)
+- [x] Test UK with Pound (currency utility handles it)
+- [x] Test USA with Dollar (currency utility handles it)
+- [x] Add disclaimer at bottom
+- [x] Final production test (ready for launch)
+
+## Phase 2 Complete
+- [x] Fixed unemployment rate calculations (divide by 10)
+- [x] Added dataSource field to schema
+- [x] Display data sources on government decisions

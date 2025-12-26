@@ -302,6 +302,7 @@ export const governmentDecisions = mysqlTable("governmentDecisions", {
   impactScore: int("impactScore").notNull(), // 1-100 scale (negative or positive)
   economicImpact: text("economicImpact"), // specific economic consequences
   socialImpact: text("socialImpact"), // specific social consequences
+  dataSource: text("dataSource"), // source of data (e.g., "Federal Statistical Office (Destatis), 2024")
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
