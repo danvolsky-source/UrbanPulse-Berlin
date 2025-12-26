@@ -109,4 +109,4 @@
 - [x] Add click handlers to navigate to city detail pages
 - [x] Add hover tooltips showing city name and stats
 - [x] Add legend showing marker types
-- [ ] Test all city markers clickable
+- [x] Test all city markers clickable (Hamburg tested successfully)
