@@ -296,3 +296,11 @@
 - [x] Improve value proposition subtitle: "Access 10 years of verified demographic and housing data from 15 global cities — free for researchers, policymakers, and citizens"
 - [x] Add visual proof in hero section (map preview or featured insight)
 - [x] Test all changes on desktop and mobile
+
+## Press Kit Screenshots
+- [x] Screenshot 1: Berlin district heatmap (grid visualization)
+- [x] Screenshot 2: Demographic breakdown chart
+- [x] Screenshot 3: Property price trends visualization
+- [x] Screenshot 4: Interactive Europe map with city markers
+- [x] Organize all screenshots in press-kit folder
+- [x] Create press kit index document

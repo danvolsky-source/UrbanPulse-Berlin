@@ -172,7 +172,7 @@ export default function Home() {
 
           {/* Featured Insight - Visual Proof */}
           <div className="max-w-3xl mx-auto mb-10">
-            <Link href="/cities/Berlin">
+            <Link href="/city/Berlin">
               <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-sm border-2 border-cyan-500/30 rounded-2xl p-8 hover:border-cyan-500/60 transition-all hover:scale-[1.02] cursor-pointer group">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
