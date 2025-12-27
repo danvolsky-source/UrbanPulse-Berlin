@@ -98,8 +98,8 @@ export default function Home() {
             <img 
               src="/urbanpulse-logo.png" 
               alt="UrbanPulse by SkyMind" 
-              className="h-16 w-auto"
-              style={{ mixBlendMode: 'multiply', filter: 'drop-shadow(0 4px 12px rgba(56, 189, 248, 0.4))' }}
+              className="h-20 w-auto"
+              style={{ filter: 'drop-shadow(0 4px 20px rgba(56, 189, 248, 0.6))' }}
             />
           </div>
           

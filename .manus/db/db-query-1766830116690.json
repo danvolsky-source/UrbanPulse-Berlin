@@ -1,0 +1,40 @@
+{
+  "query": "SELECT 'demographics' as table_name, MIN(year) as min_year, MAX(year) as max_year, COUNT(DISTINCT year) as year_count FROM demographics\nUNION ALL\nSELECT 'propertyPrices', MIN(year), MAX(year), COUNT(DISTINCT year) FROM propertyPrices\nUNION ALL\nSELECT 'unemployment', MIN(year), MAX(year), COUNT(DISTINCT year) FROM unemployment\nUNION ALL\nSELECT 'socialBenefits', MIN(year), MAX(year), COUNT(DISTINCT year) FROM socialBenefits\nUNION ALL\nSELECT 'taxBurden', MIN(year), MAX(year), COUNT(DISTINCT year) FROM taxBurden;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute SELECT 'demographics' as table_name, MIN(year) as min_year, MAX(year) as max_year, COUNT(DISTINCT year) as year_count FROM demographics\nUNION ALL\nSELECT 'propertyPrices', MIN(year), MAX(year), COUNT(DISTINCT year) FROM propertyPrices\nUNION ALL\nSELECT 'unemployment', MIN(year), MAX(year), COUNT(DISTINCT year) FROM unemployment\nUNION ALL\nSELECT 'socialBenefits', MIN(year), MAX(year), COUNT(DISTINCT year) FROM socialBenefits\nUNION ALL\nSELECT 'taxBurden', MIN(year), MAX(year), COUNT(DISTINCT year) FROM taxBurden;",
+  "rows": [
+    {
+      "table_name": "taxBurden",
+      "min_year": "2015",
+      "max_year": "2024",
+      "year_count": "10"
+    },
+    {
+      "table_name": "unemployment",
+      "min_year": "2015",
+      "max_year": "2024",
+      "year_count": "10"
+    },
+    {
+      "table_name": "socialBenefits",
+      "min_year": "2015",
+      "max_year": "2024",
+      "year_count": "10"
+    },
+    {
+      "table_name": "propertyPrices",
+      "min_year": "2015",
+      "max_year": "2024",
+      "year_count": "10"
+    },
+    {
+      "table_name": "demographics",
+      "min_year": "2020",
+      "max_year": "2024",
+      "year_count": "5"
+    }
+  ],
+  "messages": [],
+  "stdout": "table_name\tmin_year\tmax_year\tyear_count\ntaxBurden\t2015\t2024\t10\nunemployment\t2015\t2024\t10\nsocialBenefits\t2015\t2024\t10\npropertyPrices\t2015\t2024\t10\ndemographics\t2020\t2024\t5\n",
+  "stderr": "",
+  "execution_time_ms": 1529
+}

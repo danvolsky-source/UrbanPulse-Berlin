@@ -190,3 +190,6 @@
 - [ ] Ensure all charts have proper context
 - [ ] Add uncertainty ranges to predictions
 - [ ] Remove any "who benefits" implications
+
+### Bug Fixes
+- [x] Fix logo visibility on dark background (white logo background not visible on dark theme)
