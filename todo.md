@@ -66,11 +66,11 @@
 - [x] Test outline renders correctly
 
 ## Homepage Design & Psychology Audit
-- [ ] Check logo size and background (should be smaller, transparent background)
-- [ ] Review color psychology and emotional triggers
-- [ ] Verify call-to-action buttons are prominent and compelling
-- [ ] Check visual hierarchy and user flow
-- [ ] Ensure mobile responsiveness
+- [x] Check logo size and background (reduced to 60px, transparent with mix-blend-mode)
+- [x] Review color psychology and emotional triggers (added trust signals, urgency, social proof)
+- [x] Verify call-to-action buttons are prominent and compelling (added 2 CTAs)
+- [x] Check visual hierarchy and user flow
+- [x] Ensure mobile responsiveness
 
 ## All Cities Data Verification
 - [ ] Verify all 15 cities exist in database
@@ -80,13 +80,65 @@
 - [ ] Ensure consistent data quality across cities
 
 ## Extend Historical Data to 10 Years (2015-2024)
-- [ ] Update homepage stats text from "2020-2024" to "2015-2024"
-- [ ] Add ecology data for years 2015-2019 (all 15 cities)
-- [ ] Add vehicles data for years 2015-2019 (all 15 cities)
-- [ ] Add property prices for years 2015-2019 (districts with data)
-- [ ] Add unemployment data for years 2015-2019 (all 15 cities)
-- [ ] Add social benefits data for years 2015-2019 (all 15 cities)
-- [ ] Add tax burden data for years 2015-2019 (all 15 cities)
-- [ ] Add community growth data for years 2015-2019 (all 15 cities)
-- [ ] Update charts to show 10-year timeline
-- [ ] Test all graphs display correctly with extended data
+- [x] Update homepage stats text from "2020-2024" to "2015-2024"
+- [x] Add ecology data for years 2015-2019 (all 15 cities)
+- [x] Add vehicles data for years 2015-2019 (all 15 cities)
+- [x] Add property prices for years 2015-2019 (districts with data)
+- [x] Add unemployment data for years 2015-2019 (all 15 cities)
+- [x] Add social benefits data for years 2015-2019 (all 15 cities)
+- [x] Add tax burden data for years 2015-2019 (all 15 cities)
+- [x] Add community growth data for years 2015-2019 (all 15 cities)
+- [x] Update charts to show 10-year timeline
+- [x] Test all graphs display correctly with extended data
+
+## User System & Authentication
+- [x] Add Google OAuth provider alongside Manus OAuth
+- [x] Create login page with provider selection
+- [x] Update user schema to store OAuth provider info
+- [x] Add user avatar field to schema
+
+## User Profile & Settings
+- [x] Create user profile page (/profile)
+- [x] Create settings page (/settings) with tabs:
+  - [x] Profile settings (name, email, avatar display)
+  - [x] Notification preferences (email, government alerts, price alerts)
+  - [ ] Saved cities management (UI ready, backend pending)
+  - [x] Community preference selection
+- [ ] Add avatar upload functionality with S3 storage (placeholder ready)
+
+## Notifications System
+- [ ] Create notifications table in schema
+- [ ] Add notification preferences table
+- [ ] Implement notification types:
+  - [ ] Government decisions alerts
+  - [ ] Property price changes (threshold-based)
+  - [ ] New migration events
+  - [ ] Weekly/monthly email digest
+- [ ] Create notifications API endpoints
+- [ ] Build notifications UI component
+- [ ] Add notification bell icon in header
+
+## Saved Cities & Personalization
+- [x] Create savedCities table in schema
+- [x] Add "Save City" button on city pages
+- [ ] Implement save city backend (tRPC mutation)
+- [ ] Create user dashboard showing saved cities
+- [x] Add browsingHistory table to schema
+- [ ] Implement personalized recommendations based on saved cities
+
+## City Comparison Tool
+- [ ] Create comparison page (/compare)
+- [ ] Add city selector (multi-select, max 3 cities)
+- [ ] Build side-by-side comparison table:
+  - [ ] Unemployment rates
+  - [ ] Tax burden
+  - [ ] Property prices
+  - [ ] Community growth
+  - [ ] Air quality
+- [ ] Add export to PDF/Excel functionality
+
+## Additional Features
+- [ ] Add "Compare" button on city pages
+- [ ] Create user dashboard (/dashboard) as landing page after login
+- [ ] Add quick actions: "Add to favorites", "Set alert", "Compare"
+- [ ] Implement search functionality for cities

@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE users \nADD COLUMN oauthProvider ENUM('manus', 'google') NOT NULL DEFAULT 'manus' AFTER loginMethod,\nADD COLUMN communityPreference VARCHAR(50) AFTER oauthProvider;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute ALTER TABLE users \nADD COLUMN oauthProvider ENUM('manus', 'google') NOT NULL DEFAULT 'manus' AFTER loginMethod,\nADD COLUMN communityPreference VARCHAR(50) AFTER oauthProvider;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'oauthprovider' in 'users'"
+  ]
+}

@@ -15,12 +15,18 @@ import Ecology from "./pages/Ecology";
 import Vehicles from "./pages/Vehicles";
 import CommunityImpact from "./pages/CommunityImpact";
 import GovernmentImpact from "./pages/GovernmentImpact";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path="/login" component={Login} />
+      <Route path="/profile" component={Profile} />
+      <Route path="/settings" component={Settings} />
       <Route path="/map" component={MapView} />
       <Route path="/comparison" component={CityComparison} />
       <Route path="/government" component={GovernmentImpact} />

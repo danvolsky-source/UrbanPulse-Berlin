@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, tinyint } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -15,7 +15,10 @@ export const users = mysqlTable("users", {
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
+  avatar: text("avatar"), // S3 URL for user avatar
   loginMethod: varchar("loginMethod", { length: 64 }),
+  oauthProvider: mysqlEnum("oauthProvider", ["manus", "google"]).default("manus").notNull(),
+  communityPreference: varchar("communityPreference", { length: 50 }), // User's community (Muslim, Hindu, etc.)
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -308,3 +311,69 @@ export const governmentDecisions = mysqlTable("governmentDecisions", {
 
 export type GovernmentDecision = typeof governmentDecisions.$inferSelect;
 export type InsertGovernmentDecision = typeof governmentDecisions.$inferInsert;
+
+/**
+ * Saved Cities table - tracks cities saved/favorited by users
+ */
+export const savedCities = mysqlTable("savedCities", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  cityId: int("cityId").notNull(),
+  notes: text("notes"), // user's personal notes about this city
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SavedCity = typeof savedCities.$inferSelect;
+export type InsertSavedCity = typeof savedCities.$inferInsert;
+
+/**
+ * Notifications table - stores user notifications
+ */
+export const notifications = mysqlTable("notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  type: mysqlEnum("type", ["government_decision", "price_change", "migration_event", "digest"]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  relatedCityId: int("relatedCityId"), // optional: link to specific city
+  relatedUrl: varchar("relatedUrl", { length: 500 }), // optional: link to relevant page
+  isRead: int("isRead").default(0).notNull(), // 0 = unread, 1 = read
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = typeof notifications.$inferInsert;
+
+/**
+ * Notification Preferences table - user notification settings
+ */
+export const notificationPreferences = mysqlTable("notificationPreferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  emailNotifications: int("emailNotifications").default(1).notNull(), // 0 = off, 1 = on
+  pushNotifications: int("pushNotifications").default(1).notNull(),
+  governmentDecisions: int("governmentDecisions").default(1).notNull(),
+  priceChanges: int("priceChanges").default(1).notNull(),
+  migrationEvents: int("migrationEvents").default(1).notNull(),
+  weeklyDigest: int("weeklyDigest").default(1).notNull(),
+  monthlyDigest: int("monthlyDigest").default(0).notNull(),
+  priceChangeThreshold: int("priceChangeThreshold").default(10).notNull(), // notify if price changes by X%
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
+
+/**
+ * Browsing History table - tracks user's city page visits
+ */
+export const browsingHistory = mysqlTable("browsingHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  cityId: int("cityId").notNull(),
+  visitedAt: timestamp("visitedAt").defaultNow().notNull(),
+});
+
+export type BrowsingHistory = typeof browsingHistory.$inferSelect;
+export type InsertBrowsingHistory = typeof browsingHistory.$inferInsert;

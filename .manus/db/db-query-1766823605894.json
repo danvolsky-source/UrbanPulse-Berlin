@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS notificationPreferences (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL UNIQUE,\n  emailNotifications INT NOT NULL DEFAULT 1,\n  pushNotifications INT NOT NULL DEFAULT 1,\n  governmentDecisions INT NOT NULL DEFAULT 1,\n  priceChanges INT NOT NULL DEFAULT 1,\n  migrationEvents INT NOT NULL DEFAULT 1,\n  weeklyDigest INT NOT NULL DEFAULT 1,\n  monthlyDigest INT NOT NULL DEFAULT 0,\n  priceChangeThreshold INT NOT NULL DEFAULT 10,\n  createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);\n\nCREATE TABLE IF NOT EXISTS browsingHistory (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  cityId INT NOT NULL,\n  visitedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute CREATE TABLE IF NOT EXISTS notificationPreferences (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL UNIQUE,\n  emailNotifications INT NOT NULL DEFAULT 1,\n  pushNotifications INT NOT NULL DEFAULT 1,\n  governmentDecisions INT NOT NULL DEFAULT 1,\n  priceChanges INT NOT NULL DEFAULT 1,\n  migrationEvents INT NOT NULL DEFAULT 1,\n  weeklyDigest INT NOT NULL DEFAULT 1,\n  monthlyDigest INT NOT NULL DEFAULT 0,\n  priceChangeThreshold INT NOT NULL DEFAULT 10,\n  createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);\n\nCREATE TABLE IF NOT EXISTS browsingHistory (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  cityId INT NOT NULL,\n  visitedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1960
+}

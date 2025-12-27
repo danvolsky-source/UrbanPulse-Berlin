@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, TrendingUp, TrendingDown, Globe, DollarSign, AlertCircle, Home as HomeIcon, Building2, Car, Leaf } from "lucide-react";
+import { ArrowLeft, TrendingUp, TrendingDown, Globe, DollarSign, AlertCircle, Home as HomeIcon, Building2, Car, Leaf, Heart } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect } from "react";
 import { DistrictHeatmap } from "@/components/DistrictHeatmap";
@@ -184,11 +184,23 @@ export default function CityDetail() {
               <p className="text-sm text-slate-400">{currentCity.country} • Population: {currentCity.population.toLocaleString()}</p>
             </div>
           </div>
-          <Link href={`/city/${cityName}/impact`}>
-            <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all">
-              Community Impact Analysis
+          <div className="flex items-center gap-3">
+            <button
+              className="flex items-center gap-2 px-4 py-2 border border-slate-700 hover:border-cyan-600 text-slate-300 hover:text-cyan-400 rounded-lg transition-all"
+              onClick={() => {
+                // TODO: Add tRPC mutation to save city
+                alert('Save city feature coming soon!');
+              }}
+            >
+              <Heart className="w-4 h-4" />
+              Save City
             </button>
-          </Link>
+            <Link href={`/city/${cityName}/impact`}>
+              <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all">
+                Community Impact Analysis
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
 

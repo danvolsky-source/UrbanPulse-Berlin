@@ -35,7 +35,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     };
     const updateSet: Record<string, unknown> = {};
 
-    const textFields = ["name", "email", "loginMethod"] as const;
+    const textFields = ["name", "email", "loginMethod", "avatar", "communityPreference"] as const;
     type TextField = (typeof textFields)[number];
 
     const assignNullable = (field: TextField) => {
@@ -47,6 +47,12 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     };
 
     textFields.forEach(assignNullable);
+
+    // Handle oauthProvider enum field
+    if (user.oauthProvider !== undefined) {
+      values.oauthProvider = user.oauthProvider;
+      updateSet.oauthProvider = user.oauthProvider;
+    }
 
     if (user.lastSignedIn !== undefined) {
       values.lastSignedIn = user.lastSignedIn;
