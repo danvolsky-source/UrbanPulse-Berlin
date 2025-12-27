@@ -19,6 +19,7 @@ import Methodology from "./pages/Methodology";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import References from "./pages/References";
+import About from "./pages/About";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/references" component={References} />
+      <Route path="/about" component={About} />
       <Route path="/ecology" component={Ecology} />
       <Route path="/vehicles" component={Vehicles} />
       <Route path="/city/:city/impact" component={CommunityImpact} />

@@ -247,3 +247,12 @@
 - [x] Update Districts.tsx page title and footer
 - [x] Update README.md, CHANGELOG.md, CONTRIBUTING.md
 - [x] Keep Sky-Mind as company owner (info@sky-mind.com)
+
+### About Page Creation
+- [x] Create /about page with research team section
+- [x] Add funding sources disclosure
+- [x] Add conflicts of interest statement
+- [x] Add peer review status disclosure
+- [x] Add contact information for academic inquiries
+- [x] Add route to App.tsx
+- [x] Add navigation links in footer

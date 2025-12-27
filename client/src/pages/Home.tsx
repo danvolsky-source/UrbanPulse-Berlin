@@ -288,6 +288,8 @@ export default function Home() {
             <Link href="/methodology" className="text-cyan-400 hover:text-cyan-300 transition-colors">Methodology</Link>
           <span className="text-slate-700">•</span>
           <Link href="/references" className="text-cyan-400 hover:text-cyan-300 transition-colors">References</Link>
+          <span className="text-slate-700">•</span>
+          <Link href="/about" className="text-cyan-400 hover:text-cyan-300 transition-colors">About</Link>
           </div>
         </div>
       </div>
