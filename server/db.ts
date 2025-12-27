@@ -732,3 +732,44 @@ export async function getBerlinGridData(year: number, month: number, cellsPerRow
     })),
   };
 }
+
+// Zone queries
+
+export async function getAllZones(city?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.zones) {
+    console.error("zones table not found in schema");
+    return [];
+  }
+  
+  if (city) {
+    return await db
+      .select()
+      .from(schema.zones)
+      .where(eq(schema.zones.city, city));
+  }
+  
+  return await db.select().from(schema.zones);
+}
+
+export async function getZoneByCode(city: string, code: string) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const schema = await import("../drizzle/schema");
+  if (!schema.zones) {
+    console.error("zones table not found in schema");
+    return null;
+  }
+  
+  const results = await db
+    .select()
+    .from(schema.zones)
+    .where(and(eq(schema.zones.city, city), eq(schema.zones.code, code)))
+    .limit(1);
+  
+  return results[0] || null;
+}

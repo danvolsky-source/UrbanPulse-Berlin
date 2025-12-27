@@ -84,6 +84,7 @@ export default function MapView() {
   
   const { data: districts } = trpc.districts.list.useQuery({ city: "Berlin" });
   const { data: infrastructure } = trpc.infrastructure.all.useQuery();
+  const { data: zonesData } = trpc.zones.list.useQuery({ city: "Berlin" });
   
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
@@ -391,33 +392,58 @@ export default function MapView() {
               <div className="w-80 border-l border-slate-800 p-4">
                 <h2 className="text-slate-100 text-lg mb-4">Zones</h2>
                 <div className="space-y-4">
-                  <div className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#f97316" }} />
-                      <h3 className="font-semibold">Z1 - Central Core</h3>
-                    </div>
-                    <p className="text-sm text-slate-400">
-                      13.35-13.42°E, 52.50-52.54°N
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#3b82f6" }} />
-                      <h3 className="font-semibold">Z2 - West Ring</h3>
-                    </div>
-                    <p className="text-sm text-slate-400">
-                      13.28-13.35°E, 52.50-52.54°N
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-4 h-4 rounded" style={{ backgroundColor: "#22c55e" }} />
-                      <h3 className="font-semibold">Z3 - East Ring</h3>
-                    </div>
-                    <p className="text-sm text-slate-400">
-                      13.42-13.49°E, 52.50-52.54°N
-                    </p>
-                  </div>
+                  {zonesData && zonesData.length > 0 ? (
+                    zonesData.map((zone) => {
+                      const zoneColors: Record<string, string> = {
+                        Z1: "#f97316",
+                        Z2: "#3b82f6",
+                        Z3: "#22c55e",
+                      };
+                      const color = zoneColors[zone.code] || "#6b7280";
+                      
+                      return (
+                        <div key={zone.id} className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-4 h-4 rounded" style={{ backgroundColor: color }} />
+                            <h3 className="font-semibold">{zone.code} - {zone.name}</h3>
+                          </div>
+                          <p className="text-sm text-slate-400">
+                            {zone.city}
+                          </p>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <>
+                      <div className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-4 h-4 rounded" style={{ backgroundColor: "#f97316" }} />
+                          <h3 className="font-semibold">Z1 - Central Core</h3>
+                        </div>
+                        <p className="text-sm text-slate-400">
+                          13.35-13.42°E, 52.50-52.54°N
+                        </p>
+                      </div>
+                      <div className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-4 h-4 rounded" style={{ backgroundColor: "#3b82f6" }} />
+                          <h3 className="font-semibold">Z2 - West Ring</h3>
+                        </div>
+                        <p className="text-sm text-slate-400">
+                          13.28-13.35°E, 52.50-52.54°N
+                        </p>
+                      </div>
+                      <div className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-4 h-4 rounded" style={{ backgroundColor: "#22c55e" }} />
+                          <h3 className="font-semibold">Z3 - East Ring</h3>
+                        </div>
+                        <p className="text-sm text-slate-400">
+                          13.42-13.49°E, 52.50-52.54°N
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
                 <p className="text-slate-400 text-sm mt-6">
                   Zone metrics and detailed analytics will be available here.

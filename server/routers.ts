@@ -381,6 +381,32 @@ export const appRouter = router({
         return await getGovernmentDecisionsByCountry(input.country);
       }),
   }),
+
+  zones: router({
+    list: publicProcedure
+      .input((val: unknown) => {
+        if (val === undefined || val === null) return { city: undefined };
+        if (typeof val === "object" && "city" in val) {
+          return val as { city?: string };
+        }
+        return { city: undefined };
+      })
+      .query(async ({ input }) => {
+        const { getAllZones } = await import("./db");
+        return await getAllZones(input.city);
+      }),
+    getByCode: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === "object" && val !== null && "city" in val && "code" in val) {
+          return val as { city: string; code: string };
+        }
+        throw new Error("Invalid input: city and code required");
+      })
+      .query(async ({ input }) => {
+        const { getZoneByCode } = await import("./db");
+        return await getZoneByCode(input.city, input.code);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
