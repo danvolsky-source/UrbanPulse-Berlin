@@ -319,3 +319,10 @@
 - [x] Add "Explore Live Dashboard" button
 - [x] Fix video player placement - move to dedicated section (not in middle of charts)
 - [x] Make crime data dynamic with year selector instead of static mock
+
+## GitHub Migration
+- [x] Create .gitignore file (already exists)
+- [x] Create README.md for GitHub (already exists)
+- [ ] Initialize git repository
+- [ ] Create GitHub repository 'UrbanPulse-Berlin'
+- [ ] Push code to GitHub
