@@ -64,3 +64,29 @@
 - [x] Add clipPath to BerlinGridMap component
 - [x] Clip gradient grid to Berlin city shape
 - [x] Test outline renders correctly
+
+## Homepage Design & Psychology Audit
+- [ ] Check logo size and background (should be smaller, transparent background)
+- [ ] Review color psychology and emotional triggers
+- [ ] Verify call-to-action buttons are prominent and compelling
+- [ ] Check visual hierarchy and user flow
+- [ ] Ensure mobile responsiveness
+
+## All Cities Data Verification
+- [ ] Verify all 15 cities exist in database
+- [ ] Check each city has complete data (demographics, prices, ecology, etc.)
+- [ ] Test city pages load correctly for all cities
+- [ ] Verify maps/charts work for non-Berlin cities
+- [ ] Ensure consistent data quality across cities
+
+## Extend Historical Data to 10 Years (2015-2024)
+- [ ] Update homepage stats text from "2020-2024" to "2015-2024"
+- [ ] Add ecology data for years 2015-2019 (all 15 cities)
+- [ ] Add vehicles data for years 2015-2019 (all 15 cities)
+- [ ] Add property prices for years 2015-2019 (districts with data)
+- [ ] Add unemployment data for years 2015-2019 (all 15 cities)
+- [ ] Add social benefits data for years 2015-2019 (all 15 cities)
+- [ ] Add tax burden data for years 2015-2019 (all 15 cities)
+- [ ] Add community growth data for years 2015-2019 (all 15 cities)
+- [ ] Update charts to show 10-year timeline
+- [ ] Test all graphs display correctly with extended data

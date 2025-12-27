@@ -28,7 +28,7 @@ const cityPosters: Record<string, string> = {
 export default function Home() {
   const { data: cities, isLoading } = trpc.cities.list.useQuery();
   const [hoveredCity, setHoveredCity] = useState<string | null>(null);
-  const [userCountry, setUserCountry] = useState<string | null>(null);
+  const [userCountry, setUserCountry] = useState<string>("Germany");
 
   // Detect user's country via IP geolocation
   useEffect(() => {
@@ -93,12 +93,13 @@ export default function Home() {
         </div>
 
         <div className="container relative py-20 text-center">
-          {/* Logo */}
+          {/* Logo - Reduced size, transparent background */}
           <div className="flex justify-center mb-6">
             <img 
               src="/urbanpulse-logo.png" 
               alt="UrbanPulse by SkyMind" 
-              className="h-32 w-auto drop-shadow-2xl"
+              className="h-16 w-auto"
+              style={{ mixBlendMode: 'multiply', filter: 'drop-shadow(0 4px 12px rgba(56, 189, 248, 0.4))' }}
             />
           </div>
           
@@ -112,37 +113,60 @@ export default function Home() {
             </p>
           </div>
           
-          {/* CTA Button */}
-          <Link href="/government">
-            <button className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white font-semibold px-8 py-4 rounded-lg text-lg mb-12 transition-all shadow-lg hover:shadow-xl hover:scale-105">
-              <AlertTriangle className="inline-block w-5 h-5 mr-2 -mt-1" />
-              See Government Impact Analysis →
-            </button>
-          </Link>
+          {/* Trust Signals */}
+          <div className="mb-6">
+            <p className="text-sm text-slate-500">Data from OpenStreetMap, Eurostat, Government Sources</p>
+          </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-6 hover:border-cyan-500/50 transition-all">
-              <MapPin className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
-              <p className="text-3xl font-bold text-white mb-1">15</p>
-              <p className="text-sm text-slate-400">Global Cities</p>
+          {/* Social Proof */}
+          <div className="mb-6">
+            <p className="text-base text-slate-400">Join <span className="text-cyan-400 font-semibold">1,000+ property investors</span> tracking policy impact</p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
+            <Link href="/government">
+              <button className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105">
+                <AlertTriangle className="inline-block w-5 h-5 mr-2 -mt-1" />
+                See Government Impact Analysis →
+              </button>
+            </Link>
+            <button 
+              onClick={() => window.scrollTo({ top: document.getElementById('cities-section')?.offsetTop || 0, behavior: 'smooth' })}
+              className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl border border-slate-700"
+            >
+              Browse Cities
+            </button>
+          </div>
+
+          {/* Urgency */}
+          <div className="mb-12">
+            <p className="text-sm text-orange-400 font-medium">⚡ New government decisions tracked weekly</p>
+          </div>
+
+          {/* Stats Grid - Improved contrast and size */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="bg-slate-900/70 backdrop-blur-sm border-2 border-slate-700 rounded-xl p-8 hover:border-cyan-500/70 transition-all hover:scale-105">
+              <MapPin className="w-10 h-10 text-cyan-400 mx-auto mb-4" />
+              <p className="text-5xl font-bold text-white mb-2">15</p>
+              <p className="text-base text-slate-300 font-medium">Global Cities</p>
             </div>
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-6 hover:border-purple-500/50 transition-all">
-              <Users className="w-8 h-8 text-purple-400 mx-auto mb-3" />
-              <p className="text-3xl font-bold text-white mb-1">5</p>
-              <p className="text-sm text-slate-400">Communities Tracked</p>
+            <div className="bg-slate-900/70 backdrop-blur-sm border-2 border-slate-700 rounded-xl p-8 hover:border-purple-500/70 transition-all hover:scale-105">
+              <Users className="w-10 h-10 text-purple-400 mx-auto mb-4" />
+              <p className="text-5xl font-bold text-white mb-2">5</p>
+              <p className="text-base text-slate-300 font-medium">Communities Tracked</p>
             </div>
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-6 hover:border-teal-500/50 transition-all">
-              <TrendingUp className="w-8 h-8 text-teal-400 mx-auto mb-3" />
-              <p className="text-3xl font-bold text-white mb-1">2020-2024</p>
-              <p className="text-sm text-slate-400">Historical Data</p>
+            <div className="bg-slate-900/70 backdrop-blur-sm border-2 border-slate-700 rounded-xl p-8 hover:border-teal-500/70 transition-all hover:scale-105">
+              <TrendingUp className="w-10 h-10 text-teal-400 mx-auto mb-4" />
+              <p className="text-5xl font-bold text-white mb-2">2015-2024</p>
+              <p className="text-base text-slate-300 font-medium">Historical Data</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* City Gallery */}
-      <div className="container pb-16">
+      <div id="cities-section" className="container pb-16">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-slate-100 mb-3">
             Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">Cities</span>
@@ -206,7 +230,7 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-slate-100">Demographic Analysis</h3>
               </div>
               <p className="text-slate-400 text-sm">
-                Track community composition trends with 5 years of historical data
+                Track community composition trends with 10 years of historical data
               </p>
             </CardContent>
           </Card>

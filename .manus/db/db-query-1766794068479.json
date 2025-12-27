@@ -1,0 +1,50 @@
+{
+  "query": "SELECT year, COUNT(*) as record_count FROM ecology GROUP BY year ORDER BY year;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute SELECT year, COUNT(*) as record_count FROM ecology GROUP BY year ORDER BY year;",
+  "rows": [
+    {
+      "year": "2015",
+      "record_count": "4"
+    },
+    {
+      "year": "2016",
+      "record_count": "1"
+    },
+    {
+      "year": "2017",
+      "record_count": "1"
+    },
+    {
+      "year": "2018",
+      "record_count": "1"
+    },
+    {
+      "year": "2019",
+      "record_count": "1"
+    },
+    {
+      "year": "2020",
+      "record_count": "15"
+    },
+    {
+      "year": "2021",
+      "record_count": "15"
+    },
+    {
+      "year": "2022",
+      "record_count": "15"
+    },
+    {
+      "year": "2023",
+      "record_count": "15"
+    },
+    {
+      "year": "2024",
+      "record_count": "15"
+    }
+  ],
+  "messages": [],
+  "stdout": "year\trecord_count\n2015\t4\n2016\t1\n2017\t1\n2018\t1\n2019\t1\n2020\t15\n2021\t15\n2022\t15\n2023\t15\n2024\t15\n",
+  "stderr": "",
+  "execution_time_ms": 1646
+}
