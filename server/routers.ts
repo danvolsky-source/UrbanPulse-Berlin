@@ -400,7 +400,7 @@ export const appRouter = router({
         if (typeof val === "object" && val !== null && "city" in val && "code" in val) {
           return val as { city: string; code: string };
         }
-        throw new Error("Invalid input: city and code required");
+        throw new Error(`Invalid input: city and code required. Received: ${JSON.stringify(val)}`);
       })
       .query(async ({ input }) => {
         const { getZoneByCode } = await import("./db");
