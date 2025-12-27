@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import berlinZones from "@/data/berlin_zones.geojson";
 
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || "";
 
 export const BerlinZonesMap: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -35,7 +35,7 @@ export const BerlinZonesMap: React.FC = () => {
     map.on("load", () => {
       map.addSource("berlin-zones", {
         type: "geojson",
-        data: berlinZones as any
+        data: berlinZones as GeoJSON.FeatureCollection
       });
 
       map.addLayer({
