@@ -4,18 +4,26 @@
  */
 
 import { drizzle } from "drizzle-orm/mysql2";
-import { zones } from "../drizzle/schema";
+import mysql from "mysql2/promise";
+import { zones } from "../drizzle/schema.js";
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function seedZones() {
-  const DATABASE_URL = process.env.DATABASE_URL;
-  if (!DATABASE_URL) {
+  if (!process.env.DATABASE_URL) {
     console.error("DATABASE_URL not set");
     process.exit(1);
   }
 
-  const db = drizzle(DATABASE_URL);
+  const connection = await mysql.createConnection(process.env.DATABASE_URL);
+  const db = drizzle(connection);
 
   // Read the berlin_zones.geojson file
   const geojsonPath = join(__dirname, "../client/src/data/berlin_zones.geojson");
@@ -37,7 +45,7 @@ async function seedZones() {
     
     try {
       await db.insert(zones).values(zoneData);
-    } catch (error: any) {
+    } catch (error) {
       // If zone already exists (duplicate key), ignore and continue
       if (error.code === "ER_DUP_ENTRY") {
         console.log(`    Zone ${zoneData.code} already exists, skipping`);
@@ -48,6 +56,7 @@ async function seedZones() {
   }
 
   console.log("✓ Zones seeded successfully");
+  await connection.end();
   process.exit(0);
 }
 
