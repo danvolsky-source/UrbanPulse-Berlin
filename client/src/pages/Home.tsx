@@ -45,21 +45,49 @@ export default function Home() {
       });
   }, []);
 
+  // Check if user's country has cities in database
+  const hasUserCountryCities = cities ? cities.some(city => {
+    return (
+      (userCountry === 'Germany' && city.country === 'Germany') ||
+      (userCountry === 'France' && city.country === 'France') ||
+      ((userCountry === 'United Kingdom' || userCountry === 'UK') && city.country === 'United Kingdom') ||
+      ((userCountry === 'United States' || userCountry === 'USA') && city.country === 'United States') ||
+      (userCountry === 'Austria' && city.country === 'Austria') ||
+      (userCountry === 'Italy' && city.country === 'Italy') ||
+      (userCountry === 'Netherlands' && city.country === 'Netherlands') ||
+      (userCountry === 'Belgium' && city.country === 'Belgium') ||
+      (userCountry === 'Canada' && city.country === 'Canada')
+    );
+  }) : false;
+
+  // Display country name for title
+  const displayCountry = hasUserCountryCities ? userCountry : null;
+
   // Sort cities: user's country first, then others
   const sortedCities = cities ? [...cities].sort((a, b) => {
-    if (!userCountry) return 0; // No sorting if country not detected
+    if (!userCountry || !hasUserCountryCities) return 0; // No sorting if country not detected or not in DB
     
     const aIsUserCountry = 
       (userCountry === 'Germany' && a.country === 'Germany') ||
       (userCountry === 'France' && a.country === 'France') ||
       ((userCountry === 'United Kingdom' || userCountry === 'UK') && a.country === 'United Kingdom') ||
-      ((userCountry === 'United States' || userCountry === 'USA') && a.country === 'United States');
+      ((userCountry === 'United States' || userCountry === 'USA') && a.country === 'United States') ||
+      (userCountry === 'Austria' && a.country === 'Austria') ||
+      (userCountry === 'Italy' && a.country === 'Italy') ||
+      (userCountry === 'Netherlands' && a.country === 'Netherlands') ||
+      (userCountry === 'Belgium' && a.country === 'Belgium') ||
+      (userCountry === 'Canada' && a.country === 'Canada');
     
     const bIsUserCountry = 
       (userCountry === 'Germany' && b.country === 'Germany') ||
       (userCountry === 'France' && b.country === 'France') ||
       ((userCountry === 'United Kingdom' || userCountry === 'UK') && b.country === 'United Kingdom') ||
-      ((userCountry === 'United States' || userCountry === 'USA') && b.country === 'United States');
+      ((userCountry === 'United States' || userCountry === 'USA') && b.country === 'United States') ||
+      (userCountry === 'Austria' && b.country === 'Austria') ||
+      (userCountry === 'Italy' && b.country === 'Italy') ||
+      (userCountry === 'Netherlands' && b.country === 'Netherlands') ||
+      (userCountry === 'Belgium' && b.country === 'Belgium') ||
+      (userCountry === 'Canada' && b.country === 'Canada');
     
     if (aIsUserCountry && !bIsUserCountry) return -1;
     if (!aIsUserCountry && bIsUserCountry) return 1;
@@ -165,13 +193,17 @@ export default function Home() {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-slate-100 mb-3">
             Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">Cities</span>
-            {userCountry && <span className="text-slate-400 text-2xl ml-2">in {userCountry}</span>}
+            {displayCountry ? (
+              <span className="text-slate-400 text-2xl ml-2">in {displayCountry}</span>
+            ) : (
+              <span className="text-slate-400 text-2xl ml-2">Worldwide</span>
+            )}
           </h2>
           <p className="text-slate-400">Interactive district analysis with demographic and economic indicators</p>
         </div>
         
         {/* Interactive Europe Map */}
-        <InteractiveEuropeMap cities={cities || []} userCountry={userCountry} />
+        <InteractiveEuropeMap cities={cities || []} userCountry={displayCountry || ''} />
       </div>
 
       {/* Urban Development Analysis Banner - Neutral Academic Tone */}

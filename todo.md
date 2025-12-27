@@ -276,4 +276,16 @@
 - [x] Apply chosen section title: "City Data Explorer" (replace "Urban Development Observatory")
 - [x] Create neutral press release for public launch
 - [x] Create comprehensive QA checklist for staging environment
-- [ ] Final checkpoint before production deployment
+- [x] Final checkpoint before production deployment
+
+## Public URL Access Issue
+- [ ] Diagnose why public URL shows Manus login instead of UrbanPulse homepage
+- [ ] Check deployment status in Manus UI
+- [ ] Verify correct public endpoint URL
+- [ ] Test site accessibility without authentication
+
+## Country Detection Logic Fix
+- [x] Update Home.tsx to check if user's country has cities in database
+- [x] Show "Explore Cities Worldwide" if country not represented
+- [x] Show "Explore Cities in [Country]" only if cities exist for that country
+- [x] Test with Israel IP (should show "Worldwide" not "Israel")
