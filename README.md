@@ -1,6 +1,6 @@
-# Berlin Real Estate Analytics
+# UrbanPulse
 
-[![CI](https://github.com/danvolsky-source/berlin-real-estate-analytics/workflows/CI/badge.svg)](https://github.com/danvolsky-source/berlin-real-estate-analytics/actions)
+[![CI](https://github.com/danvolsky-source/urbanpulse/workflows/CI/badge.svg)](https://github.com/danvolsky-source/urbanpulse/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D22.0.0-brightgreen)](https://nodejs.org/)
 
@@ -74,8 +74,8 @@ Deep-dive into individual districts with:
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/berlin-real-estate-analytics.git
-cd berlin-real-estate-analytics
+git clone https://github.com/yourusername/urbanpulse.git
+cd urbanpulse
 ```
 
 2. **Install dependencies**
@@ -127,7 +127,7 @@ The application will be available at `http://localhost:3000`
 ## Project Structure
 
 ```
-berlin-real-estate-analytics/
+urbanpulse/
 ├── client/                  # Frontend React application
 │   ├── src/
 │   │   ├── components/     # Reusable UI components

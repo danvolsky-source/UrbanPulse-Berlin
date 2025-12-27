@@ -240,3 +240,10 @@
 - [x] Update seed script: taxBurden table 2015-2024 (currently 2020-2024)
 - [x] Run seed script to populate database with expanded data
 - [x] Verify all tables have consistent 10-year coverage (2015-2024 confirmed)
+
+### Project Renaming: Berlin Real Estate Analytics → UrbanPulse
+- [ ] Update VITE_APP_TITLE environment variable (requires manual update in Settings → Secrets UI)
+- [x] Update package.json name to "urbanpulse"
+- [x] Update Districts.tsx page title and footer
+- [x] Update README.md, CHANGELOG.md, CONTRIBUTING.md
+- [x] Keep Sky-Mind as company owner (info@sky-mind.com)

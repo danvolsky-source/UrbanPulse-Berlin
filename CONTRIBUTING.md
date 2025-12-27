@@ -1,6 +1,6 @@
-# Contributing to Berlin Real Estate Analytics
+# Contributing to UrbanPulse
 
-Thank you for your interest in contributing to the Berlin Real Estate Analytics project! This document provides guidelines and best practices for contributing code, documentation, and improvements to the platform.
+Thank you for your interest in contributing to the UrbanPulse project! This document provides guidelines and best practices for contributing code, documentation, and improvements to the platform.
 
 ---
 
@@ -17,8 +17,8 @@ We are committed to providing a welcoming and inclusive environment for all cont
 Begin by forking the repository to your GitHub account, then clone your fork locally:
 
 ```bash
-git clone https://github.com/your-username/berlin-real-estate-analytics.git
-cd berlin-real-estate-analytics
+git clone https://github.com/your-username/urbanpulse.git
+cd urbanpulse
 ```
 
 ### Install Dependencies
@@ -582,6 +582,6 @@ Contributors will be recognized in the project README and release notes. Signifi
 
 ---
 
-Thank you for contributing to Berlin Real Estate Analytics! Your efforts help make this project better for everyone.
+Thank you for contributing to UrbanPulse! Your efforts help make this project better for everyone.
 
 **Maintained by:** Manus AI

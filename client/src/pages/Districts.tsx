@@ -97,7 +97,7 @@ export default function Districts() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent">
-                Berlin Real Estate Analytics
+                UrbanPulse
               </h1>
               <p className="text-muted-foreground mt-1">
                 Demographic insights and property market analysis
@@ -344,7 +344,7 @@ export default function Districts() {
       <footer className="border-t border-border mt-20">
         <div className="container py-8">
           <div className="flex justify-between items-center text-sm text-muted-foreground">
-            <p>© 2024 Berlin Real Estate Analytics. Data visualization platform.</p>
+            <p>© 2024 UrbanPulse. Data visualization platform.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-foreground transition-colors">About</a>
               <a href="#" className="hover:text-foreground transition-colors">Contact</a>
