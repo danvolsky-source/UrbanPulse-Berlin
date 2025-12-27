@@ -1,0 +1,15 @@
+{
+  "query": "SELECT MIN(year) as min_year, MAX(year) as max_year, COUNT(*) as total_records FROM taxBurden",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute SELECT MIN(year) as min_year, MAX(year) as max_year, COUNT(*) as total_records FROM taxBurden",
+  "rows": [
+    {
+      "min_year": "2015",
+      "max_year": "2024",
+      "total_records": "150"
+    }
+  ],
+  "messages": [],
+  "stdout": "min_year\tmax_year\ttotal_records\n2015\t2024\t150\n",
+  "stderr": "",
+  "execution_time_ms": 1504
+}

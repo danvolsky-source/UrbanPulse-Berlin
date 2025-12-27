@@ -39,9 +39,11 @@ async function seedEconomyData() {
   // Seed unemployment data (REALISTIC: 4-8%)
   const unemploymentData = [];
   for (const city of cities) {
-    for (let year = 2020; year <= 2024; year++) {
-      // Base unemployment increases slightly over years
-      const baseRate = 4.5 + (year - 2020) * 0.6; // 4.5% → 6.9%
+    for (let year = 2015; year <= 2024; year++) {
+      // Base unemployment decreases from 2015-2019, then increases 2020-2024 (COVID impact)
+      const baseRate = year < 2020 
+        ? 7.0 - (year - 2015) * 0.5  // 2015: 7.0% → 2019: 5.0%
+        : 4.5 + (year - 2020) * 0.6; // 2020: 4.5% → 2024: 6.9%
       const cityVariation = Math.random() * 1.5; // ±1.5%
       
       unemploymentData.push({
@@ -59,9 +61,9 @@ async function seedEconomyData() {
   // Seed social benefits data (REALISTIC: billions)
   const socialBenefitsData = [];
   for (const city of cities) {
-    for (let year = 2020; year <= 2024; year++) {
-      // Benefits grow 5% per year (stored in millions)
-      const baseBenefits = 2500 * Math.pow(1.05, year - 2020); // 2.5B → 3.1B (in millions)
+    for (let year = 2015; year <= 2024; year++) {
+      // Benefits grow 5% per year from 2015 baseline (stored in millions)
+      const baseBenefits = 2000 * Math.pow(1.05, year - 2015); // 2.0B (2015) → 3.1B (2024) in millions
       const citySize = city.id <= 5 ? 1.2 : city.id <= 8 ? 1.1 : 1.0;
       
       const totalSpending = Math.round(baseBenefits * citySize);
@@ -76,7 +78,9 @@ async function seedEconomyData() {
         childBenefits: Math.round(totalSpending * 0.20),
         refugeeBenefits: Math.round(totalSpending * 0.20),
         beneficiariesCount: beneficiariesCount,
-        foreignerBeneficiariesPercent: 55 + (year - 2020) * 2, // 55% → 63%
+        foreignerBeneficiariesPercent: year < 2020
+          ? 45 + (year - 2015) * 2  // 2015: 45% → 2019: 53%
+          : 55 + (year - 2020) * 2, // 2020: 55% → 2024: 63%
       });
     }
   }
@@ -107,11 +111,12 @@ async function seedEconomyData() {
   // Seed tax burden data (REALISTIC: 40-50%)
   const taxBurdenData = [];
   for (const city of cities) {
-    for (let year = 2020; year <= 2024; year++) {
-      const baseTaxRate = 42 + (year - 2020) * 1.5; // 42% → 48%
-      const baseTaxRevenue = 85000; // 85B (in millions)
+    for (let year = 2015; year <= 2024; year++) {
+      // Tax rate increases gradually from 2015-2024
+      const baseTaxRate = 35 + (year - 2015) * 1.3; // 2015: 35% → 2024: 46.7%
+      const baseTaxRevenue = 70000; // 70B baseline (in millions)
       
-      const totalRevenue = Math.round(baseTaxRevenue * Math.pow(1.04, year - 2020));
+      const totalRevenue = Math.round(baseTaxRevenue * Math.pow(1.04, year - 2015));
       const cityPopulation = 3500000; // approximate
       
       taxBurdenData.push({

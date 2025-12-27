@@ -233,3 +233,10 @@
 - [x] Remove "Policy Correlations" card - replaced with "Development Patterns"
 - [x] Remove "policy decisions" from all user-facing UI (kept only in Methodology)
 - [x] Ensure homepage focuses on "urban development / city context / distributional effects" not "policy"
+
+### Data Expansion to 2015-2024
+- [x] Update seed script: unemployment table 2015-2024 (currently 2020-2024)
+- [x] Update seed script: socialBenefits table 2015-2024 (currently 2020-2024)
+- [x] Update seed script: taxBurden table 2015-2024 (currently 2020-2024)
+- [x] Run seed script to populate database with expanded data
+- [x] Verify all tables have consistent 10-year coverage (2015-2024 confirmed)
