@@ -7,6 +7,7 @@ import { formatCurrency, type Country } from "@shared/currency";
 import { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { InterpretationToggle, useShowInterpretations } from "@/components/InterpretationToggle";
+import { DataSourceBadge } from "@/components/DataSourceBadge";
 
 const COUNTRIES: Country[] = ["Germany", "France", "United Kingdom", "United States"];
 
@@ -152,8 +153,8 @@ export default function GovernmentImpact() {
             <CardContent className="p-6 text-center">
               <Database className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
               <p className="text-3xl font-bold text-white">{avgUnemployment.toFixed(1)}%</p>
-              <p className="text-sm text-slate-400 mt-1">Unemployment Rate</p>
-              <p className="text-xs text-slate-500 mt-1">2024 Average</p>
+              <p className="text-sm text-slate-400 mt-1">Regional Labour Market Indicator</p>
+              <p className="text-xs text-slate-500 mt-1">NUTS 2 Regional Data (2024)</p>
             </CardContent>
           </Card>
           
@@ -188,7 +189,13 @@ export default function GovernmentImpact() {
         {/* NEUTRAL DATA LAYER - Unemployment Trend Chart */}
         <Card className="bg-slate-900/50 border-slate-800 mb-8">
           <CardHeader>
-            <CardTitle className="text-white">Unemployment Rate Trend (2020-2024)</CardTitle>
+            <div className="flex items-start justify-between">
+              <div>
+                <CardTitle className="text-white">Regional Labour Market Trend (2020-2024)</CardTitle>
+                <p className="text-xs text-slate-400 mt-1">Regional unemployment indicator (NUTS 2), used for contextual comparison</p>
+              </div>
+              <DataSourceBadge type="official" source="Eurostat (lfst_r_lfu3rt)" />
+            </div>
           </CardHeader>
           <CardContent className="p-6">
             <ResponsiveContainer width="100%" height={250}>
@@ -229,8 +236,10 @@ export default function GovernmentImpact() {
         {/* NEUTRAL DATA LAYER - Policy Decisions Timeline */}
         <Card className="bg-slate-900/50 border-slate-800 mb-8">
           <CardHeader>
-            <CardTitle className="text-white">Policy Decisions Timeline</CardTitle>
-          </CardHeader>
+            <div className="flex items-start justify-between">
+              <CardTitle className="text-white">Policy Decisions & Observed Outcomes</CardTitle>
+              <DataSourceBadge type="national" source="Government Records" />
+            </div></CardHeader>
           <CardContent className="p-6">
             <div className="space-y-4">
               {countryDecisions.map((decision, idx) => (
@@ -279,7 +288,7 @@ export default function GovernmentImpact() {
                 <div>
                   <p className="text-sm font-semibold text-orange-400 mb-2">Observable Pattern</p>
                   <p className="text-slate-300 text-sm leading-relaxed">
-                    Unemployment increased by <span className="font-bold text-orange-400">{unemploymentChange.toFixed(1)}%</span> over 5 years 
+                    Regional unemployment indicators show a <span className="font-bold text-orange-400">{unemploymentChange.toFixed(1)}%</span> change over 5 years 
                     while social benefits spending reached <span className="font-bold">{formatCurrency(totalBenefits / 1000, selectedCountry)}K</span> per city annually.
                   </p>
                 </div>

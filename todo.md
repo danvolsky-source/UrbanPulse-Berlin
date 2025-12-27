@@ -193,3 +193,25 @@
 
 ### Bug Fixes
 - [x] Fix logo visibility on dark background (white logo background not visible on dark theme)
+
+### Data Integration
+- [ ] Create Eurostat API client
+- [ ] Implement demographics data fetcher (urb_cpopcb)
+- [ ] Implement unemployment data fetcher (lfst_r_lfu3rt)
+- [ ] Create data import script for database population
+- [ ] Extend unemployment data from 2020-2024 to 2015-2024
+- [ ] Extend socialBenefits data from 2020-2024 to 2015-2024
+- [ ] Extend taxBurden data from 2020-2024 to 2015-2024
+- [ ] Update Methodology page to remove "data from 2020" limitation
+- [ ] Validate imported data for all 15 cities
+
+### Legal Compliance Fixes (from letter)
+- [x] Add disclaimer: "Where city-level data is unavailable, regional (NUTS 2/3) or national indicators are used as contextual proxies"
+- [x] Rename `unemploymentRate` → `regionalUnemploymentContext` in UI/API
+- [x] Add label: "Regional labour market indicator (NUTS 2), used for contextual comparison"
+- [x] Add disclaimer: "Community categories are analytical groupings derived from multiple secondary sources, not official Eurostat classifications"
+- [x] Add disclaimer: "GDP per capita is used as an economic proxy and does not represent individual income distribution"
+- [x] Add data source labels to every chart/graph (Official statistical data / National statistical offices / Market-based estimates)
+- [x] Create NUTS mapping reference appendix with "City-to-region mapping follows Eurostat NUTS 2021 classification"
+- [x] Replace "synthetic data" → "statistical interpolation" or "model-based estimation" everywhere
+- [ ] Review 3 potentially dangerous screens identified in letter

@@ -106,6 +106,31 @@ export default function Methodology() {
           </CardContent>
         </Card>
 
+        {/* Data Granularity Disclaimer */}
+        <Card className="bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 border-blue-500/30 mb-8">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-blue-500/20 rounded-lg shrink-0">
+                <Scale className="w-6 h-6 text-blue-400" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white mb-3">Data Granularity & Regional Proxies</h2>
+                <p className="text-slate-300 leading-relaxed">
+                  <strong>Where city-level data is unavailable, regional (NUTS 2/3) or national indicators are used as contextual proxies and are not interpreted as direct city measurements.</strong>
+                </p>
+                <p className="text-slate-300 leading-relaxed mt-3">
+                  For example, unemployment data is reported at NUTS 2 regional level (e.g., Berlin region DE30) rather than city-specific measurements. 
+                  These regional indicators provide context for urban trends but do not represent precise city-level conditions.
+                </p>
+                <p className="text-slate-300 leading-relaxed mt-3">
+                  <strong>City-to-region mapping follows Eurostat NUTS 2021 classification and administrative correspondence.</strong> 
+                  See the <a href="/nuts-mapping" className="text-cyan-400 hover:text-cyan-300 underline">NUTS Mapping Reference</a> for complete city-region correspondence tables.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Data Sources */}
         <Card className="bg-slate-900/50 border-slate-800 mb-8">
           <CardHeader>
@@ -166,6 +191,8 @@ export default function Methodology() {
                 <li>• <strong>Definitional Changes:</strong> Statistical definitions and methodologies change over time, affecting comparability</li>
                 <li>• <strong>Missing Data:</strong> Not all indicators are available for all cities and time periods</li>
                 <li>• <strong>Self-Reported Data:</strong> Census and survey data rely on voluntary reporting and may contain biases</li>
+                <li>• <strong>Community Categories:</strong> Community categories used in the platform are analytical groupings derived from multiple secondary sources and are not official Eurostat classifications</li>
+                <li>• <strong>GDP as Proxy:</strong> GDP per capita is used as an economic proxy and does not represent individual income distribution</li>
               </ul>
             </div>
           </CardContent>

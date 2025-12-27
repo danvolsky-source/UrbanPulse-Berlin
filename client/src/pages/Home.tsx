@@ -109,7 +109,7 @@ export default function Home() {
               <span className="text-cyan-400">Urban Demographic Change</span> <span className="text-slate-500">×</span> <span className="text-teal-400">Housing Market Dynamics</span>
             </p>
             <p className="text-xl md:text-2xl text-slate-300 mb-6 max-w-4xl mx-auto font-light">
-              Explore correlations between <span className="text-cyan-400 font-semibold">policy changes</span> and urban development patterns
+              Explore correlations between <span className="text-cyan-400 font-semibold">demographic shifts</span> and urban development patterns
             </p>
             <p className="text-sm text-slate-500 max-w-3xl mx-auto">
               Educational research tool for analyzing distributional effects of urban policy decisions
@@ -264,7 +264,7 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-slate-100">Policy Correlations</h3>
               </div>
               <p className="text-slate-400 text-sm">
-                Observable relationships between policy changes and urban development patterns
+                Observable relationships between demographic changes and housing market trends
               </p>
             </CardContent>
           </Card>
