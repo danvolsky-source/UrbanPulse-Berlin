@@ -8,6 +8,7 @@ import { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { InterpretationToggle, useShowInterpretations } from "@/components/InterpretationToggle";
 import { DataSourceBadge } from "@/components/DataSourceBadge";
+import { Citation } from "@/components/Citation";
 
 const COUNTRIES: Country[] = ["Germany", "France", "United Kingdom", "United States"];
 
@@ -152,7 +153,7 @@ export default function GovernmentImpact() {
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-6 text-center">
               <Database className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
-              <p className="text-3xl font-bold text-white">{avgUnemployment.toFixed(1)}%</p>
+              <p className="text-3xl font-bold text-white">{avgUnemployment.toFixed(1)}% <Citation id="eurostat_lfst_r_lfu3rt" number={1} /></p>
               <p className="text-sm text-slate-400 mt-1">Regional Labour Market Indicator</p>
               <p className="text-xs text-slate-500 mt-1">NUTS 2 Regional Data (2024)</p>
             </CardContent>
@@ -170,18 +171,18 @@ export default function GovernmentImpact() {
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-6 text-center">
               <BarChart3 className="w-8 h-8 text-teal-400 mx-auto mb-3" />
-              <p className="text-3xl font-bold text-white">{formatCurrency(totalBenefits, selectedCountry)}M</p>
+              <p className="text-3xl font-bold text-white">{formatCurrency(totalBenefits / 1000, selectedCountry)}K <Citation id="eurostat_gov_10a_exp" number={2} /></p>
               <p className="text-sm text-slate-400 mt-1">Social Spending</p>
-              <p className="text-xs text-slate-500 mt-1">Per city annually</p>
+              <p className="text-xs text-slate-500 mt-1">Per City (2024)</p>
             </CardContent>
           </Card>
           
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-6 text-center">
               <Database className="w-8 h-8 text-orange-400 mx-auto mb-3" />
-              <p className="text-3xl font-bold text-white">{avgTaxRate.toFixed(1)}%</p>
-              <p className="text-sm text-slate-400 mt-1">Avg Tax Rate</p>
-              <p className="text-xs text-slate-500 mt-1">2024</p>
+              <p className="text-3xl font-bold text-white">{avgTaxRate.toFixed(1)}% <Citation id="eurostat_gov_10a_taxag" number={3} /></p>
+              <p className="text-sm text-slate-400 mt-1">Average Tax Rate</p>
+              <p className="text-xs text-slate-500 mt-1">2024 Average</p>
             </CardContent>
           </Card>
         </div>
@@ -237,7 +238,7 @@ export default function GovernmentImpact() {
         <Card className="bg-slate-900/50 border-slate-800 mb-8">
           <CardHeader>
             <div className="flex items-start justify-between">
-              <CardTitle className="text-white">Policy Decisions & Observed Outcomes</CardTitle>
+              <CardTitle className="text-white">Policy Decisions & Observed Outcomes <Citation id="german_government_records" number={4} /></CardTitle>
               <DataSourceBadge type="national" source="Government Records" />
             </div></CardHeader>
           <CardContent className="p-6">

@@ -285,7 +285,9 @@ export default function Home() {
             <span className="text-slate-700">•</span>
             <Link href="/privacy" className="text-slate-400 hover:text-cyan-400 transition-colors">Privacy Policy</Link>
             <span className="text-slate-700">•</span>
-            <Link href="/methodology" className="text-slate-400 hover:text-cyan-400 transition-colors">Methodology</Link>
+            <Link href="/methodology" className="text-cyan-400 hover:text-cyan-300 transition-colors">Methodology</Link>
+          <span className="text-slate-700">•</span>
+          <Link href="/references" className="text-cyan-400 hover:text-cyan-300 transition-colors">References</Link>
           </div>
         </div>
       </div>

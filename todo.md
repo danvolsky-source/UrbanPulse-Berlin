@@ -215,3 +215,14 @@
 - [x] Create NUTS mapping reference appendix with "City-to-region mapping follows Eurostat NUTS 2021 classification"
 - [x] Replace "synthetic data" → "statistical interpolation" or "model-based estimation" everywhere
 - [ ] Review 3 potentially dangerous screens identified in letter
+
+### Citation System Implementation
+- [x] Create citations reference database with Eurostat/Destatis URLs
+- [x] Build Citation component with tooltip hover
+- [x] Add citations to unemployment data points
+- [x] Add citations to social benefits data points
+- [x] Add citations to tax burden data points
+- [x] Add citations to policy decisions
+- [x] Create /references page with full bibliography
+- [x] Add citation hover tooltips with source preview
+- [x] Add References link to homepage footer
