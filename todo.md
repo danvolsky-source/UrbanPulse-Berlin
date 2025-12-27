@@ -226,3 +226,10 @@
 - [x] Create /references page with full bibliography
 - [x] Add citation hover tooltips with source preview
 - [x] Add References link to homepage footer
+
+### Final Language Neutralization (from letter review)
+- [x] Replace "Urban Demographic Change" headline with "Explore Urban Development Patterns" or "Analyze City Growth Trends"
+- [x] Remove "Urban Policy Impact Observatory" - replaced with "Urban Development Observatory"
+- [x] Remove "Policy Correlations" card - replaced with "Development Patterns"
+- [x] Remove "policy decisions" from all user-facing UI (kept only in Methodology)
+- [x] Ensure homepage focuses on "urban development / city context / distributional effects" not "policy"

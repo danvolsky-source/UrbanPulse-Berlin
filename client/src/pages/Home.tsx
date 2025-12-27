@@ -106,13 +106,13 @@ export default function Home() {
           {/* Tagline with Observable Correlations (NOT causation) */}
           <div className="mb-8">
             <p className="text-3xl md:text-4xl text-white font-bold mb-4 max-w-4xl mx-auto leading-tight">
-              <span className="text-cyan-400">Urban Demographic Change</span> <span className="text-slate-500">×</span> <span className="text-teal-400">Housing Market Dynamics</span>
+              <span className="text-cyan-400">Explore Urban Development Patterns</span>
             </p>
             <p className="text-xl md:text-2xl text-slate-300 mb-6 max-w-4xl mx-auto font-light">
-              Explore correlations between <span className="text-cyan-400 font-semibold">demographic shifts</span> and urban development patterns
+              Analyze city growth trends and housing market dynamics across European and North American cities
             </p>
             <p className="text-sm text-slate-500 max-w-3xl mx-auto">
-              Educational research tool for analyzing distributional effects of urban policy decisions
+              Educational research tool for understanding urban development patterns and distributional effects
             </p>
           </div>
           
@@ -185,7 +185,7 @@ export default function Home() {
         <InteractiveEuropeMap cities={cities || []} userCountry={userCountry} />
       </div>
 
-      {/* Policy Analysis Banner - Neutral Academic Tone */}
+      {/* Urban Development Analysis Banner - Neutral Academic Tone */}
       <div className="container pb-8">
         <Link href="/methodology">
           <Card className="bg-gradient-to-r from-cyan-500/10 via-teal-500/10 to-blue-500/10 border-cyan-500/30 hover:border-cyan-500/50 transition-all cursor-pointer">
@@ -195,10 +195,10 @@ export default function Home() {
                   <BarChart3 className="w-8 h-8 text-cyan-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-2">Urban Policy Impact Observatory</h3>
+                  <h3 className="text-2xl font-bold text-white mb-2">Urban Development Observatory</h3>
                   <p className="text-gray-300 text-sm">
-                    Analyzing correlations between demographic change, policy decisions, and housing market dynamics. 
-                    Explore distributional effects across unemployment, taxation, and social expenditure indicators.
+                    Analyzing correlations between demographic change, city context, and housing market dynamics. 
+                    Explore distributional effects across employment, economic indicators, and urban development patterns.
                   </p>
                 </div>
                 <div className="text-cyan-400 font-semibold shrink-0">
@@ -261,10 +261,10 @@ export default function Home() {
                 <div className="p-2 bg-cyan-500/10 rounded-lg">
                   <BarChart3 className="w-6 h-6 text-cyan-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-100">Policy Correlations</h3>
+                <h3 className="text-lg font-semibold text-slate-100">Development Patterns</h3>
               </div>
               <p className="text-slate-400 text-sm">
-                Observable relationships between demographic changes and housing market trends
+                Observable relationships between demographic changes and urban development trends
               </p>
             </CardContent>
           </Card>
@@ -277,7 +277,7 @@ export default function Home() {
           <p className="text-xs text-slate-500 max-w-4xl mx-auto leading-relaxed mb-3">
             <strong className="text-slate-400">Research & Educational Tool:</strong> This platform presents observable correlations in urban data for research and educational purposes. 
             Correlation does not imply causation. Multiple confounding variables may influence observed patterns. 
-            Data is aggregated from public sources and should not be used as sole basis for financial, legal, or policy decisions. 
+            Data is aggregated from public sources and should not be used as sole basis for financial, legal, or decision-making. 
             <Link href="/methodology" className="text-cyan-400 hover:text-cyan-300 ml-1">View full methodology →</Link>
           </p>
           <div className="flex items-center justify-center gap-4 text-xs">
