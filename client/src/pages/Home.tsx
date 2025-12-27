@@ -121,17 +121,15 @@ export default function Home() {
         </div>
 
         <div className="container relative py-20 text-center">
-          {/* Logo - Professional placement with transparent background */}
+          {/* Logo - Professional placement with white background */}
           <div className="flex justify-center mb-8">
-            <img 
-              src="/urbanpulse-logo.png" 
-              alt="UrbanPulse by SkyMind" 
-              className="h-16 w-auto object-contain"
-              style={{ 
-                filter: 'drop-shadow(0 8px 24px rgba(6, 182, 212, 0.4))',
-                mixBlendMode: 'normal'
-              }}
-            />
+            <div className="bg-white/95 px-8 py-4 rounded-2xl shadow-2xl">
+              <img 
+                src="/urbanpulse-logo.png" 
+                alt="UrbanPulse by SkyMind" 
+                className="h-16 w-auto object-contain"
+              />
+            </div>
           </div>
           
           {/* Hero Message with Improved Value Proposition */}

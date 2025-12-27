@@ -304,3 +304,10 @@
 - [x] Screenshot 4: Interactive Europe map with city markers
 - [x] Organize all screenshots in press-kit folder
 - [x] Create press kit index document
+
+## Missing Features Restoration
+- [x] Add crime data back to city detail pages
+- [x] Integrate video functionality
+- [x] Add real-time online data feeds (LIVE DATA indicator in header)
+- [x] Fix logo visibility on dark background
+- [x] Test all restored features

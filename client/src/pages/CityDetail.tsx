@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, TrendingUp, TrendingDown, Globe, DollarSign, AlertCircle, Home as HomeIcon, Building2, Car, Leaf, Heart } from "lucide-react";
+import { ArrowLeft, TrendingUp, TrendingDown, Globe, DollarSign, AlertCircle, Home as HomeIcon, Building2, Car, Leaf, Heart, Shield, Video } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect } from "react";
 import { DistrictHeatmap } from "@/components/DistrictHeatmap";
@@ -41,6 +41,32 @@ export default function CityDetail() {
   const [areaFilter, setAreaFilter] = useState([0, 200]);
   const [airQualityFilter, setAirQualityFilter] = useState(false);
   const [greeneryFilter, setGreeneryFilter] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  const [liveDataTimestamp, setLiveDataTimestamp] = useState(new Date());
+
+  // Update live data timestamp every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLiveDataTimestamp(new Date());
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Mock crime data
+  const crimeData = {
+    total: 12847,
+    change: -8.3,
+    categories: [
+      { name: "Theft", count: 4521, change: -12.1, color: "#ef4444" },
+      { name: "Assault", count: 2134, change: -5.2, color: "#f97316" },
+      { name: "Burglary", count: 1876, change: -15.8, color: "#f59e0b" },
+      { name: "Vandalism", count: 1543, change: 3.4, color: "#eab308" },
+      { name: "Drug offenses", count: 1289, change: -2.1, color: "#84cc16" },
+      { name: "Other", count: 1484, change: -1.5, color: "#22c55e" },
+    ],
+    safetyScore: 73,
+    trend: "improving"
+  };
 
   const currentCity = cityData?.find((c: any) => c.name === cityName);
   const cityEcology = ecologyData?.filter((e: any) => e.cityId === currentCity?.id && e.year === 2024)[0];
@@ -180,8 +206,17 @@ export default function CityDetail() {
               </button>
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-slate-100">{cityName}</h1>
-              <p className="text-sm text-slate-400">{currentCity.country} • Population: {currentCity.population.toLocaleString()}</p>
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-bold text-white">{cityName}</h1>
+                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-500/50 rounded-full">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  <span className="text-xs text-green-400 font-medium">LIVE DATA</span>
+                  <span className="text-xs text-slate-400">{liveDataTimestamp.toLocaleTimeString()}</span>
+                </div>
+              </div>
+              <p className="text-sm text-slate-400">
+                {currentCity?.country} • Population: {currentCity?.population?.toLocaleString()}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -468,6 +503,49 @@ export default function CityDetail() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Video Section */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                  <Video className="w-4 h-4 text-cyan-400" />
+                  CITY OVERVIEW VIDEO
+                </h3>
+                <button 
+                  onClick={() => setShowVideo(!showVideo)}
+                  className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  {showVideo ? "Hide" : "Show"}
+                </button>
+              </div>
+              {showVideo && (
+                <div className="aspect-video bg-slate-800 rounded-lg overflow-hidden relative">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={`https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0`}
+                    title="City Overview"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0"
+                  />
+                </div>
+              )}
+              {!showVideo && (
+                <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
+                  <button 
+                    onClick={() => setShowVideo(true)}
+                    className="flex flex-col items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors"
+                  >
+                    <Video className="w-12 h-12" />
+                    <span className="text-sm">Click to play video</span>
+                  </button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
         {/* Right Panel - Filters and Metrics */}
@@ -490,6 +568,50 @@ export default function CityDetail() {
                     <span className="text-sm text-slate-300">Greenery proximity</span>
                   </div>
                   <Switch checked={greeneryFilter} onCheckedChange={setGreeneryFilter} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Crime Data */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-cyan-400" />
+                  CRIME & SAFETY
+                </h3>
+                <Badge variant={crimeData.trend === "improving" ? "default" : "destructive"} className="text-xs">
+                  {crimeData.change > 0 ? "+" : ""}{crimeData.change}%
+                </Badge>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-slate-400">Total incidents</span>
+                  <span className="text-sm font-semibold text-slate-100">{crimeData.total.toLocaleString()}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-slate-400">Safety score</span>
+                  <span className="text-sm font-semibold text-green-400">{crimeData.safetyScore}/100</span>
+                </div>
+                <div className="mt-3 space-y-2">
+                  {crimeData.categories.slice(0, 4).map((category, idx) => (
+                    <div key={idx} className="space-y-1">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-slate-400">{category.name}</span>
+                        <span className="text-slate-300">{category.count.toLocaleString()}</span>
+                      </div>
+                      <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full rounded-full transition-all" 
+                          style={{ 
+                            width: `${(category.count / crimeData.total) * 100}%`,
+                            backgroundColor: category.color
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </CardContent>
