@@ -142,3 +142,51 @@
 - [ ] Create user dashboard (/dashboard) as landing page after login
 - [ ] Add quick actions: "Add to favorites", "Set alert", "Compare"
 - [ ] Implement search functionality for cities
+
+## Variant 1: Safety & Legalization (Critical Priority)
+
+### Phase 1: Rewrite Dangerous UI Texts
+- [x] Homepage: Remove "YOUR taxes", "WHO benefits" language
+- [x] Replace "Immigration → Property Prices" with "Demographic change indicators vs housing market dynamics"
+- [x] Remove emotional accusatory questions
+- [x] Change "government decisions" to "policy changes"
+- [x] Rewrite CTA buttons to neutral academic tone
+- [x] Add "Research & Educational Purpose" badge
+- [x] Add disclaimer footer with correlation ≠ causation warning
+
+### Phase 2: Methodology Page
+- [x] Create /methodology page
+- [x] Add "Correlation ≠ Causation" disclaimer
+- [x] List alternative hypotheses (zoning policy, interest rates, construction delays, investor activity)
+- [x] Document data sources and limitations
+- [x] Add "Educational & Research Purpose" statement
+- [x] Include confidence intervals explanation
+- [x] Add data limitations section
+- [x] Add appropriate vs inappropriate uses
+- [x] Add contact email for research inquiries
+
+### Phase 3: Architectural Separation
+- [x] Create toggle "Show Interpretations" (off by default)
+- [x] Separate data layer from interpretation layer
+- [x] Make narrative blocks optional
+- [x] Add ability to disable insights per user preference
+- [x] Ensure neutral engine can work standalone
+- [x] Create InterpretationToggle component with localStorage persistence
+- [x] Create useShowInterpretations hook for components
+- [x] Rewrite GovernmentImpact page with clear data/interpretation separation
+
+### Phase 4: Legal Protection
+- [x] Create Terms of Service page
+- [x] Create Privacy Policy (GDPR compliant)
+- [x] Add disclaimer in footer
+- [x] Add "Research Tool" badge/label
+- [x] Include "Not Financial/Legal Advice" warning
+- [x] Add footer links to Terms, Privacy, Methodology on homepage
+- [x] Add routes for /terms and /privacy pages
+
+### Phase 5: Content Audit
+- [ ] Review all city pages for politically charged language
+- [ ] Replace "blame" framing with "distributional effects analysis"
+- [ ] Ensure all charts have proper context
+- [ ] Add uncertainty ranges to predictions
+- [ ] Remove any "who benefits" implications

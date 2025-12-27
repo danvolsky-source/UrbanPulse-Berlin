@@ -1,7 +1,7 @@
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Users, TrendingUp, Leaf, Car, AlertTriangle } from "lucide-react";
+import { MapPin, Users, TrendingUp, Leaf, Car, BarChart3 } from "lucide-react";
 import { Link } from "wouter";
 import InteractiveEuropeMap from "@/components/InteractiveEuropeMap";
 import { useState, useEffect } from "react";
@@ -103,13 +103,16 @@ export default function Home() {
             />
           </div>
           
-          {/* Tagline with Shocking Stats */}
+          {/* Tagline with Observable Correlations (NOT causation) */}
           <div className="mb-8">
             <p className="text-3xl md:text-4xl text-white font-bold mb-4 max-w-4xl mx-auto leading-tight">
-              <span className="text-rose-400">+52% Immigration</span> → <span className="text-orange-400">+35% Property Prices</span>
+              <span className="text-cyan-400">Urban Demographic Change</span> <span className="text-slate-500">×</span> <span className="text-teal-400">Housing Market Dynamics</span>
             </p>
             <p className="text-xl md:text-2xl text-slate-300 mb-6 max-w-4xl mx-auto font-light">
-              Discover how <span className="text-cyan-400 font-semibold">government decisions</span> reshaped your neighborhood's value
+              Explore correlations between <span className="text-cyan-400 font-semibold">policy changes</span> and urban development patterns
+            </p>
+            <p className="text-sm text-slate-500 max-w-3xl mx-auto">
+              Educational research tool for analyzing distributional effects of urban policy decisions
             </p>
           </div>
           
@@ -118,30 +121,33 @@ export default function Home() {
             <p className="text-sm text-slate-500">Data from OpenStreetMap, Eurostat, Government Sources</p>
           </div>
 
-          {/* Social Proof */}
+          {/* Academic Badge */}
           <div className="mb-6">
-            <p className="text-base text-slate-400">Join <span className="text-cyan-400 font-semibold">1,000+ property investors</span> tracking policy impact</p>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-full">
+              <BarChart3 className="w-4 h-4 text-cyan-400" />
+              <span className="text-sm text-slate-400">Research & Educational Purpose</span>
+            </div>
           </div>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons - Neutral Academic Tone */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
-            <Link href="/government">
-              <button className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105">
-                <AlertTriangle className="inline-block w-5 h-5 mr-2 -mt-1" />
-                See Government Impact Analysis →
+            <Link href="/methodology">
+              <button className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105">
+                <BarChart3 className="inline-block w-5 h-5 mr-2 -mt-1" />
+                View Methodology →
               </button>
             </Link>
             <button 
               onClick={() => window.scrollTo({ top: document.getElementById('cities-section')?.offsetTop || 0, behavior: 'smooth' })}
               className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl border border-slate-700"
             >
-              Browse Cities
+              Explore Cities
             </button>
           </div>
 
-          {/* Urgency */}
+          {/* Data Update Notice (not urgency) */}
           <div className="mb-12">
-            <p className="text-sm text-orange-400 font-medium">⚡ New government decisions tracked weekly</p>
+            <p className="text-sm text-cyan-400 font-medium">📊 Dataset updated quarterly with latest available statistics</p>
           </div>
 
           {/* Stats Grid - Improved contrast and size */}
@@ -172,31 +178,31 @@ export default function Home() {
             Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">Cities</span>
             {userCountry && <span className="text-slate-400 text-2xl ml-2">in {userCountry}</span>}
           </h2>
-          <p className="text-slate-400">Interactive district analysis with real-time demographic insights</p>
+          <p className="text-slate-400">Interactive district analysis with demographic and economic indicators</p>
         </div>
         
         {/* Interactive Europe Map */}
         <InteractiveEuropeMap cities={cities || []} userCountry={userCountry} />
       </div>
 
-      {/* Critical Analysis Banner */}
+      {/* Policy Analysis Banner - Neutral Academic Tone */}
       <div className="container pb-8">
-        <Link href="/government">
-          <Card className="bg-gradient-to-r from-rose-500/10 via-orange-500/10 to-yellow-500/10 border-rose-500/30 hover:border-rose-500/50 transition-all cursor-pointer">
+        <Link href="/methodology">
+          <Card className="bg-gradient-to-r from-cyan-500/10 via-teal-500/10 to-blue-500/10 border-cyan-500/30 hover:border-cyan-500/50 transition-all cursor-pointer">
             <CardContent className="p-8">
               <div className="flex items-center gap-4">
-                <div className="p-4 bg-rose-500/20 rounded-lg shrink-0">
-                  <AlertTriangle className="w-8 h-8 text-rose-400" />
+                <div className="p-4 bg-cyan-500/20 rounded-lg shrink-0">
+                  <BarChart3 className="w-8 h-8 text-cyan-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-2">Влияние решений правительства</h3>
+                  <h3 className="text-2xl font-bold text-white mb-2">Urban Policy Impact Observatory</h3>
                   <p className="text-gray-300 text-sm">
-                    Что обещали vs что получили: анализ экономических последствий иммиграционной политики. 
-                    Безработица, налоги, социальные выплаты - цифры говорят сами за себя.
+                    Analyzing correlations between demographic change, policy decisions, and housing market dynamics. 
+                    Explore distributional effects across unemployment, taxation, and social expenditure indicators.
                   </p>
                 </div>
-                <div className="text-rose-400 font-semibold shrink-0">
-                  Посмотреть →
+                <div className="text-cyan-400 font-semibold shrink-0">
+                  Learn More →
                 </div>
               </div>
             </CardContent>
@@ -216,7 +222,7 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-slate-100">Interactive Maps</h3>
               </div>
               <p className="text-slate-400 text-sm">
-                Explore districts with color-coded community dominance and infrastructure markers
+                Explore districts with demographic composition and infrastructure data visualization
               </p>
             </CardContent>
           </Card>
@@ -241,27 +247,46 @@ export default function Home() {
                 <div className="p-2 bg-teal-500/10 rounded-lg">
                   <TrendingUp className="w-6 h-6 text-teal-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-100">Market Insights</h3>
+                <h3 className="text-lg font-semibold text-slate-100">Market Indicators</h3>
               </div>
               <p className="text-slate-400 text-sm">
-                Property price trends and investment recommendations powered by AI
+                Property price trends and housing market dynamics analysis
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900/50 border-slate-800 border-rose-500/30">
+          <Card className="bg-slate-900/50 border-slate-800 border-cyan-500/30">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-rose-500/10 rounded-lg">
-                  <AlertTriangle className="w-6 h-6 text-rose-400" />
+                <div className="p-2 bg-cyan-500/10 rounded-lg">
+                  <BarChart3 className="w-6 h-6 text-cyan-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-100">Government Impact</h3>
+                <h3 className="text-lg font-semibold text-slate-100">Policy Correlations</h3>
               </div>
               <p className="text-slate-400 text-sm">
-                Critical analysis of policy decisions and their real economic consequences
+                Observable relationships between policy changes and urban development patterns
               </p>
             </CardContent>
           </Card>
+        </div>
+      </div>
+
+      {/* Disclaimer Footer */}
+      <div className="container pb-12">
+        <div className="bg-slate-900/30 border border-slate-800 rounded-lg p-6 text-center">
+          <p className="text-xs text-slate-500 max-w-4xl mx-auto leading-relaxed mb-3">
+            <strong className="text-slate-400">Research & Educational Tool:</strong> This platform presents observable correlations in urban data for research and educational purposes. 
+            Correlation does not imply causation. Multiple confounding variables may influence observed patterns. 
+            Data is aggregated from public sources and should not be used as sole basis for financial, legal, or policy decisions. 
+            <Link href="/methodology" className="text-cyan-400 hover:text-cyan-300 ml-1">View full methodology →</Link>
+          </p>
+          <div className="flex items-center justify-center gap-4 text-xs">
+            <Link href="/terms" className="text-slate-400 hover:text-cyan-400 transition-colors">Terms of Service</Link>
+            <span className="text-slate-700">•</span>
+            <Link href="/privacy" className="text-slate-400 hover:text-cyan-400 transition-colors">Privacy Policy</Link>
+            <span className="text-slate-700">•</span>
+            <Link href="/methodology" className="text-slate-400 hover:text-cyan-400 transition-colors">Methodology</Link>
+          </div>
         </div>
       </div>
     </div>

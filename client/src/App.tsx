@@ -15,6 +15,9 @@ import Ecology from "./pages/Ecology";
 import Vehicles from "./pages/Vehicles";
 import CommunityImpact from "./pages/CommunityImpact";
 import GovernmentImpact from "./pages/GovernmentImpact";
+import Methodology from "./pages/Methodology";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -30,6 +33,9 @@ function Router() {
       <Route path="/map" component={MapView} />
       <Route path="/comparison" component={CityComparison} />
       <Route path="/government" component={GovernmentImpact} />
+      <Route path="/methodology" component={Methodology} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/privacy" component={Privacy} />
       <Route path="/ecology" component={Ecology} />
       <Route path="/vehicles" component={Vehicles} />
       <Route path="/city/:city/impact" component={CommunityImpact} />
