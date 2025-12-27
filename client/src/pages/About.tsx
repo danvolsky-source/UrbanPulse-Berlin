@@ -83,6 +83,16 @@ export default function About() {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-slate-300 space-y-6">
+            <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4 mb-4">
+              <h3 className="text-cyan-400 font-semibold mb-2 flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Principal Investigator
+              </h3>
+              <p className="text-slate-300 text-sm">
+                <strong>Sky-Mind Research Team</strong> — Independent researchers and data analysts specializing in urban analytics, demographic research, and transparent methodology.
+              </p>
+            </div>
+
             <div>
               <h3 className="text-white font-semibold mb-2">Development Team</h3>
               <p>
@@ -144,6 +154,45 @@ export default function About() {
               <h3 className="text-white font-semibold mb-2">Data Sources</h3>
               <p>
                 All data used in UrbanPulse is sourced from publicly available government statistics and open data repositories. We do not purchase proprietary datasets or receive data from private entities. See our <Link href="/references" className="text-cyan-400 hover:text-cyan-300 underline">References</Link> page for complete source documentation.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Peer Review Status - CRITICAL DISCLOSURE */}
+        <Card className="mb-8 bg-orange-500/10 border-orange-500/30">
+          <CardHeader>
+            <CardTitle className="text-orange-400 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5" />
+              Peer Review Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-slate-300 space-y-4">
+            <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-4">
+              <p className="text-orange-400 font-semibold mb-2">Important Disclosure</p>
+              <p className="text-slate-300 text-sm leading-relaxed mb-3">
+                <strong>This platform has not undergone formal peer review.</strong> While we follow rigorous data collection and analysis practices, 
+                the methodologies and interpretations presented have not been independently validated by academic reviewers.
+              </p>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                We maintain full transparency to enable independent verification. All data sources, statistical methods, and limitations 
+                are documented in our <Link href="/methodology" className="text-orange-400 hover:text-orange-300 underline">Methodology page</Link>.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-white font-semibold mb-2">Why This Matters</h3>
+              <p>
+                Peer review is the gold standard in academic research, where independent experts evaluate methodology, data quality, and conclusions. 
+                Without peer review, users should exercise additional critical judgment when interpreting our findings.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-white font-semibold mb-2">Our Commitment</h3>
+              <p>
+                We are committed to transparency and welcome scrutiny from the academic community. If you identify methodological issues or data errors, 
+                please contact us at <a href="mailto:info@sky-mind.com" className="text-cyan-400 hover:text-cyan-300 underline">info@sky-mind.com</a>.
               </p>
             </div>
           </CardContent>

@@ -9,6 +9,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "rec
 import { InterpretationToggle, useShowInterpretations } from "@/components/InterpretationToggle";
 import { DataSourceBadge } from "@/components/DataSourceBadge";
 import { Citation } from "@/components/Citation";
+import { ChartTitleWithQuality } from "@/components/DataQualityIndicator";
 
 const COUNTRIES: Country[] = ["Germany", "France", "United Kingdom", "United States"];
 
@@ -190,11 +191,12 @@ export default function GovernmentImpact() {
         {/* NEUTRAL DATA LAYER - Unemployment Trend Chart */}
         <Card className="bg-slate-900/50 border-slate-800 mb-8">
           <CardHeader>
-            <div className="flex items-start justify-between">
-              <div>
-                <CardTitle className="text-white">Regional Labour Market Trend (2020-2024)</CardTitle>
-                <p className="text-xs text-slate-400 mt-1">Regional unemployment indicator (NUTS 2), used for contextual comparison</p>
-              </div>
+            <ChartTitleWithQuality 
+              title="Regional Labour Market Trend (2020-2024)"
+              quality="medium"
+              subtitle="Regional unemployment indicator (NUTS 2), used for contextual comparison"
+            />
+            <div className="absolute top-6 right-6">
               <DataSourceBadge type="official" source="Eurostat (lfst_r_lfu3rt)" />
             </div>
           </CardHeader>

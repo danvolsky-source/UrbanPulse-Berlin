@@ -256,3 +256,15 @@
 - [x] Add contact information for academic inquiries
 - [x] Add route to App.tsx
 - [x] Add navigation links in footer
+
+### Expert Review - Top-10 Critical Fixes
+- [x] Fix "tinyint is not defined" console error
+- [x] Add Error Boundaries to prevent app crashes (already implemented in App.tsx)
+- [x] Implement GDPR cookie consent banner
+- [x] Add data quality indicators (🟢🟡🔴) to all charts
+- [x] Simplify homepage hero section (reduce text, add clear CTAs)
+- [x] Add Principal Investigator info to About page
+- [x] Add "Not peer-reviewed" disclosure to About page
+- [ ] Create Data Quality Index system
+- [ ] Add export watermark to charts
+- [ ] Create /changelog page for data updates

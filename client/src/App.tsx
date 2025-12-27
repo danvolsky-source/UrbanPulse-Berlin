@@ -20,6 +20,7 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import References from "./pages/References";
 import About from "./pages/About";
+import CookieConsent from "./components/CookieConsent";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -69,6 +70,7 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <Router />
+            <CookieConsent />
           </TooltipProvider>
         </CityProvider>
       </ThemeProvider>

@@ -103,51 +103,40 @@ export default function Home() {
             />
           </div>
           
-          {/* Tagline with Observable Correlations (NOT causation) */}
+          {/* Simplified Hero Message */}
           <div className="mb-8">
-            <p className="text-3xl md:text-4xl text-white font-bold mb-4 max-w-4xl mx-auto leading-tight">
-              <span className="text-cyan-400">Explore Urban Development Patterns</span>
+            <h1 className="text-4xl md:text-5xl text-white font-bold mb-4 max-w-4xl mx-auto leading-tight">
+              <span className="text-cyan-400">Compare 15 Cities</span> <span className="text-white">(2015–2024)</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-slate-300 mb-2 max-w-3xl mx-auto font-light">
+              See demographic & housing trends
             </p>
-            <p className="text-xl md:text-2xl text-slate-300 mb-6 max-w-4xl mx-auto font-light">
-              Analyze city growth trends and housing market dynamics across European and North American cities
-            </p>
-            <p className="text-sm text-slate-500 max-w-3xl mx-auto">
-              Educational research tool for understanding urban development patterns and distributional effects
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+              Explore correlations · No causation claims
             </p>
           </div>
           
-          {/* Trust Signals */}
-          <div className="mb-6">
-            <p className="text-sm text-slate-500">Data from OpenStreetMap, Eurostat, Government Sources</p>
-          </div>
-
           {/* Academic Badge */}
-          <div className="mb-6">
+          <div className="mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-full">
               <BarChart3 className="w-4 h-4 text-cyan-400" />
-              <span className="text-sm text-slate-400">Research & Educational Purpose</span>
+              <span className="text-sm text-slate-400">Research & Educational Tool</span>
             </div>
           </div>
 
-          {/* CTA Buttons - Neutral Academic Tone */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
-            <Link href="/methodology">
-              <button className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105">
-                <BarChart3 className="inline-block w-5 h-5 mr-2 -mt-1" />
-                View Methodology →
-              </button>
-            </Link>
+          {/* Clear CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <button 
               onClick={() => window.scrollTo({ top: document.getElementById('cities-section')?.offsetTop || 0, behavior: 'smooth' })}
-              className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl border border-slate-700"
+              className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-semibold px-10 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105"
             >
-              Explore Cities
+              Explore Cities →
             </button>
-          </div>
-
-          {/* Data Update Notice (not urgency) */}
-          <div className="mb-12">
-            <p className="text-sm text-cyan-400 font-medium">📊 Dataset updated quarterly with latest available statistics</p>
+            <Link href="/methodology">
+              <button className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-10 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl border border-slate-700">
+                View Methodology
+              </button>
+            </Link>
           </div>
 
           {/* Stats Grid - Improved contrast and size */}
