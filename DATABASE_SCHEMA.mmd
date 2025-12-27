@@ -1,0 +1,122 @@
+erDiagram
+    cities ||--o{ districts : "has many"
+    cities ||--o{ propertyPrices : "has prices"
+    cities ||--o{ unemployment : "has unemployment data"
+    cities ||--o{ socialBenefits : "has social benefits"
+    cities ||--o{ taxBurden : "has tax data"
+    cities ||--o{ governmentDecisions : "has decisions"
+    cities ||--o{ citySummary : "has summary"
+    
+    districts ||--o{ demographics : "has demographics"
+    districts ||--o{ communityInfrastructure : "has infrastructure"
+    districts ||--o{ districtPropertyPrices : "has prices"
+    
+    cities {
+        int id PK
+        string name
+        string country
+        int population
+        float latitude
+        float longitude
+        string nutsCode "NUTS 2/3 region code"
+    }
+    
+    districts {
+        int id PK
+        string city FK
+        string name
+        string nameEn
+        int population
+        float area "in km²"
+        int foreignerPercentage "×10 (e.g., 250 = 25.0%)"
+        string dominantCommunity
+    }
+    
+    demographics {
+        int id PK
+        int districtId FK
+        int year "2015-2024"
+        string community "Turkish, Polish, Syrian, etc."
+        int population
+        int percentageOfDistrict "×10 (e.g., 48 = 4.8%)"
+    }
+    
+    propertyPrices {
+        int id PK
+        string city FK
+        int year "2015-2024"
+        int month "1-12"
+        int pricePerSqm "EUR per m²"
+    }
+    
+    districtPropertyPrices {
+        int id PK
+        int districtId FK
+        int year "2015-2024"
+        int month "1-12"
+        int pricePerSqm "EUR per m²"
+    }
+    
+    unemployment {
+        int id PK
+        string city FK
+        int year "2015-2024"
+        int rate "×10 (e.g., 85 = 8.5%)"
+    }
+    
+    socialBenefits {
+        int id PK
+        string city FK
+        int year "2015-2024"
+        int spendingPerCapita "EUR per person"
+    }
+    
+    taxBurden {
+        int id PK
+        string city FK
+        int year "2015-2024"
+        int effectiveRate "×10 (e.g., 325 = 32.5%)"
+    }
+    
+    governmentDecisions {
+        int id PK
+        string city FK
+        string title
+        text description
+        string date "YYYY-MM-DD"
+        string category "housing, immigration, welfare, taxation"
+        string promisedOutcome
+        string observedOutcome
+        string source "URL to official document"
+    }
+    
+    communityInfrastructure {
+        int id PK
+        int districtId FK
+        string type "mosque, church, community_center, school"
+        string name
+        float latitude
+        float longitude
+        int yearEstablished
+    }
+    
+    citySummary {
+        int id PK
+        string city FK
+        int year "2015-2024"
+        int totalPopulation
+        int foreignPopulation
+        int foreignPercentage "×10"
+        int avgPropertyPrice "EUR per m²"
+        int unemploymentRate "×10"
+    }
+    
+    user {
+        int id PK
+        string openId "Manus OAuth ID"
+        string name
+        string email
+        string role "admin or user"
+        datetime createdAt
+        datetime updatedAt
+    }

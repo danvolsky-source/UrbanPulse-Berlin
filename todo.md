@@ -268,3 +268,12 @@
 - [ ] Create Data Quality Index system
 - [ ] Add export watermark to charts
 - [ ] Create /changelog page for data updates
+
+### Final Language Neutralization - Observatory Section
+- [ ] Replace "Urban Development Observatory" with neutral alternative (doesn't imply monitoring/surveillance)
+
+## Final Pre-Launch Tasks
+- [x] Apply chosen section title: "City Data Explorer" (replace "Urban Development Observatory")
+- [x] Create neutral press release for public launch
+- [x] Create comprehensive QA checklist for staging environment
+- [ ] Final checkpoint before production deployment

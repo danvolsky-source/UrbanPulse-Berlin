@@ -1,0 +1,85 @@
+{
+  "query": "SELECT id, name, country FROM cities ORDER BY name;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 29gdLDSgnUm8329.10fabf3e428b --database KisoxzGj7YxTPNbfpxKGfF --execute SELECT id, name, country FROM cities ORDER BY name;",
+  "rows": [
+    {
+      "id": "8",
+      "name": "Amsterdam",
+      "country": "Netherlands"
+    },
+    {
+      "id": "1",
+      "name": "Berlin",
+      "country": "Germany"
+    },
+    {
+      "id": "9",
+      "name": "Brussels",
+      "country": "Belgium"
+    },
+    {
+      "id": "15",
+      "name": "Chicago",
+      "country": "United States"
+    },
+    {
+      "id": "4",
+      "name": "Cologne",
+      "country": "Germany"
+    },
+    {
+      "id": "3",
+      "name": "Hamburg",
+      "country": "Germany"
+    },
+    {
+      "id": "10",
+      "name": "London",
+      "country": "United Kingdom"
+    },
+    {
+      "id": "14",
+      "name": "Los Angeles",
+      "country": "United States"
+    },
+    {
+      "id": "2",
+      "name": "Munich",
+      "country": "Germany"
+    },
+    {
+      "id": "12",
+      "name": "New York",
+      "country": "United States"
+    },
+    {
+      "id": "5",
+      "name": "Paris",
+      "country": "France"
+    },
+    {
+      "id": "7",
+      "name": "Rome",
+      "country": "Italy"
+    },
+    {
+      "id": "13",
+      "name": "Toronto",
+      "country": "Canada"
+    },
+    {
+      "id": "6",
+      "name": "Vienna",
+      "country": "Austria"
+    },
+    {
+      "id": "11",
+      "name": "Washington D.C.",
+      "country": "United States"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcountry\n8\tAmsterdam\tNetherlands\n1\tBerlin\tGermany\n9\tBrussels\tBelgium\n15\tChicago\tUnited States\n4\tCologne\tGermany\n3\tHamburg\tGermany\n10\tLondon\tUnited Kingdom\n14\tLos Angeles\tUnited States\n2\tMunich\tGermany\n12\tNew York\tUnited States\n5\tParis\tFrance\n7\tRome\tItaly\n13\tToronto\tCanada\n6\tVienna\tAustria\n11\tWashington D.C.\tUnited States\n",
+  "stderr": "",
+  "execution_time_ms": 1587
+}

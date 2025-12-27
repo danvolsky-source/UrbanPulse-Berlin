@@ -184,7 +184,7 @@ export default function Home() {
                   <BarChart3 className="w-8 h-8 text-cyan-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-2">Urban Development Observatory</h3>
+                  <h3 className="text-2xl font-bold text-white mb-2">City Data Explorer</h3>
                   <p className="text-gray-300 text-sm">
                     Analyzing correlations between demographic change, city context, and housing market dynamics. 
                     Explore distributional effects across employment, economic indicators, and urban development patterns.
