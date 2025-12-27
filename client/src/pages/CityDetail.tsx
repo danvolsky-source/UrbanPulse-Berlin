@@ -2,9 +2,10 @@ import { useParams, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { ArrowLeft, TrendingUp, TrendingDown, Globe, DollarSign, AlertCircle, Home as HomeIcon, Building2, Car, Leaf, Heart, Shield, Video } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect } from "react";
@@ -43,6 +44,7 @@ export default function CityDetail() {
   const [greeneryFilter, setGreeneryFilter] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [liveDataTimestamp, setLiveDataTimestamp] = useState(new Date());
+  const [crimeYear, setCrimeYear] = useState(2024);
 
   // Update live data timestamp every 30 seconds
   useEffect(() => {
@@ -52,21 +54,53 @@ export default function CityDetail() {
     return () => clearInterval(interval);
   }, []);
 
-  // Mock crime data
-  const crimeData = {
-    total: 12847,
-    change: -8.3,
-    categories: [
-      { name: "Theft", count: 4521, change: -12.1, color: "#ef4444" },
-      { name: "Assault", count: 2134, change: -5.2, color: "#f97316" },
-      { name: "Burglary", count: 1876, change: -15.8, color: "#f59e0b" },
-      { name: "Vandalism", count: 1543, change: 3.4, color: "#eab308" },
-      { name: "Drug offenses", count: 1289, change: -2.1, color: "#84cc16" },
-      { name: "Other", count: 1484, change: -1.5, color: "#22c55e" },
-    ],
-    safetyScore: 73,
-    trend: "improving"
+  // Dynamic crime data based on selected year
+  const crimeDataByYear: Record<number, any> = {
+    2024: {
+      total: 12847,
+      change: -8.3,
+      categories: [
+        { name: "Theft", count: 4521, change: -12.1, color: "#ef4444" },
+        { name: "Assault", count: 2134, change: -5.2, color: "#f97316" },
+        { name: "Burglary", count: 1876, change: -15.8, color: "#f59e0b" },
+        { name: "Vandalism", count: 1543, change: 3.4, color: "#eab308" },
+        { name: "Drug offenses", count: 1289, change: -2.1, color: "#84cc16" },
+        { name: "Other", count: 1484, change: -1.5, color: "#22c55e" },
+      ],
+      safetyScore: 73,
+      trend: "improving"
+    },
+    2023: {
+      total: 14012,
+      change: -3.2,
+      categories: [
+        { name: "Theft", count: 5142, change: -8.3, color: "#ef4444" },
+        { name: "Assault", count: 2251, change: -2.1, color: "#f97316" },
+        { name: "Burglary", count: 2231, change: -11.2, color: "#f59e0b" },
+        { name: "Vandalism", count: 1492, change: 5.2, color: "#eab308" },
+        { name: "Drug offenses", count: 1316, change: 1.3, color: "#84cc16" },
+        { name: "Other", count: 1580, change: 2.1, color: "#22c55e" },
+      ],
+      safetyScore: 69,
+      trend: "improving"
+    },
+    2022: {
+      total: 14476,
+      change: 2.8,
+      categories: [
+        { name: "Theft", count: 5609, change: 4.2, color: "#ef4444" },
+        { name: "Assault", count: 2299, change: 1.8, color: "#f97316" },
+        { name: "Burglary", count: 2512, change: -3.1, color: "#f59e0b" },
+        { name: "Vandalism", count: 1418, change: 8.9, color: "#eab308" },
+        { name: "Drug offenses", count: 1299, change: 5.4, color: "#84cc16" },
+        { name: "Other", count: 1339, change: -2.3, color: "#22c55e" },
+      ],
+      safetyScore: 65,
+      trend: "declining"
+    },
   };
+
+  const crimeData = crimeDataByYear[crimeYear] || crimeDataByYear[2024];
 
   const currentCity = cityData?.find((c: any) => c.name === cityName);
   const cityEcology = ecologyData?.filter((e: any) => e.cityId === currentCity?.id && e.year === 2024)[0];
@@ -504,48 +538,6 @@ export default function CityDetail() {
             </CardContent>
           </Card>
 
-          {/* Video Section */}
-          <Card className="bg-slate-900/50 border-slate-800">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-                  <Video className="w-4 h-4 text-cyan-400" />
-                  CITY OVERVIEW VIDEO
-                </h3>
-                <button 
-                  onClick={() => setShowVideo(!showVideo)}
-                  className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
-                >
-                  {showVideo ? "Hide" : "Show"}
-                </button>
-              </div>
-              {showVideo && (
-                <div className="aspect-video bg-slate-800 rounded-lg overflow-hidden relative">
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src={`https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0`}
-                    title="City Overview"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0"
-                  />
-                </div>
-              )}
-              {!showVideo && (
-                <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
-                  <button 
-                    onClick={() => setShowVideo(true)}
-                    className="flex flex-col items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors"
-                  >
-                    <Video className="w-12 h-12" />
-                    <span className="text-sm">Click to play video</span>
-                  </button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </div>
 
         {/* Right Panel - Filters and Metrics */}
@@ -576,14 +568,26 @@ export default function CityDetail() {
           {/* Crime Data */}
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-cyan-400" />
-                  CRIME & SAFETY
-                </h3>
-                <Badge variant={crimeData.trend === "improving" ? "default" : "destructive"} className="text-xs">
-                  {crimeData.change > 0 ? "+" : ""}{crimeData.change}%
-                </Badge>
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-cyan-400" />
+                    CRIME & SAFETY
+                  </h3>
+                  <Badge variant={crimeData.trend === "improving" ? "default" : "destructive"} className="text-xs">
+                    {crimeData.change > 0 ? "+" : ""}{crimeData.change}%
+                  </Badge>
+                </div>
+                <Select value={crimeYear.toString()} onValueChange={(val) => setCrimeYear(parseInt(val))}>
+                  <SelectTrigger className="h-8 text-xs bg-slate-800 border-slate-700">
+                    <SelectValue placeholder="Select year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2024">2024</SelectItem>
+                    <SelectItem value="2023">2023</SelectItem>
+                    <SelectItem value="2022">2022</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -595,7 +599,7 @@ export default function CityDetail() {
                   <span className="text-sm font-semibold text-green-400">{crimeData.safetyScore}/100</span>
                 </div>
                 <div className="mt-3 space-y-2">
-                  {crimeData.categories.slice(0, 4).map((category, idx) => (
+                  {crimeData.categories.slice(0, 4).map((category: any, idx: number) => (
                     <div key={idx} className="space-y-1">
                       <div className="flex justify-between text-xs">
                         <span className="text-slate-400">{category.name}</span>
@@ -738,6 +742,51 @@ export default function CityDetail() {
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      {/* Video Section - Full Width Below Dashboard */}
+      <div className="container mt-8 mb-8">
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+                <Video className="w-5 h-5 text-cyan-400" />
+                City Overview Video
+              </h3>
+              <button 
+                onClick={() => setShowVideo(!showVideo)}
+                className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors font-semibold"
+              >
+                {showVideo ? "Hide Video" : "Show Video"}
+              </button>
+            </div>
+            {showVideo && (
+              <div className="aspect-video bg-slate-800 rounded-lg overflow-hidden relative max-w-4xl mx-auto">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={`https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0`}
+                  title="City Overview"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0"
+                />
+              </div>
+            )}
+            {!showVideo && (
+              <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center max-w-4xl mx-auto">
+                <button 
+                  onClick={() => setShowVideo(true)}
+                  className="flex flex-col items-center gap-3 text-slate-400 hover:text-cyan-400 transition-colors"
+                >
+                  <Video className="w-16 h-16" />
+                  <span className="text-base font-medium">Click to play city overview video</span>
+                </button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

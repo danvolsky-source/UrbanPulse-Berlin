@@ -153,17 +153,17 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Clear CTAs */}
+          {/* CTAs matching PDF */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <button 
               onClick={() => window.scrollTo({ top: document.getElementById('cities-section')?.offsetTop || 0, behavior: 'smooth' })}
-              className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-semibold px-10 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105"
+              className="bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900 text-white font-bold px-10 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl"
             >
-              Explore Cities →
+              Request Demo
             </button>
             <Link href="/methodology">
-              <button className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-10 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl border border-slate-700">
-                View Methodology
+              <button className="bg-transparent hover:bg-slate-800/50 text-white font-bold px-10 py-4 rounded-lg text-lg transition-all border-2 border-white hover:border-cyan-400">
+                Learn More
               </button>
             </Link>
           </div>
@@ -190,22 +190,39 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Stats Grid - Improved contrast and size */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="bg-slate-900/70 backdrop-blur-sm border-2 border-slate-700 rounded-xl p-8 hover:border-cyan-500/70 transition-all hover:scale-105">
-              <MapPin className="w-10 h-10 text-cyan-400 mx-auto mb-4" />
-              <p className="text-5xl font-bold text-white mb-2">15</p>
-              <p className="text-base text-slate-300 font-medium">Global Cities</p>
+          {/* Platform Statistics Showcase - Matching PDF */}
+          <div className="max-w-5xl mx-auto mb-16">
+            <h2 className="text-3xl font-bold text-center text-white mb-8">Platform Overview</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="text-center">
+                <p className="text-6xl font-bold text-white mb-2">15</p>
+                <p className="text-lg font-semibold text-slate-300 mb-1">Cities</p>
+                <p className="text-sm text-slate-400">In the database</p>
+              </div>
+              <div className="text-center">
+                <p className="text-6xl font-bold text-white mb-2">4.5K+</p>
+                <p className="text-lg font-semibold text-slate-300 mb-1">Data Points</p>
+                <p className="text-sm text-slate-400">In the repository</p>
+              </div>
+              <div className="text-center">
+                <p className="text-6xl font-bold text-white mb-2">15K</p>
+                <p className="text-lg font-semibold text-slate-300 mb-1">Code Lines</p>
+                <p className="text-sm text-slate-400">TypeScript</p>
+              </div>
+              <div className="text-center">
+                <p className="text-6xl font-bold text-white mb-2">32</p>
+                <p className="text-lg font-semibold text-slate-300 mb-1">Tests Passing</p>
+                <p className="text-sm text-slate-400">100% passing</p>
+              </div>
             </div>
-            <div className="bg-slate-900/70 backdrop-blur-sm border-2 border-slate-700 rounded-xl p-8 hover:border-purple-500/70 transition-all hover:scale-105">
-              <Users className="w-10 h-10 text-purple-400 mx-auto mb-4" />
-              <p className="text-5xl font-bold text-white mb-2">5</p>
-              <p className="text-base text-slate-300 font-medium">Communities Tracked</p>
-            </div>
-            <div className="bg-slate-900/70 backdrop-blur-sm border-2 border-slate-700 rounded-xl p-8 hover:border-teal-500/70 transition-all hover:scale-105">
-              <TrendingUp className="w-10 h-10 text-teal-400 mx-auto mb-4" />
-              <p className="text-5xl font-bold text-white mb-2">2015-2024</p>
-              <p className="text-base text-slate-300 font-medium">Historical Data</p>
+            
+            {/* Explore Live Dashboard CTA */}
+            <div className="text-center mt-10">
+              <Link href="/city/Berlin">
+                <button className="bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900 text-white font-bold px-12 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl">
+                  Explore Live Dashboard
+                </button>
+              </Link>
             </div>
           </div>
         </div>

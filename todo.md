@@ -311,3 +311,11 @@
 - [x] Add real-time online data feeds (LIVE DATA indicator in header)
 - [x] Fix logo visibility on dark background
 - [x] Test all restored features
+
+## PDF Requirements Alignment (Keep Dark Theme + Current 15 Cities)
+- [x] Add "Request Demo" CTA button to homepage hero
+- [x] Add "Learn More" CTA button to homepage hero
+- [x] Add platform statistics showcase (15 cities, 4.5K+ data points, 15K code lines, 32 tests)
+- [x] Add "Explore Live Dashboard" button
+- [x] Fix video player placement - move to dedicated section (not in middle of charts)
+- [x] Make crime data dynamic with year selector instead of static mock
