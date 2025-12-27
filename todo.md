@@ -289,3 +289,10 @@
 - [x] Show "Explore Cities Worldwide" if country not represented
 - [x] Show "Explore Cities in [Country]" only if cities exist for that country
 - [x] Test with Israel IP (should show "Worldwide" not "Israel")
+
+## Critical Homepage Improvements
+- [x] Fix logo placement - remove white background, make transparent, professional sizing
+- [x] Delay cookie banner to 3 seconds after page load
+- [x] Improve value proposition subtitle: "Access 10 years of verified demographic and housing data from 15 global cities — free for researchers, policymakers, and citizens"
+- [x] Add visual proof in hero section (map preview or featured insight)
+- [x] Test all changes on desktop and mobile

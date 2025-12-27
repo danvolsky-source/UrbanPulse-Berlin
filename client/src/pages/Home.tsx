@@ -121,25 +121,28 @@ export default function Home() {
         </div>
 
         <div className="container relative py-20 text-center">
-          {/* Logo - Reduced size, transparent background */}
-          <div className="flex justify-center mb-6">
+          {/* Logo - Professional placement with transparent background */}
+          <div className="flex justify-center mb-8">
             <img 
               src="/urbanpulse-logo.png" 
               alt="UrbanPulse by SkyMind" 
-              className="h-20 w-auto"
-              style={{ filter: 'drop-shadow(0 4px 20px rgba(56, 189, 248, 0.6))' }}
+              className="h-16 w-auto object-contain"
+              style={{ 
+                filter: 'drop-shadow(0 8px 24px rgba(6, 182, 212, 0.4))',
+                mixBlendMode: 'normal'
+              }}
             />
           </div>
           
-          {/* Simplified Hero Message */}
+          {/* Hero Message with Improved Value Proposition */}
           <div className="mb-8">
-            <h1 className="text-4xl md:text-5xl text-white font-bold mb-4 max-w-4xl mx-auto leading-tight">
+            <h1 className="text-4xl md:text-5xl text-white font-bold mb-6 max-w-4xl mx-auto leading-tight">
               <span className="text-cyan-400">Compare 15 Cities</span> <span className="text-white">(2015–2024)</span>
             </h1>
-            <p className="text-xl md:text-2xl text-slate-300 mb-2 max-w-3xl mx-auto font-light">
-              See demographic & housing trends
+            <p className="text-xl md:text-2xl text-slate-200 mb-4 max-w-4xl mx-auto font-normal leading-relaxed">
+              Access 10 years of verified demographic and housing data from 15 global cities — free for researchers, policymakers, and citizens
             </p>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+            <p className="text-base text-slate-400 max-w-2xl mx-auto">
               Explore correlations · No causation claims
             </p>
           </div>
@@ -164,6 +167,28 @@ export default function Home() {
               <button className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-10 py-4 rounded-lg text-lg transition-all shadow-lg hover:shadow-xl border border-slate-700">
                 View Methodology
               </button>
+            </Link>
+          </div>
+
+          {/* Featured Insight - Visual Proof */}
+          <div className="max-w-3xl mx-auto mb-10">
+            <Link href="/cities/Berlin">
+              <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-sm border-2 border-cyan-500/30 rounded-2xl p-8 hover:border-cyan-500/60 transition-all hover:scale-[1.02] cursor-pointer group">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+                  <span className="text-sm font-semibold text-cyan-400 uppercase tracking-wider">Featured Insight</span>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
+                  Berlin: Property prices rose 35% (2015–2024) while Muslim community grew 52%
+                </h3>
+                <p className="text-slate-300 mb-4">
+                  Explore the full district-level analysis with interactive heatmaps, demographic breakdowns, and economic indicators across 200+ neighborhoods.
+                </p>
+                <div className="flex items-center gap-2 text-cyan-400 font-medium group-hover:gap-3 transition-all">
+                  <span>Explore Berlin Data</span>
+                  <span className="text-xl">→</span>
+                </div>
+              </div>
             </Link>
           </div>
 

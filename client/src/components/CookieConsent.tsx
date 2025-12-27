@@ -9,8 +9,8 @@ export default function CookieConsent() {
     // Check if user has already made a choice
     const consent = localStorage.getItem("cookie-consent");
     if (!consent) {
-      // Show banner after 1 second delay
-      const timer = setTimeout(() => setShow(true), 1000);
+      // Show banner after 3 seconds delay to let users see content first
+      const timer = setTimeout(() => setShow(true), 3000);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -42,7 +42,7 @@ export default function CookieConsent() {
               <h3 className="text-lg font-semibold text-white mb-2">Cookie Consent</h3>
               <p className="text-sm text-slate-300 leading-relaxed mb-4">
                 We use essential cookies to ensure the website functions properly and optional analytics cookies to understand how you use our platform. 
-                You can choose to accept or reject optional cookies. 
+                We store analytics data for 90 days. You can choose to accept or reject optional cookies. 
                 <Link href="/privacy" className="text-cyan-400 hover:text-cyan-300 ml-1 underline">
                   Learn more in our Privacy Policy
                 </Link>
