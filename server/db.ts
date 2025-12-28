@@ -742,46 +742,69 @@ export async function getDistrictMapData(city: string = "Berlin") {
   const { districts, propertyPrices, demographics } = await import("../drizzle/schema");
   const { sql } = await import("drizzle-orm");
   
-  // Get districts with latest property prices and demographics
+  // Get all districts for the city
   const districtList = await db.select().from(districts).where(eq(districts.city, city));
   
-  const result = [];
+  if (districtList.length === 0) return [];
   
-  for (const district of districtList) {
-    // Get latest property price
-    const latestPrice = await db
-      .select({ avgPrice: propertyPrices.averagePricePerSqm })
-      .from(propertyPrices)
-      .where(eq(propertyPrices.districtId, district.id))
-      .orderBy(sql`${propertyPrices.year} DESC, ${propertyPrices.month} DESC`)
-      .limit(1);
-    
-    // Get top 3 communities for this district
-    const topCommunities = await db
-      .select({
-        community: demographics.community,
-        population: demographics.population,
-        percentage: demographics.percentageOfDistrict,
-      })
-      .from(demographics)
-      .where(eq(demographics.districtId, district.id))
-      .orderBy(sql`${demographics.population} DESC`)
-      .limit(3);
-    
-    result.push({
-      id: district.id,
-      name: district.name,
-      nameEn: district.nameEn,
-      population: district.population,
-      area: district.area,
-      foreignerPercentage: district.foreignerPercentage,
-      dominantCommunity: district.dominantCommunity,
-      averagePricePerSqm: latestPrice.length > 0 ? latestPrice[0].avgPrice : null,
-      topCommunities: topCommunities,
-    });
-  }
+  const districtIds = districtList.map(d => d.id);
   
-  return result;
+  // Get latest property prices for all districts in one query
+  const latestPrices = await db
+    .select({
+      districtId: propertyPrices.districtId,
+      avgPrice: propertyPrices.averagePricePerSqm,
+      year: propertyPrices.year,
+      month: propertyPrices.month,
+    })
+    .from(propertyPrices)
+    .where(inArray(propertyPrices.districtId, districtIds))
+    .orderBy(sql`${propertyPrices.year} DESC, ${propertyPrices.month} DESC`);
+  
+  // Create map of latest prices by district
+  const priceMap = new Map<number, number>();
+  latestPrices.forEach(p => {
+    if (!priceMap.has(p.districtId)) {
+      priceMap.set(p.districtId, p.avgPrice);
+    }
+  });
+  
+  // Get top 3 communities for all districts in one query
+  const allDemographics = await db
+    .select({
+      districtId: demographics.districtId,
+      community: demographics.community,
+      population: demographics.population,
+      percentage: demographics.percentageOfDistrict,
+    })
+    .from(demographics)
+    .where(inArray(demographics.districtId, districtIds))
+    .orderBy(demographics.districtId, sql`${demographics.population} DESC`);
+  
+  // Group demographics by district and get top 3
+  const demographicsMap = new Map<number, typeof allDemographics>();
+  allDemographics.forEach(demo => {
+    if (!demographicsMap.has(demo.districtId)) {
+      demographicsMap.set(demo.districtId, []);
+    }
+    const districtDemos = demographicsMap.get(demo.districtId)!;
+    if (districtDemos.length < 3) {
+      districtDemos.push(demo);
+    }
+  });
+  
+  // Build final result
+  return districtList.map(district => ({
+    id: district.id,
+    name: district.name,
+    nameEn: district.nameEn,
+    population: district.population,
+    area: district.area,
+    foreignerPercentage: district.foreignerPercentage,
+    dominantCommunity: district.dominantCommunity,
+    averagePricePerSqm: priceMap.get(district.id) ?? null,
+    topCommunities: demographicsMap.get(district.id) ?? [],
+  }));
 }
 
 export async function getPropertyPricesForYear(city: string = "Berlin", year: number = 2024) {
@@ -789,37 +812,32 @@ export async function getPropertyPricesForYear(city: string = "Berlin", year: nu
   if (!db) return [];
   
   const { districts, propertyPrices } = await import("../drizzle/schema");
+  const { sql } = await import("drizzle-orm");
   
-  // Get all districts for the city
-  const districtList = await db.select().from(districts).where(eq(districts.city, city));
+  // Get all districts and their average prices for the year in one query using JOIN
+  const result = await db
+    .select({
+      districtId: districts.id,
+      districtName: districts.nameEn,
+      avgPrice: sql<number>`AVG(${propertyPrices.averagePricePerSqm})`.as('avgPrice'),
+    })
+    .from(districts)
+    .leftJoin(
+      propertyPrices,
+      and(
+        eq(propertyPrices.districtId, districts.id),
+        eq(propertyPrices.year, year)
+      )
+    )
+    .where(eq(districts.city, city))
+    .groupBy(districts.id, districts.nameEn);
   
-  const result = [];
-  
-  for (const district of districtList) {
-    // Get average price for the year (average of all months)
-    const yearPrices = await db
-      .select({ avgPrice: propertyPrices.averagePricePerSqm })
-      .from(propertyPrices)
-      .where(
-        and(
-          eq(propertyPrices.districtId, district.id),
-          eq(propertyPrices.year, year)
-        )
-      );
-    
-    const avgPrice = yearPrices.length > 0
-      ? Math.round(yearPrices.reduce((sum, p) => sum + p.avgPrice, 0) / yearPrices.length)
-      : null;
-    
-    result.push({
-      districtId: district.id,
-      districtName: district.nameEn,
-      year: year,
-      averagePricePerSqm: avgPrice,
-    });
-  }
-  
-  return result;
+  return result.map(r => ({
+    districtId: r.districtId,
+    districtName: r.districtName,
+    year: year,
+    averagePricePerSqm: r.avgPrice ? Math.round(r.avgPrice) : null,
+  }));
 }
 
 export async function getDemographicsForYear(city: string = "Berlin", year: number = 2024) {
@@ -831,32 +849,42 @@ export async function getDemographicsForYear(city: string = "Berlin", year: numb
   // Get all districts for the city
   const districtList = await db.select().from(districts).where(eq(districts.city, city));
   
-  const result = [];
+  if (districtList.length === 0) return [];
   
-  for (const district of districtList) {
-    // Get demographics for this year
-    const yearDemographics = await db
-      .select()
-      .from(demographics)
-      .where(
-        and(
-          eq(demographics.districtId, district.id),
-          eq(demographics.year, year)
-        )
+  const districtIds = districtList.map(d => d.id);
+  
+  // Get demographics for all districts for the year in one query
+  const yearDemographics = await db
+    .select()
+    .from(demographics)
+    .where(
+      and(
+        inArray(demographics.districtId, districtIds),
+        eq(demographics.year, year)
       )
-      .orderBy(demographics.population);
+    )
+    .orderBy(demographics.districtId, demographics.population);
+  
+  // Group demographics by district
+  const demographicsMap = new Map<number, typeof yearDemographics>();
+  yearDemographics.forEach(demo => {
+    if (!demographicsMap.has(demo.districtId)) {
+      demographicsMap.set(demo.districtId, []);
+    }
+    demographicsMap.get(demo.districtId)!.push(demo);
+  });
+  
+  // Build final result
+  return districtList.map(district => {
+    const districtDemographics = demographicsMap.get(district.id) ?? [];
     
-    const totalPopulation = yearDemographics.reduce((sum, d) => sum + d.population, 0);
-    
-    result.push({
+    return {
       districtId: district.id,
       districtName: district.nameEn,
       year: year,
       totalPopulation: district.population,
-      communities: yearDemographics,
+      communities: districtDemographics,
       populationDensity: Math.round(district.population / district.area),
-    });
-  }
-  
-  return result;
+    };
+  });
 }

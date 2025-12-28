@@ -52,6 +52,7 @@ export default function MapView() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markers = useRef<mapboxgl.Marker[]>([]);
+  const geojsonCache = useRef<any>(null);
   const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(null);
   const [selectedYear, setSelectedYear] = useState(2024);
   const [activeLayer, setActiveLayer] = useState<"none" | "prices" | "demographics">("none");
@@ -184,8 +185,13 @@ export default function MapView() {
       if (!map.current) return;
       
       try {
-        const response = await fetch("/berlin_districts.geojson");
-        const geojson = await response.json();
+        // Load GeoJSON only once and cache it
+        if (!geojsonCache.current) {
+          const response = await fetch("/berlin_districts.geojson");
+          geojsonCache.current = await response.json();
+        }
+        
+        const geojson = geojsonCache.current;
         
         if (activeLayer === "prices" && propertyPricesData) {
           // Create price map

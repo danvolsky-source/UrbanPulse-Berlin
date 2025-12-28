@@ -386,7 +386,7 @@ export const appRouter = router({
     districtData: publicProcedure
       .input((val: unknown) => {
         if (val === undefined || val === null) return { city: "Berlin" };
-        if (typeof val === "object" && "city" in val) {
+        if (typeof val === "object" && "city" in val && typeof val.city === "string") {
           return val as { city: string };
         }
         return { city: "Berlin" };
@@ -399,7 +399,9 @@ export const appRouter = router({
       .input((val: unknown) => {
         if (val === undefined || val === null) return { city: "Berlin", year: 2024 };
         if (typeof val === "object" && "city" in val && "year" in val) {
-          return val as { city: string; year: number };
+          const city = typeof val.city === "string" ? val.city : "Berlin";
+          const year = typeof val.year === "number" ? val.year : 2024;
+          return { city, year };
         }
         return { city: "Berlin", year: 2024 };
       })
@@ -411,7 +413,9 @@ export const appRouter = router({
       .input((val: unknown) => {
         if (val === undefined || val === null) return { city: "Berlin", year: 2024 };
         if (typeof val === "object" && "city" in val && "year" in val) {
-          return val as { city: string; year: number };
+          const city = typeof val.city === "string" ? val.city : "Berlin";
+          const year = typeof val.year === "number" ? val.year : 2024;
+          return { city, year };
         }
         return { city: "Berlin", year: 2024 };
       })
