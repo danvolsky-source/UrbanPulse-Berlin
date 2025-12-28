@@ -25,6 +25,7 @@ import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
+import { Timeline } from './Timeline';
 import { Button } from "./ui/button";
 
 const menuItems = [
@@ -263,8 +264,7 @@ function DashboardLayoutContent({
               <div className="col-span-2 bg-background border rounded-lg p-4">
                 <h3 className="text-sm font-semibold mb-4">Timeline</h3>
                 <div className="space-y-2">
-                  {/* Timeline placeholder */}
-                  <div className="text-xs text-muted-foreground">Timeline component</div>
+                  <Timeline />                  </div>
                 </div>
               </div>
               
