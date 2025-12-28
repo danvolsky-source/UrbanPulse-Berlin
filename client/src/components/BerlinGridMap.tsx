@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { trpc } from "../lib/trpc";
 import { scaleSequential } from "d3-scale";
-import { interpolateTurbo } from "d3-scale-chromatic";
+import { interpolateYlOrRd } from "d3-scale-chromatic";
+
 import { BERLIN_OUTLINE_PATH } from "../lib/berlinOutline";
 
 type BerlinGridMapProps = {
@@ -38,12 +39,10 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
     const min = Math.min(...prices);
     const max = Math.max(...prices);
 
-    const colorScale = scaleSequential(interpolateTurbo).domain([min, max]);
+    const colorScale = scaleSequential(interpolateYlOrRd).domain([min, max]);
 
     const cells: {
       x: number;
-      y: number;
-      w: number;
       h: number;
       value: number;
       districtName: string;
