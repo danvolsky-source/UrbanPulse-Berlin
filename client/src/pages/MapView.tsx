@@ -8,8 +8,6 @@ import { Link } from "wouter";
 import { Home, X } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { BerlinZonesMap } from "@/components/maps/BerlinZonesMap";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Mapbox public token from environment variable
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || "";
@@ -84,7 +82,6 @@ export default function MapView() {
   
   const { data: districts } = trpc.districts.list.useQuery({ city: "Berlin" });
   const { data: infrastructure } = trpc.infrastructure.all.useQuery();
-  const { data: zonesData } = trpc.zones.list.useQuery({ city: "Berlin" });
   
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
@@ -241,9 +238,9 @@ export default function MapView() {
         <div className="container py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Berlin Maps</h1>
+              <h1 className="text-2xl font-bold">Berlin Districts Map</h1>
               <p className="text-sm text-muted-foreground">
-                Explore districts and zones
+                Color-coded by dominant community
               </p>
             </div>
             <Link href="/">
@@ -256,203 +253,120 @@ export default function MapView() {
         </div>
       </div>
       
-      {/* Main Content */}
-      <div className="pt-20 h-full">
-        <Tabs defaultValue="districts" className="h-full flex flex-col">
-          <TabsList className="mx-6 mb-4">
-            <TabsTrigger value="districts">Districts</TabsTrigger>
-            <TabsTrigger value="zones">Zones</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="districts" className="flex-1 m-0 relative">
-            {/* Districts Map */}
-            <div ref={mapContainer} className="w-full h-full" />
-            
-            {/* Legend */}
-            <Card className="absolute bottom-6 left-6 z-10 bg-card/95 backdrop-blur-sm">
-              <CardContent className="pt-4">
-                <h3 className="font-semibold mb-3 text-sm">Dominant Communities</h3>
-                <div className="space-y-2">
-                  {Object.entries(communityColors).map(([community, color]) => (
-                    <div key={community} className="flex items-center gap-2">
-                      <div
-                        className="w-4 h-4 rounded"
-                        style={{ backgroundColor: color }}
-                      />
-                      <span className="text-sm">{community}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="mt-4 pt-4 border-t border-border">
-                  <h3 className="font-semibold mb-3 text-sm">Infrastructure Filters</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Checkbox 
-                        id="mosques"
-                        checked={filters.mosques}
-                        onCheckedChange={(checked) => setFilters(prev => ({ ...prev, mosques: checked as boolean }))}
-                      />
-                      <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#3b82f6" }} />
-                      <Label htmlFor="mosques" className="text-sm cursor-pointer">Mosques</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox 
-                        id="churches"
-                        checked={filters.churches}
-                        onCheckedChange={(checked) => setFilters(prev => ({ ...prev, churches: checked as boolean }))}
-                      />
-                      <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#10b981" }} />
-                      <Label htmlFor="churches" className="text-sm cursor-pointer">Churches</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox 
-                        id="synagogues"
-                        checked={filters.synagogues}
-                        onCheckedChange={(checked) => setFilters(prev => ({ ...prev, synagogues: checked as boolean }))}
-                      />
-                      <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#f59e0b" }} />
-                      <Label htmlFor="synagogues" className="text-sm cursor-pointer">Synagogues</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox 
-                        id="culturalCenters"
-                        checked={filters.culturalCenters}
-                        onCheckedChange={(checked) => setFilters(prev => ({ ...prev, culturalCenters: checked as boolean }))}
-                      />
-                      <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#8b5cf6" }} />
-                      <Label htmlFor="culturalCenters" className="text-sm cursor-pointer">Cultural Centers</Label>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* District Info Panel */}
-            {selectedDistrictData && (
-              <Card className="absolute top-6 right-6 z-10 w-80 bg-card/95 backdrop-blur-sm">
-                <CardContent className="pt-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold">{selectedDistrictData.nameEn}</h3>
-                      <p className="text-sm text-muted-foreground">District Information</p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSelectedDistrict(null)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Population</p>
-                      <p className="text-lg font-semibold">{selectedDistrictData.population.toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Area</p>
-                      <p className="text-lg font-semibold">{selectedDistrictData.area} km²</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Foreign Residents</p>
-                      <p className="text-lg font-semibold">{selectedDistrictData.foreignerPercentage}%</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Dominant Community</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <div
-                          className="w-3 h-3 rounded"
-                          style={{ backgroundColor: communityColors[selectedDistrictData.dominantCommunity || ""] || "#6b7280" }}
-                        />
-                        <p className="text-lg font-semibold">{selectedDistrictData.dominantCommunity}</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <Link href={`/district/${selectedDistrictData.id}`}>
-                    <Button className="w-full mt-4">
-                      View Full Details
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="zones" className="flex-1 m-0">
-            <div className="flex h-full">
-              {/* Zones Map */}
-              <div className="flex-1 p-4">
-                <BerlinZonesMap />
+      {/* Map */}
+      <div ref={mapContainer} className="w-full h-full" />
+      
+      {/* Legend */}
+      <Card className="absolute bottom-6 left-6 z-10 bg-card/95 backdrop-blur-sm">
+        <CardContent className="pt-4">
+          <h3 className="font-semibold mb-3 text-sm">Dominant Communities</h3>
+          <div className="space-y-2">
+            {Object.entries(communityColors).map(([community, color]) => (
+              <div key={community} className="flex items-center gap-2">
+                <div
+                  className="w-4 h-4 rounded"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="text-sm">{community}</span>
               </div>
-              
-              {/* Right Panel for Zones Info */}
-              <div className="w-80 border-l border-slate-800 p-4">
-                <h2 className="text-slate-100 text-lg mb-4">Zones</h2>
-                <div className="space-y-4">
-                  {zonesData && zonesData.length > 0 ? (
-                    zonesData.map((zone) => {
-                      const zoneColors: Record<string, string> = {
-                        Z1: "#f97316",
-                        Z2: "#3b82f6",
-                        Z3: "#22c55e",
-                      };
-                      const color = zoneColors[zone.code] || "#6b7280";
-                      
-                      return (
-                        <div key={zone.id} className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="w-4 h-4 rounded" style={{ backgroundColor: color }} />
-                            <h3 className="font-semibold">{zone.code} - {zone.name}</h3>
-                          </div>
-                          <p className="text-sm text-slate-400">
-                            {zone.city}
-                          </p>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <>
-                      <div className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-4 h-4 rounded" style={{ backgroundColor: "#f97316" }} />
-                          <h3 className="font-semibold">Z1 - Central Core</h3>
-                        </div>
-                        <p className="text-sm text-slate-400">
-                          13.35-13.42°E, 52.50-52.54°N
-                        </p>
-                      </div>
-                      <div className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-4 h-4 rounded" style={{ backgroundColor: "#3b82f6" }} />
-                          <h3 className="font-semibold">Z2 - West Ring</h3>
-                        </div>
-                        <p className="text-sm text-slate-400">
-                          13.28-13.35°E, 52.50-52.54°N
-                        </p>
-                      </div>
-                      <div className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-4 h-4 rounded" style={{ backgroundColor: "#22c55e" }} />
-                          <h3 className="font-semibold">Z3 - East Ring</h3>
-                        </div>
-                        <p className="text-sm text-slate-400">
-                          13.42-13.49°E, 52.50-52.54°N
-                        </p>
-                      </div>
-                    </>
-                  )}
-                </div>
-                <p className="text-slate-400 text-sm mt-6">
-                  Zone metrics and detailed analytics will be available here.
-                </p>
+            ))}
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-border">
+            <h3 className="font-semibold mb-3 text-sm">Infrastructure Filters</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="mosques"
+                  checked={filters.mosques}
+                  onCheckedChange={(checked) => setFilters(prev => ({ ...prev, mosques: checked as boolean }))}
+                />
+                <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#3b82f6" }} />
+                <Label htmlFor="mosques" className="text-sm cursor-pointer">Mosques</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="churches"
+                  checked={filters.churches}
+                  onCheckedChange={(checked) => setFilters(prev => ({ ...prev, churches: checked as boolean }))}
+                />
+                <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#10b981" }} />
+                <Label htmlFor="churches" className="text-sm cursor-pointer">Churches</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="synagogues"
+                  checked={filters.synagogues}
+                  onCheckedChange={(checked) => setFilters(prev => ({ ...prev, synagogues: checked as boolean }))}
+                />
+                <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#f59e0b" }} />
+                <Label htmlFor="synagogues" className="text-sm cursor-pointer">Synagogues</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="culturalCenters"
+                  checked={filters.culturalCenters}
+                  onCheckedChange={(checked) => setFilters(prev => ({ ...prev, culturalCenters: checked as boolean }))}
+                />
+                <div className="w-4 h-4 rounded-full border-2 border-white" style={{ backgroundColor: "#8b5cf6" }} />
+                <Label htmlFor="culturalCenters" className="text-sm cursor-pointer">Cultural Centers</Label>
               </div>
             </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* District Info Panel */}
+      {selectedDistrictData && (
+        <Card className="absolute top-24 right-6 z-10 w-80 bg-card/95 backdrop-blur-sm">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold">{selectedDistrictData.nameEn}</h3>
+                <p className="text-sm text-muted-foreground">District Information</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedDistrict(null)}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm text-muted-foreground">Population</p>
+                <p className="text-lg font-semibold">{selectedDistrictData.population.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Area</p>
+                <p className="text-lg font-semibold">{selectedDistrictData.area} km²</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Foreign Residents</p>
+                <p className="text-lg font-semibold">{selectedDistrictData.foreignerPercentage}%</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Dominant Community</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <div
+                    className="w-3 h-3 rounded"
+                    style={{ backgroundColor: communityColors[selectedDistrictData.dominantCommunity || ""] || "#6b7280" }}
+                  />
+                  <p className="text-lg font-semibold">{selectedDistrictData.dominantCommunity}</p>
+                </div>
+              </div>
+            </div>
+            
+            <Link href={`/district/${selectedDistrictData.id}`}>
+              <Button className="w-full mt-4">
+                View Full Details
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
