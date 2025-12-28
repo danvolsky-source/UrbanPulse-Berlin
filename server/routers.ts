@@ -381,6 +381,49 @@ export const appRouter = router({
         return await getGovernmentDecisionsByCountry(input.country);
       }),
   }),
+
+  heatMap: router({
+    districtData: publicProcedure
+      .input((val: unknown) => {
+        if (val === undefined || val === null) return { city: "Berlin" };
+        if (typeof val === "object" && "city" in val && typeof val.city === "string") {
+          return val as { city: string };
+        }
+        return { city: "Berlin" };
+      })
+      .query(async ({ input }) => {
+        const { getDistrictMapData } = await import("./db");
+        return await getDistrictMapData(input.city);
+      }),
+    propertyPricesByYear: publicProcedure
+      .input((val: unknown) => {
+        if (val === undefined || val === null) return { city: "Berlin", year: 2024 };
+        if (typeof val === "object" && "city" in val && "year" in val) {
+          const city = typeof val.city === "string" ? val.city : "Berlin";
+          const year = typeof val.year === "number" ? val.year : 2024;
+          return { city, year };
+        }
+        return { city: "Berlin", year: 2024 };
+      })
+      .query(async ({ input }) => {
+        const { getPropertyPricesForYear } = await import("./db");
+        return await getPropertyPricesForYear(input.city, input.year);
+      }),
+    demographicsByYear: publicProcedure
+      .input((val: unknown) => {
+        if (val === undefined || val === null) return { city: "Berlin", year: 2024 };
+        if (typeof val === "object" && "city" in val && "year" in val) {
+          const city = typeof val.city === "string" ? val.city : "Berlin";
+          const year = typeof val.year === "number" ? val.year : 2024;
+          return { city, year };
+        }
+        return { city: "Berlin", year: 2024 };
+      })
+      .query(async ({ input }) => {
+        const { getDemographicsForYear } = await import("./db");
+        return await getDemographicsForYear(input.city, input.year);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

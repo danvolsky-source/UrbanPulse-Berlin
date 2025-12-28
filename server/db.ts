@@ -732,3 +732,159 @@ export async function getBerlinGridData(year: number, month: number, cellsPerRow
     })),
   };
 }
+
+// Heat Map Data queries
+
+export async function getDistrictMapData(city: string = "Berlin") {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { districts, propertyPrices, demographics } = await import("../drizzle/schema");
+  const { sql } = await import("drizzle-orm");
+  
+  // Get all districts for the city
+  const districtList = await db.select().from(districts).where(eq(districts.city, city));
+  
+  if (districtList.length === 0) return [];
+  
+  const districtIds = districtList.map(d => d.id);
+  
+  // Get latest property prices for all districts in one query
+  const latestPrices = await db
+    .select({
+      districtId: propertyPrices.districtId,
+      avgPrice: propertyPrices.averagePricePerSqm,
+      year: propertyPrices.year,
+      month: propertyPrices.month,
+    })
+    .from(propertyPrices)
+    .where(inArray(propertyPrices.districtId, districtIds))
+    .orderBy(sql`${propertyPrices.year} DESC, ${propertyPrices.month} DESC`);
+  
+  // Create map of latest prices by district
+  const priceMap = new Map<number, number>();
+  latestPrices.forEach(p => {
+    if (!priceMap.has(p.districtId)) {
+      priceMap.set(p.districtId, p.avgPrice);
+    }
+  });
+  
+  // Get top 3 communities for all districts in one query
+  const allDemographics = await db
+    .select({
+      districtId: demographics.districtId,
+      community: demographics.community,
+      population: demographics.population,
+      percentage: demographics.percentageOfDistrict,
+    })
+    .from(demographics)
+    .where(inArray(demographics.districtId, districtIds))
+    .orderBy(demographics.districtId, sql`${demographics.population} DESC`);
+  
+  // Group demographics by district and get top 3
+  const demographicsMap = new Map<number, typeof allDemographics>();
+  allDemographics.forEach(demo => {
+    if (!demographicsMap.has(demo.districtId)) {
+      demographicsMap.set(demo.districtId, []);
+    }
+    const districtDemos = demographicsMap.get(demo.districtId)!;
+    if (districtDemos.length < 3) {
+      districtDemos.push(demo);
+    }
+  });
+  
+  // Build final result
+  return districtList.map(district => ({
+    id: district.id,
+    name: district.name,
+    nameEn: district.nameEn,
+    population: district.population,
+    area: district.area,
+    foreignerPercentage: district.foreignerPercentage,
+    dominantCommunity: district.dominantCommunity,
+    averagePricePerSqm: priceMap.get(district.id) ?? null,
+    topCommunities: demographicsMap.get(district.id) ?? [],
+  }));
+}
+
+export async function getPropertyPricesForYear(city: string = "Berlin", year: number = 2024) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { districts, propertyPrices } = await import("../drizzle/schema");
+  const { sql } = await import("drizzle-orm");
+  
+  // Get all districts and their average prices for the year in one query using JOIN
+  const result = await db
+    .select({
+      districtId: districts.id,
+      districtName: districts.nameEn,
+      avgPrice: sql<number>`AVG(${propertyPrices.averagePricePerSqm})`.as('avgPrice'),
+    })
+    .from(districts)
+    .leftJoin(
+      propertyPrices,
+      and(
+        eq(propertyPrices.districtId, districts.id),
+        eq(propertyPrices.year, year)
+      )
+    )
+    .where(eq(districts.city, city))
+    .groupBy(districts.id, districts.nameEn);
+  
+  return result.map(r => ({
+    districtId: r.districtId,
+    districtName: r.districtName,
+    year: year,
+    averagePricePerSqm: r.avgPrice ? Math.round(r.avgPrice) : null,
+  }));
+}
+
+export async function getDemographicsForYear(city: string = "Berlin", year: number = 2024) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const { districts, demographics } = await import("../drizzle/schema");
+  
+  // Get all districts for the city
+  const districtList = await db.select().from(districts).where(eq(districts.city, city));
+  
+  if (districtList.length === 0) return [];
+  
+  const districtIds = districtList.map(d => d.id);
+  
+  // Get demographics for all districts for the year in one query
+  const yearDemographics = await db
+    .select()
+    .from(demographics)
+    .where(
+      and(
+        inArray(demographics.districtId, districtIds),
+        eq(demographics.year, year)
+      )
+    )
+    .orderBy(demographics.districtId, demographics.population);
+  
+  // Group demographics by district
+  const demographicsMap = new Map<number, typeof yearDemographics>();
+  yearDemographics.forEach(demo => {
+    if (!demographicsMap.has(demo.districtId)) {
+      demographicsMap.set(demo.districtId, []);
+    }
+    demographicsMap.get(demo.districtId)!.push(demo);
+  });
+  
+  // Build final result
+  return districtList.map(district => {
+    const districtDemographics = demographicsMap.get(district.id) ?? [];
+    
+    return {
+      districtId: district.id,
+      districtName: district.nameEn,
+      year: year,
+      totalPopulation: district.population,
+      communities: districtDemographics,
+      populationDensity: Math.round(district.population / district.area),
+    };
+  });
+}
