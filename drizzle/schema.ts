@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, unique } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -377,21 +377,3 @@ export const browsingHistory = mysqlTable("browsingHistory", {
 
 export type BrowsingHistory = typeof browsingHistory.$inferSelect;
 export type InsertBrowsingHistory = typeof browsingHistory.$inferInsert;
-
-/**
- * Zones table - stores geographical zones for cities (e.g., Berlin zones Z1, Z2, Z3)
- */
-export const zones = mysqlTable("zones", {
-  id: int("id").autoincrement().primaryKey(),
-  code: varchar("code", { length: 10 }).notNull(), // "Z1", "Z2", "Z3"
-  name: varchar("name", { length: 255 }).notNull(),
-  city: varchar("city", { length: 100 }).notNull(),
-  geojson: text("geojson").notNull(), // store polygon coordinates as JSON string
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-}, (table) => ({
-  // Composite unique constraint on city and code to allow same codes across different cities
-  cityCodeUnique: unique().on(table.city, table.code),
-}));
-
-export type Zone = typeof zones.$inferSelect;
-export type InsertZone = typeof zones.$inferInsert;
