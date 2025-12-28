@@ -1,0 +1,174 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mitte",
+        "nameEn": "Mitte"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.3338, 52.5409], [13.4155, 52.5409], [13.4155, 52.5008], [13.3800, 52.5008],
+          [13.3338, 52.5200], [13.3338, 52.5409]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Friedrichshain-Kreuzberg",
+        "nameEn": "Friedrichshain-Kreuzberg"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.3800, 52.5008], [13.4155, 52.5008], [13.4670, 52.5008],
+          [13.4670, 52.4750], [13.4155, 52.4750], [13.3800, 52.4920], [13.3800, 52.5008]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pankow",
+        "nameEn": "Pankow"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.3338, 52.5409], [13.3338, 52.6100], [13.4300, 52.6100],
+          [13.5200, 52.6100], [13.5200, 52.5409], [13.4155, 52.5409], [13.3338, 52.5409]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Charlottenburg-Wilmersdorf",
+        "nameEn": "Charlottenburg-Wilmersdorf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.2200, 52.5200], [13.3338, 52.5200], [13.3338, 52.5409],
+          [13.2200, 52.5409], [13.2200, 52.4800], [13.2900, 52.4800], [13.3338, 52.4920],
+          [13.3800, 52.4920], [13.3800, 52.5008], [13.3338, 52.5008], [13.2200, 52.5200]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Spandau",
+        "nameEn": "Spandau"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.1200, 52.5409], [13.2200, 52.5409], [13.2200, 52.5200],
+          [13.2200, 52.4800], [13.1200, 52.4800], [13.1200, 52.5409]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Steglitz-Zehlendorf",
+        "nameEn": "Steglitz-Zehlendorf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.2200, 52.4800], [13.2900, 52.4800], [13.3338, 52.4920],
+          [13.3338, 52.4200], [13.2200, 52.4200], [13.2200, 52.4800]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tempelhof-Schöneberg",
+        "nameEn": "Tempelhof-Schöneberg"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.3338, 52.4920], [13.3800, 52.4920], [13.4155, 52.4750],
+          [13.4155, 52.4200], [13.3338, 52.4200], [13.3338, 52.4920]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Neukölln",
+        "nameEn": "Neukölln"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.4155, 52.4750], [13.4670, 52.4750], [13.4670, 52.4200],
+          [13.4155, 52.4200], [13.4155, 52.4750]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Treptow-Köpenick",
+        "nameEn": "Treptow-Köpenick"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.4670, 52.5008], [13.5800, 52.5008], [13.5800, 52.4200],
+          [13.4670, 52.4200], [13.4670, 52.4750], [13.4670, 52.5008]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marzahn-Hellersdorf",
+        "nameEn": "Marzahn-Hellersdorf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.5200, 52.5409], [13.5200, 52.6100], [13.6500, 52.6100],
+          [13.6500, 52.5409], [13.5200, 52.5409]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lichtenberg",
+        "nameEn": "Lichtenberg"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.4155, 52.5409], [13.5200, 52.5409], [13.5800, 52.5008],
+          [13.4670, 52.5008], [13.4155, 52.5008], [13.4155, 52.5409]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Reinickendorf",
+        "nameEn": "Reinickendorf"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.2200, 52.5409], [13.3338, 52.5409], [13.3338, 52.6100],
+          [13.2200, 52.6100], [13.2200, 52.5409]
+        ]]
+      }
+    }
+  ]
+}
