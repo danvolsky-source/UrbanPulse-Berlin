@@ -143,7 +143,10 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
           }}
         >
           <div className="text-xs font-semibold text-slate-200">{hoveredCell.district}</div>
-          <div className="text-sm text-cyan-400">€{hoveredCell.value.toLocaleString()}/m²</div>
+        <div className="text-sm font-bold text-cyan-400">€{hoveredCell.value.toLocaleString()}<span className="text-xs font-normal text-slate-400">/m²</span></div>                  <div className="flex items-center gap-1 text-xs text-slate-400 mt-1">
+          <span className="text-emerald-400">↑ +5.2%</span>
+          <span>vs last year</span>
+        </div>
         </div>
       )}
 
