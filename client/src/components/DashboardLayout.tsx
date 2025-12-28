@@ -26,6 +26,7 @@ import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Timeline } from './Timeline';
+import { FilterPanel } from './FilterPanel';
 import { Button } from "./ui/button";
 
 const menuItems = [
@@ -289,7 +290,7 @@ function DashboardLayoutContent({
               <div className="col-span-3 bg-background border rounded-lg p-4">
                 <h3 className="text-sm font-semibold mb-4">Filters & KPI</h3>
                 <div className="space-y-4">
-                  <div className="text-xs text-muted-foreground">Filter panel placeholder</div>
+                  <FilterPanel />                  </div>
                 </div>
               </div>
             </div>
