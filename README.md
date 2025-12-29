@@ -322,7 +322,7 @@ MIT License - see LICENSE file for details
 
 ## Acknowledgments
 
-- Built with [Manus](https://manus.im) platform
+
 - Maps powered by [Mapbox](https://www.mapbox.com/)
 - UI components from [shadcn/ui](https://ui.shadcn.com/)
 - Charts by [Recharts](https://recharts.org/)
@@ -346,7 +346,7 @@ For issues and questions:
 
 ---
 
-**Built with ❤️ by Manus AI**
+
 
  
 
