@@ -1,4 +1,4 @@
-# UrbanPulse
+# UrbanMosaic
 
 [![CI](https://github.com/danvolsky-source/urbanpulse/workflows/CI/badge.svg)](https://github.com/danvolsky-source/urbanpulse/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
