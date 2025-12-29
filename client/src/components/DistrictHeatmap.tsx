@@ -53,6 +53,79 @@ const priceByYear: Record<number, Record<number, number>> = {
   2024: { 1: 7, 2: 6, 3: 6, 4: 6, 5: 5, 6: 5, 7: 4, 8: 4, 9: 3, 10: 3, 11: 2, 12: 2, 13: 1, 14: 2, 15: 1, 16: 2 },
 };
 
+// --- Fine-grid "mosaic" overlay (to match reference screenshot) ---
+const GRID_CELL = 7; // smaller = denser grid, try 6-9
+const GRID_GAP = 0.25;
+
+function clamp01(n: number) {
+  return Math.max(0, Math.min(1, n));
+}
+
+function hexToRgb(hex: string) {
+  const h = hex.replace("#", "").trim();
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const num = parseInt(full, 16);
+  return {
+    r: (num >> 16) & 255,
+    g: (num >> 8) & 255,
+    b: num & 255,
+  };
+}
+
+function hash2(x: number, y: number, seed: number) {
+  const t = Math.sin(x * 12.9898 + y * 78.233 + seed * 37.719) * 43758.5453123;
+  return t - Math.floor(t);
+}
+
+function shade(hex: string, amount: number) {
+  const { r, g, b } = hexToRgb(hex);
+  const means = (r + g + b) / 3;
+  const k = amount;
+  const rr = Math.round(r + (255 - means) * k);
+  const gg = Math.round(g + (255 - means) * k);
+  const bb = Math.round(b + (255 - means) * k);
+  return `rgb(${Math.max(0, Math.min(255, rr))}, ${Math.max(0, Math.min(255, gg))}, ${Math.max(0, Math.min(255, bb))})`;
+}
+
+function getPathBounds(path: string) {
+  const coords = path.match(/[\d.]+/g)?.map(Number) || [];
+  const xs = coords.filter((_, i) => i % 2 === 0);
+  const ys = coords.filter((_, i) => i % 2 === 1);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  return { minX, maxX, minY, maxY };
+}
+
+function renderMosaicRects(bounds: { minX: number; maxX: number; minY: number; maxY: number }, baseHex: string, seed: number) {
+  const rects: JSX.Element[] = [];
+  const startX = Math.floor(bounds.minX / GRID_CELL) * GRID_CELL;
+  const startY = Math.floor(bounds.minY / GRID_CELL) * GRID_CELL;
+
+  for (let x = startX; x < bounds.maxX + GRID_CELL; x += GRID_CELL) {
+    for (let y = startY; y < bounds.maxY + GRID_CELL; y += GRID_CELL) {
+      const r = hash2(x, y, seed);
+      const shadeAmt = (r - 0.5) * 0.9;
+      const opacity = clamp01(0.35 + r * 0.55);
+
+      rects.push(
+        <rect
+          key={`${seed}-${x}-${y}`}
+          x={x + GRID_GAP}
+          y={y + GRID_GAP}
+          width={GRID_CELL - GRID_GAP * 2}
+          height={GRID_CELL - GRID_GAP * 2}
+          fill={shade(baseHex, shadeAmt)}
+          opacity={opacity}
+        />
+      );
+    }
+  }
+
+  return rects;
+}
+
 export function DistrictHeatmap({
   className,
   districts,
@@ -144,20 +217,61 @@ export function DistrictHeatmap({
           
           return (
             <g key={district.id}>
-              <path
-                d={district.path}
-                fill={getDistrictColor(district)}
-                fillOpacity={isHighlighted ? 1 : isHovered ? 0.9 : 0.7}
-                stroke={isHighlighted ? "#fbbf24" : isSelected ? "#3b82f6" : "#1e293b"}
-                strokeWidth={isHighlighted ? "4" : isSelected ? "3" : "2"}
-                className="transition-all duration-200 cursor-pointer"
-                onMouseEnter={() => setHoveredDistrict(district.id)}
-                onMouseLeave={() => setHoveredDistrict(null)}
-                onClick={() => handleDistrictClick(district.id)}
-                style={{
-                  filter: isHighlighted ? "drop-shadow(0 0 8px rgba(251, 191, 36, 0.8))" : "none",
-                }}
-              />
+{(() => {
+  const baseColor = getDistrictColor(district);
+  const bounds = getPathBounds(district.path);
+  const clipId = `district-clip-${district.id}`;
+
+  return (
+    <>
+      <defs>
+        <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+          <path d={district.path} />
+        </clipPath>
+
+        <filter id="heatGlow">
+          <feGaussianBlur stdDeviation="2.2" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <path
+        d={district.path}
+        fill={baseColor}
+        fillOpacity={isHighlighted ? 0.45 : isHovered ? 0.40 : 0.28}
+        stroke={isHighlighted ? "#fbbf24" : isSelected ? "#3b82f6" : "#1e293b"}
+        strokeWidth={isHighlighted ? "4" : isSelected ? "3" : "2"}
+        className="transition-all duration-200 cursor-pointer"
+        onMouseEnter={() => setHoveredDistrict(district.id)}
+        onMouseLeave={() => setHoveredDistrict(null)}
+        onClick={() => handleDistrictClick(district.id)}
+        style={{
+          filter: isHighlighted ? "drop-shadow(0 0 8px rgba(251, 191, 36, 0.8))" : "none",
+        }}
+      />
+
+      <g
+        clipPath={`url(#${clipId})`}
+        pointerEvents="none"
+        filter="url(#heatGlow)"
+        opacity={0.95}
+      >
+        {renderMosaicRects(bounds, baseColor, district.id)}
+      </g>
+
+      <path
+        d={district.path}
+        fill="none"
+        stroke="rgba(15, 23, 42, 0.9)"
+        strokeWidth="1.5"
+        pointerEvents="none"
+      />
+    </>
+  );
+})()}
               
               {/* District labels */}
               <text
