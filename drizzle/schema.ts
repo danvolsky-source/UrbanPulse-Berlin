@@ -377,3 +377,40 @@ export const browsingHistory = mysqlTable("browsingHistory", {
 
 export type BrowsingHistory = typeof browsingHistory.$inferSelect;
 export type InsertBrowsingHistory = typeof browsingHistory.$inferInsert;
+
+
+/**
+ * Grid Cells table - stores fine-grained mosaic grid data for heatmap visualization
+ * Each cell represents a small geographic area with aggregated demographic and infrastructure metrics
+ */
+export const gridCells = mysqlTable("gridCells", {
+  id: int("id").autoincrement().primaryKey(),
+  city: varchar("city", { length: 50 }).notNull().default("Berlin"),
+  zoomLevel: int("zoomLevel").notNull(), // 11, 12, 13, etc.
+  cellX: int("cellX").notNull(), // grid column index
+  cellY: int("cellY").notNull(), // grid row index
+  
+  // GeoJSON geometry for cell boundaries
+  bboxGeojson: text("bboxGeojson").notNull(), // JSON string of polygon coordinates
+  
+  // Population metrics
+  population: int("population"),
+  populationDensity: int("populationDensity"), // people per km² * 100 (for int storage)
+  
+  // Religious infrastructure counts
+  mosquesCount: int("mosquesCount").default(0),
+  churchesCount: int("churchesCount").default(0),
+  synagoguesCount: int("synagoguesCount").default(0),
+  
+  // Community demographics
+  turkishPop: int("turkishPop").default(0),
+  syrianPop: int("syrianPop").default(0),
+  polishPop: int("polishPop").default(0),
+  italianPop: int("italianPop").default(0),
+  russianPop: int("russianPop").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GridCell = typeof gridCells.$inferSelect;
+export type InsertGridCell = typeof gridCells.$inferInsert;
