@@ -424,6 +424,23 @@ export const appRouter = router({
         return await getDemographicsForYear(input.city, input.year);
       }),
   }),
+
+                gridCells: router({
+        getGrid: publicProcedure
+            .input((val: unknown) => {
+                if (typeof val === "object" && val !== null) {
+                    const city = (val as any).city || "Berlin";
+                    const zoomLevel = (val as any).zoomLevel || 12;
+                    const bounds = (val as any).bounds || {};
+                    return { city, zoomLevel, bounds };
+                }
+                return { city: "Berlin", zoomLevel: 12, bounds: {} };
+            })
+            .query(async ({ input }) => {
+                const { getGridCells } = await import("./db");
+                return await getGridCells(input.city, input.zoomLevel, input.bounds);
+            }),
+    }),
 });
 
 export type AppRouter = typeof appRouter;
