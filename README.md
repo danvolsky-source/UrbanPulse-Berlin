@@ -106,6 +106,57 @@ MIT License - see LICENSE file
 - UI by [shadcn/ui](https://ui.shadcn.com/)
 - Charts by [Recharts](https://recharts.org/)
 
+
+## 🔬 Grid Cells API
+
+### High-Resolution Heatmap Visualization
+
+The Grid Cells API provides fine-grained, mosaic-style data for advanced heatmap visualizations:
+
+- **Multi-zoom support**: Data available at zoom levels 10, 11, and 12
+- **Spatial queries**: Efficient bounding box filtering for viewport-based loading
+- **Rich metrics**: Population density, property prices, air quality, greenery
+- **10,000+ cells**: Fine-grained grid overlay for detailed analysis
+
+### Quick Start
+
+#### 1. Generate Test Data
+
+```bash
+npm run tsx scripts/seed-grid-cells.ts
+```
+
+This will populate ~10,000 grid cells for Berlin with realistic mock data.
+
+#### 2. Use the API
+
+```typescript
+import { trpc } from '@/lib/trpc';
+
+const { data: gridCells } = trpc.gridCells.getGrid.useQuery({
+  city: 'Berlin',
+  zoomLevel: 12,
+  bounds: { minX: 0, maxX: 100, minY: 0, maxY: 100 }
+});
+```
+
+#### 3. Complete Integration Guide
+
+For detailed implementation instructions, see [`docs/GRID_CELLS_API_INTEGRATION.md`](docs/GRID_CELLS_API_INTEGRATION.md)
+
+### Features
+
+✅ **Backend Complete**
+- tRPC API endpoint: `gridCells.getGrid`
+- Database schema with gridCells table
+- Optimized spatial queries with safety limits
+- Seed script for test data generation
+
+🚧 **Frontend Integration** (See documentation)
+- tRPC hook integration
+- Mosaic rect rendering from API data
+- Viewport-based filtering
+- Performance optimizations
 ---
 
 **GALOR by SkyMind** - Wave of light, revealing urban truth.
