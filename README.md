@@ -159,4 +159,9 @@ For detailed implementation instructions, see [`docs/GRID_CELLS_API_INTEGRATION.
 - Performance optimizations
 ---
 
+---
+
+**🚀 Deployed to GitHub Pages** | Live demo coming soon!
+
+
 **GALOR by SkyMind** - Wave of light, revealing urban truth.
