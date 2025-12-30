@@ -140,6 +140,15 @@ export function DistrictHeatmap({
 }: DistrictHeatmapProps) {
   const [hoveredDistrict, setHoveredDistrict] = useState<number | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
+
+           // Fetch grid cells data from API
+  const { data: gridCellsData, isLoading: gridCellsLoading } = trpc.gridCells.getGrid.useQuery({
+    city: cityName,
+    zoomLevel: 12,
+    bounds: {} // Optional: add viewport bounds for optimization
+  }, {
+    enabled: !!cityName, // Only fetch when city is available
+  });
   
   console.log('DistrictHeatmap rendering:', { 
     districts: districts?.length, 
