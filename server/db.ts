@@ -888,3 +888,27 @@ export async function getDemographicsForYear(city: string = "Berlin", year: numb
     };
   });
 }
+
+    // Grid Cells queries for heatmap
+export async function getGridCells(city: string = "Berlin", zoomLevel: number = 12, bounds: any = {}) {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const { gridCells } = await import("../drizzle/schema");
+    const { and, gte, lte } = await import("drizzle-orm");
+    
+    // Build query conditions
+    const conditions = [eq(gridCells.city, city), eq(gridCells.zoomLevel, zoomLevel)];
+    
+    // Add bounding box filters if provided
+    if (bounds.minX !== undefined) conditions.push(gte(gridCells.cellX, bounds.minX));
+    if (bounds.maxX !== undefined) conditions.push(lte(gridCells.cellX, bounds.maxX));
+    if (bounds.minY !== undefined) conditions.push(gte(gridCells.cellY, bounds.minY));
+    if (bounds.maxY !== undefined) conditions.push(lte(gridCells.cellY, bounds.maxY));
+    
+    return await db
+        .select()
+        .from(gridCells)
+        .where(and(...conditions))
+        .limit(10000); // Safety limit
+}
