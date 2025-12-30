@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="220" viewBox="0 0 980 220" role="img" aria-label="GALOR by SkyMind">
+  <defs>
+    <linearGradient id="oGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="55%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+
+    <filter id="oGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g fill="none" stroke="none">
+    <g transform="translate(40,60)">
+      <text x="0" y="86"
+            fill="#E5E7EB"
+            font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+            font-size="96"
+            font-weight="700"
+            letter-spacing="2.5">GAL</text>
+
+      <g transform="translate(315,18)" filter="url(#oGlow)">
+        <circle cx="52" cy="52" r="44" stroke="url(#oGradient)" stroke-width="6" opacity="0.95" fill="none"/>
+        <circle cx="52" cy="52" r="30" stroke="url(#oGradient)" stroke-width="6" opacity="0.75" fill="none"/>
+        <circle cx="52" cy="52" r="16" stroke="url(#oGradient)" stroke-width="6" opacity="0.55" fill="none"/>
+        <path d="M82 22 C90 30, 92 40, 86 50"
+              stroke="#0B1220" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+        <circle cx="52" cy="52" r="4.5" fill="#E5E7EB" opacity="0.95"/>
+      </g>
+
+      <text x="430" y="86"
+            fill="#E5E7EB"
+            font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+            font-size="96"
+            font-weight="700"
+            letter-spacing="2.5">R</text>
+    </g>
+
+    <text x="46" y="190"
+          fill="#94A3B8"
+          font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+          font-size="28"
+          font-weight="500"
+          letter-spacing="0.6">by SkyMind</text>
+  </g>
+</svg>
