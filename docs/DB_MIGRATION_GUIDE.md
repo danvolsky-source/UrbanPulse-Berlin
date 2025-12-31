@@ -21,7 +21,13 @@ File: `drizzle/schema.ts`
 - Added 7 new fields to cities table definition
 - Commit: "Expand cities table schema with new fields for multi-city support"
 
-### Step 2: Generate Migration (CURRENT)
+### Step 2: Generate Migration✅ COMPLETED
+
+File: `drizzle/migrations/0002_expand_cities_table.sql`
+- Created SQL migration with ALTER TABLE statements
+- Added 7 columns: countryCode, latitude, longitude, timezone, dataStartYear, dataEndYear, updatedAt
+- Included indexes on countryCode and timezone
+- Commit: "Create 0002_expand_cities_table.sql"
 ```bash
 npm run db:push
 # Or separately:
@@ -33,11 +39,9 @@ This will:
 - Generate SQL migration files in `drizzle/migrations/`
 - Create ALTER TABLE statements for cities table
 
-### Step 3: Apply Migration
-```bash
+### Step 3: Apply Migration (CURRENT)```bash
 drizzle-kit migrate
 ```
-
 Executes generated SQL against MySQL database to:
 - Add new columns to cities table
 - Preserve existing data (id, name, country, population)
