@@ -775,3 +775,421 @@ This architecture provides a comprehensive roadmap for optimizing GALOR's map re
 - **Scalability** to 100k+ features
 
 The phased approach ensures we get quick wins early while building towards long-term scalability.
+
+- **Scalability** to 100k+ features
+
+The phased approach ensures we get quick wins early while building towards long-term scalability.
+
+---
+
+## 11. Expert Recommendations & Best Practices
+
+### 🎯 Critical Implementation Notes
+
+#### Spatial Indexing Enhancements
+
+**Store Object IDs in rbush for instant metadata access:**
+
+```typescript
+// Enhanced spatial index with metadata
+interface GridCellIndexItem {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+  id: string;              // Add ID for instant lookup
+  cellType: string;        // Pre-cached cell type
+  metrics: {
+    population: number;
+    avgPrice: number;
+  };                       // Pre-cached frequently accessed data
+  data: GridCell;          // Full data reference
+}
+
+export class EnhancedSpatialIndex {
+  private index: RBush<GridCellIndexItem>;
+  private metadataCache: Map<string, GridCell>;
+
+  constructor() {
+    this.index = new RBush<GridCellIndexItem>();
+    this.metadataCache = new Map();
+  }
+
+  load(cells: GridCell[]) {
+    const items = cells.map(cell => {
+      // Cache metadata separately
+      this.metadataCache.set(cell.id, cell);
+      
+      return {
+        minX: cell.bounds.minX,
+        minY: cell.bounds.minY,
+        maxX: cell.bounds.maxX,
+        maxY: cell.bounds.maxY,
+        id: cell.id,
+        cellType: cell.type,
+        metrics: {
+          population: cell.population,
+          avgPrice: cell.avgPrice
+        },
+        data: cell
+      };
+    });
+    this.index.load(items);
+  }
+
+  // Fast lookup by ID (O(1) instead of O(log n))
+  getById(id: string): GridCell | undefined {
+    return this.metadataCache.get(id);
+  }
+
+  // Optimized hover handler
+  searchWithMetadata(x: number, y: number) {
+    const candidates = this.index.search({
+      minX: x, minY: y, maxX: x, maxY: y
+    });
+    
+    // Return pre-cached metrics without full point-in-polygon check
+    return candidates.map(item => ({
+      id: item.id,
+      type: item.cellType,
+      metrics: item.metrics,
+      bounds: {
+        minX: item.minX,
+        minY: item.minY,
+        maxX: item.maxX,
+        maxY: item.maxY
+      }
+    }));
+  }
+}
+```
+
+**Why this matters:**
+- `mousemove` events fire 60+ times per second
+- Instant ID→metadata lookup avoids expensive database queries
+- Pre-cached metrics eliminate repeated calculations
+- Drizzle queries only when needed (on click, not hover)
+
+---
+
+#### Geometry Simplification Optimization
+
+**Use ST_Simplify directly in TiDB/MySQL:**
+
+```typescript
+// server/src/services/geometry-simplifier-sql.ts
+import { db } from '../db';
+
+export class SQLGeometrySimplifier {
+  async simplifyDistrictsInDB(city: string) {
+    // Leverage ST_Simplify in database
+    await db.execute(sql`
+      UPDATE districts
+      SET 
+        geometry_l0 = ST_Simplify(geometry, 0.01),
+        geometry_l1 = ST_Simplify(geometry, 0.005),
+        geometry_l2 = ST_Simplify(geometry, 0.001)
+      WHERE city = ${city}
+    `);
+  }
+
+  // For runtime simplification (if needed)
+  async getSimplifiedDistricts(city: string, zoomLevel: number) {
+    const tolerance = zoomLevel <= 8 ? 0.01 : 
+                     zoomLevel <= 11 ? 0.005 : 0.001;
+
+    return db.execute(sql`
+      SELECT 
+        id,
+        name,
+        ST_AsGeoJSON(ST_Simplify(geometry, ${tolerance})) as geometry
+      FROM districts
+      WHERE city = ${city}
+    `);
+  }
+}
+```
+
+**Alternative: simplify-js for client-side:**
+
+```typescript
+// client/src/lib/simplify-client.ts
+import simplify from 'simplify-js';
+
+export function simplifyGeometry(
+  coordinates: [number, number][],
+  tolerance: number = 0.001
+) {
+  const points = coordinates.map(([x, y]) => ({ x, y }));
+  const simplified = simplify(points, tolerance, true);
+  return simplified.map(p => [p.x, p.y]);
+}
+
+// Use for dynamic LOD without server round-trip
+export class ClientSideSimplifier {
+  private cache = new Map<string, any>();
+
+  simplifyForZoom(geometry: GeoJSON.Geometry, zoom: number) {
+    const cacheKey = `${geometry.type}-${zoom}`;
+    
+    if (this.cache.has(cacheKey)) {
+      return this.cache.get(cacheKey);
+    }
+
+    const tolerance = zoom <= 8 ? 0.01 : zoom <= 11 ? 0.005 : 0.001;
+    const simplified = this.simplify(geometry, tolerance);
+    
+    this.cache.set(cacheKey, simplified);
+    return simplified;
+  }
+}
+```
+
+**Benefits:**
+- No network overhead for geometry transfer
+- TiDB/MySQL handles computation efficiently
+- Client-side fallback for dynamic simplification
+
+---
+
+#### Martin Integration Best Practices
+
+**Optimal Martin Configuration:**
+
+```yaml
+# martin-config.yaml
+postgres:
+  connection_string: "${DATABASE_URL}"
+  pool_size: 20
+  max_feature_count: 10000
+
+sources:
+  districts:
+    type: table
+    schema: public
+    table: districts
+    geometry_column: geometry_l1  # Pre-simplified
+    geometry_type: MULTIPOLYGON
+    srid: 4326
+    extent: 4096
+    buffer: 64
+    clip_geom: true
+    
+    # Zoom-based LOD
+    minzoom: 0
+    maxzoom: 14
+    
+    # Properties to include
+    properties:
+      id: int
+      name: text
+      avg_price: float
+      population: int
+      district_type: text
+
+  grid_cells:
+    type: table
+    table: grid_cells
+    geometry_column: geom
+    srid: 4326
+    minzoom: 10  # Only show grid at higher zooms
+    maxzoom: 18
+    
+    # Function-based source for dynamic filtering
+    sql: |
+      SELECT 
+        id,
+        geom,
+        metrics,
+        city
+      FROM grid_cells
+      WHERE zoom_level = ZOOM_LEVEL()
+      AND ST_Intersects(geom, BBOX())
+```
+
+**Docker Compose optimization:**
+
+```yaml
+services:
+  martin:
+    image: ghcr.io/maplibre/martin:latest
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - RUST_LOG=martin=info
+      - MARTIN_KEEP_ALIVE=75
+      - MARTIN_WORKER_PROCESSES=4  # Match CPU cores
+    volumes:
+      - ./martin-config.yaml:/config.yaml:ro
+    command: --config /config.yaml
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+```
+
+---
+
+### 🚀 Phase 1 Priority Justification
+
+**Why start with Spatial Indexing + LOD:**
+
+1. **Immediate Visual Impact**
+   - Users see instant response on hover/click
+   - 60 FPS feels dramatically faster
+   - No backend changes required initially
+
+2. **Foundation for Future Phases**
+   - Spatial index is required for all other optimizations
+   - LOD system guides geometry simplification decisions
+
+3. **Risk-Free Implementation**
+   - Pure frontend enhancement
+   - Can roll back instantly if issues arise
+   - No database migrations needed
+
+4. **Quantifiable Metrics**
+   ```typescript
+   // Before: 50ms average hover latency
+   // After: < 1ms average hover latency
+   // Improvement: 50x faster
+   ```
+
+---
+
+### 📊 Performance Monitoring Setup
+
+**Real-time monitoring dashboard:**
+
+```typescript
+// client/src/lib/performance-dashboard.tsx
+import { useEffect, useState } from 'react';
+import { PerformanceMonitor } from './performance-monitor';
+
+export const PerformanceDashboard: React.FC = () => {
+  const [metrics, setMetrics] = useState<any>(null);
+  const monitor = PerformanceMonitor.getInstance();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMetrics(monitor.reportMetrics());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="fixed bottom-4 right-4 bg-black/80 text-white p-4 rounded">
+      <h3>Performance Metrics</h3>
+      {metrics && (
+        <dl>
+          <dt>Grid Render:</dt>
+          <dd>{metrics.gridRender?.avg.toFixed(2)}ms</dd>
+          
+          <dt>Hit Test:</dt>
+          <dd>{metrics.hitTest?.avg.toFixed(2)}ms</dd>
+          
+          <dt>FPS:</dt>
+          <dd>{(1000 / (metrics.frameTime?.avg || 16)).toFixed(0)}</dd>
+        </dl>
+      )}
+    </div>
+  );
+};
+```
+
+---
+
+### 🎨 Canvas Optimization: Path2D
+
+**Use Path2D for batch rendering:**
+
+```typescript
+// client/src/lib/optimized-canvas-renderer.ts
+export class OptimizedCanvasRenderer {
+  private pathCache = new Map<string, Path2D>();
+
+  renderGridCells(ctx: CanvasRenderingContext2D, cells: GridCell[]) {
+    // Batch all fills together
+    cells.forEach(cell => {
+      const path = this.getOrCreatePath(cell);
+      ctx.fillStyle = cell.color;
+      ctx.fill(path);
+    });
+
+    // Then batch all strokes
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 1;
+    cells.forEach(cell => {
+      const path = this.pathCache.get(cell.id);
+      if (path) ctx.stroke(path);
+    });
+  }
+
+  private getOrCreatePath(cell: GridCell): Path2D {
+    if (this.pathCache.has(cell.id)) {
+      return this.pathCache.get(cell.id)!;
+    }
+
+    const path = new Path2D();
+    const coords = cell.geometry.coordinates[0];
+    
+    path.moveTo(coords[0][0], coords[0][1]);
+    for (let i = 1; i < coords.length; i++) {
+      path.lineTo(coords[i][0], coords[i][1]);
+    }
+    path.closePath();
+
+    this.pathCache.set(cell.id, path);
+    return path;
+  }
+}
+```
+
+---
+
+## 🎯 Action Items Summary
+
+### Week 1: Quick Wins
+- [ ] Implement enhanced rbush with ID caching
+- [ ] Add LODManager with 3 zoom levels
+- [ ] Deploy performance monitoring dashboard
+- [ ] Measure baseline metrics
+
+### Week 2: Optimization
+- [ ] Integrate Path2D canvas renderer
+- [ ] Add client-side simplify-js fallback
+- [ ] Optimize Mapbox layer toggling
+- [ ] A/B test with users
+
+### Week 3-4: Database
+- [ ] Add ST_Simplify to TiDB migrations
+- [ ] Pre-compute L0, L1, L2 geometries
+- [ ] Update tRPC endpoints
+- [ ] Test payload sizes
+
+### Week 5-6: Martin
+- [ ] Deploy Martin tile server
+- [ ] Configure vector tile sources
+- [ ] Migrate frontend to MVT
+- [ ] Load test with 100k+ features
+
+---
+
+## 📚 Additional Resources
+
+- [rbush Documentation](https://github.com/mourner/rbush)
+- [Martin Tile Server](https://maplibre.org/martin/)
+- [TiDB Spatial Functions](https://docs.pingcap.com/tidb/stable/spatial-functions)
+- [Mapbox GL Performance](https://docs.mapbox.com/mapbox-gl-js/guides/performance/)
+- [simplify-js](https://github.com/mourner/simplify-js)
+- [Canvas Path2D API](https://developer.mozilla.org/en-US/docs/Web/API/Path2D)
+
+---
+
+**Document Version:** 1.1  
+**Last Updated:** December 31, 2025  
+**Authors:** GALOR Performance Team + Expert Review
