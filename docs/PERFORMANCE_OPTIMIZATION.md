@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This document outlines the comprehensive performance optimization strategy for GALOR's map rendering system, designed to handle 10,000+ polygons per city across multiple German cities (Berlin, Munich, Hamburg, Cologne) with interactive Mapbox + Canvas rendering.
+This document outlines the comprehensive performance optimization strategy for GALOR's map rendering system, designed to handle 10,000+ polygons per city across multiple German cities (Berlin, Munich, and other major European cities) with interactive Mapbox + Canvas rendering.
 
 ## Current Architecture
 
@@ -213,7 +213,7 @@ export const districtsRouter = router({
 import { GeometrySimplifier } from '../server/src/services/geometry-simplifier';
 
 async function main() {
-  const cities = ['Berlin', 'Munich', 'Hamburg', 'Cologne'];
+  const cities = ['Berlin', 'Munich', Berlin, Munich, and other major European cities];
   const simplifier = new GeometrySimplifier();
 
   for (const city of cities) {
