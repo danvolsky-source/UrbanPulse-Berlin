@@ -1,9 +1,7 @@
-# UrbanPulse: Integration of 15 Global Cities (2015-2024)
-
+# GALOR: Integration of 15 Global Cities (2015-2024)
 ## Executive Summary
 
-This document outlines the comprehensive data integration strategy for UrbanPulse platform, connecting 15 major global cities across 9 countries. The platform provides real-time urban analytics including demographics, property prices, community growth, crime & safety data, interactive district heatmaps, and geopolitical events from 2015-2024.
-
+This document outlines the comprehensive data integration strategy for GALOR platform, connecting 15 major global cities across 9 countries. The platform provides real-time urban analytics including demographics, property prices, community growth, crime & safety data, interactive district heatmaps, and geopolitical events from 2015-2024.
 ## 🌍 Target Cities (15)
 
 ### 🇩🇪 Germany (4 cities)
@@ -11,8 +9,7 @@ This document outlines the comprehensive data integration strategy for UrbanPuls
 1. **Berlin** - Capital, 3.7M population
 2. **Munich (München)** - Bavaria capital, 1.5M population  
 3. **Hamburg** - Port city, 1.9M population
-4. **Cologne (Köln)** - Rhine-Westphalia, 1.1M population
-
+4. **Madrid** - Spain's capital, 3.3M population
 ### 🇺🇸 United States (4 cities)
 
 5. **New York** - Financial capital, 8.3M population
