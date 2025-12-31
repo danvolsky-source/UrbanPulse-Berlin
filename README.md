@@ -1,167 +1,182 @@
-# GALOR by SkyMind
+GALOR by SkyMind is an analytical platform that reveals how government decisions translate into real, measurable urban outcomes.
 
-[![CI](https://github.com/danvolsky-source/GALOR/workflows/CI/badge.svg)](https://github.com/danvolsky-source/GALOR/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D22.0.0-brightgreen)](https://nodejs.org/)
+GALOR connects policy, data, and geography — exposing structural cause-and-effect relationships within cities.
 
-**GALOR by SkyMind** — Analytical platform revealing structural connections between government decisions and measurable urban outcomes.
+Core Capabilities
+Multi-City Intelligence
 
-## Features
+Analyze and compare urban dynamics across major global cities.
+Instantly switch cities through a unified analytical interface.
 
-### Multi-City Analytics
-Track urban development trends across major global cities. Switch between cities seamlessly using the integrated city selector.
+Government Impact Analysis
 
-### Government Impact Dashboard
-View real-time impact analysis including:
-- **Policy Timeline**: Major government decisions with year-over-year change indicators
-- **Urban Metrics**: Housing prices, employment, demographics with population percentages
-- **5-Year Progression Charts**: Visualizations showing trends over time
+Understand how decisions shape cities through:
 
-### Interactive Heat Maps
-Explore city districts through interactive maps featuring:
-- District boundaries color-coded by price/impact metrics
-- Infrastructure markers for key urban developments
-- Click-to-view district profiles with detailed statistics
-- Real-time data overlays
+Policy timelines with year-over-year change indicators
 
-### District Profiles
-Deep-dive into individual districts with:
-- Population demographics and composition
-- Property price trends over time
-- Infrastructure and development listings
-- Correlation analysis between policies and outcomes
+Urban metrics: housing prices, employment, demographics
 
-### Data Visualization
-- Line charts for demographic trends
-- Property price evolution graphs  
-- Sparkline indicators for quick trend analysis
-- Interactive tooltips and legends
+Multi-year trend analysis highlighting long-term effects
 
-## Technology Stack
+Interactive Spatial Intelligence
 
-### Backend
-- Node.js with Express
-- tRPC for end-to-end type-safe APIs
-- Drizzle ORM
-- MySQL/TiDB
-- Vitest for testing
+Explore cities through high-resolution, interactive maps:
 
-### Frontend  
-- React 19 with TypeScript
-- Tailwind CSS 4
-- Mapbox GL for interactive maps
-- Recharts for data visualization
-- shadcn/ui component library
-- Wouter for routing
+District-level heatmaps based on price and impact metrics
 
-## Installation
+Infrastructure and development markers
 
-### Prerequisites
-- Node.js 22.x or higher
-- MySQL 8.0+ or TiDB compatible database
-- pnpm package manager
+Click-through district views with detailed statistics
 
-### Setup
+Live data overlays tied to policy context
 
-1. Clone the repository
-```bash
+District Intelligence Profiles
+
+Deep analysis at the district level:
+
+Demographic composition
+
+Property price evolution
+
+Infrastructure and development activity
+
+Correlation between policy decisions and observed outcomes
+
+Advanced Data Visualization
+
+Long-term trend charts
+
+Property price evolution graphs
+
+Compact sparkline indicators
+
+Interactive tooltips and contextual legends
+
+Technology Stack
+Backend
+
+Node.js + Express
+
+tRPC (end-to-end type safety)
+
+Drizzle ORM
+
+MySQL / TiDB
+
+Vitest
+
+Frontend
+
+React 19 + TypeScript
+
+Tailwind CSS 4
+
+Mapbox GL
+
+Recharts
+
+shadcn/ui
+
+Wouter
+
+Installation
+Requirements
+
+Node.js ≥ 22
+
+MySQL 8+ or TiDB-compatible database
+
+pnpm
+
+Setup
 git clone https://github.com/danvolsky-source/GALOR.git
 cd GALOR
-```
-
-2. Install dependencies
-```bash
 pnpm install
-```
 
-3. Configure environment
-Create a `.env` file:
-```
+
+Create .env:
+
 DATABASE_URL=mysql://user:password@host:port/database
 JWT_SECRET=your-jwt-secret
 VITE_APP_ID=your-app-id
 OAUTH_SERVER_URL=https://api.manus.im
 VITE_OAUTH_PORTAL_URL=https://oauth.manus.im
 VITE_MAPBOX_ACCESS_TOKEN=your-mapbox-token
-```
 
-4. Initialize database
-```bash
+
+Initialize database:
+
 pnpm db:push
-```
 
-5. Start development server
-```bash
+
+Start development server:
+
 pnpm dev
-```
-
-The application will be available at http://localhost:3000
-
-## License
-MIT License - see LICENSE file
-
-## Acknowledgments
-- Built with [Manus](https://manus.im/)
-- Maps by [Mapbox](https://www.mapbox.com/)
-- UI by [shadcn/ui](https://ui.shadcn.com/)
-- Charts by [Recharts](https://recharts.org/)
 
 
-## 🔬 Grid Cells API
+Application runs at: http://localhost:3000
 
-### High-Resolution Heatmap Visualization
+🔬 Grid Cells API
+High-Resolution Urban Heatmaps
 
-The Grid Cells API provides fine-grained, mosaic-style data for advanced heatmap visualizations:
+The Grid Cells API enables fine-grained spatial analysis using a mosaic-based grid system.
 
-- **Multi-zoom support**: Data available at zoom levels 10, 11, and 12
-- **Spatial queries**: Efficient bounding box filtering for viewport-based loading
-- **Rich metrics**: Population density, property prices, air quality, greenery
-- **10,000+ cells**: Fine-grained grid overlay for detailed analysis
+Capabilities
 
-### Quick Start
+Multi-zoom support (levels 10–12)
 
-#### 1. Generate Test Data
+Viewport-based spatial queries
 
-```bash
+Metrics per cell: population density, property prices, air quality, greenery
+
+10,000+ grid cells per city
+
+Quick Start
+
+Generate test data:
+
 npm run tsx scripts/seed-grid-cells.ts
-```
 
-This will populate ~10,000 grid cells for Berlin with realistic mock data.
 
-#### 2. Use the API
+Query grid cells:
 
-```typescript
-import { trpc } from '@/lib/trpc';
-
-const { data: gridCells } = trpc.gridCells.getGrid.useQuery({
+const { data } = trpc.gridCells.getGrid.useQuery({
   city: 'Berlin',
   zoomLevel: 12,
   bounds: { minX: 0, maxX: 100, minY: 0, maxY: 100 }
 });
-```
-
-#### 3. Complete Integration Guide
-
-For detailed implementation instructions, see [`docs/GRID_CELLS_API_INTEGRATION.md`](docs/GRID_CELLS_API_INTEGRATION.md)
-
-### Features
-
-✅ **Backend Complete**
-- tRPC API endpoint: `gridCells.getGrid`
-- Database schema with gridCells table
-- Optimized spatial queries with safety limits
-- Seed script for test data generation
-
-🚧 **Frontend Integration** (See documentation)
-- tRPC hook integration
-- Mosaic rect rendering from API data
-- Viewport-based filtering
-- Performance optimizations
----
-
----
-
-**🚀 Deployed to GitHub Pages** | Live demo coming soon!
 
 
-**GALOR by SkyMind** - Wave of light, revealing urban truth.
+Full integration guide:
+docs/GRID_CELLS_API_INTEGRATION.md
+
+Grid Cells Status
+
+✅ Backend complete
+
+tRPC endpoint: gridCells.getGrid
+
+Optimized spatial queries
+
+Seed scripts for realistic mock data
+
+🚧 Frontend integration
+
+See documentation for rendering and performance strategies
+
+License
+
+MIT — see LICENSE file.
+
+Acknowledgments
+
+Built with Manus
+
+Maps powered by Mapbox
+
+UI components by shadcn/ui
+
+Charts by Recharts
+
+GALOR by SkyMind
+Wave of light — revealing how cities truly work.
