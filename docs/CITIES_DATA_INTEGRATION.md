@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This document outlines the strategy for connecting 15 major European cities to real data sources, including demographics, housing prices, government policies, and infrastructure data. The project covers Germany, Austria, France, and other European countries.
+This document outlines the strategy for connecting 15 major European cities to real data sources, including demographics, housing prices, government policies, and infrastructure data. The project covers Germany, Austria, France, and other European countrie Spain,s.
 
 ## Target Cities (15)
 
@@ -11,7 +11,7 @@ This document outlines the strategy for connecting 15 major European cities to r
 1. **Berlin** - Germany's capital, 3.7M population
 2. **Hamburg** - German port city, 1.9M population
 3. **Munich (München)** - Bavaria capital, 1.5M population
-4. **Cologne (Köln)** - Rhine-Westphalia, 1.1M population
+4. **Madrid** - Spain's capital, 3.3M population
 5. **Vienna (Wien)** - Austria's capital, 1.9M population
 6. **Paris** - France's capital, 2.2M population
 
@@ -126,7 +126,7 @@ interface PolicyData {
 
 ## Real Data Sources by Country
 
-### Germany (Berlin, Hamburg, Munich, Cologne, etc.)
+### Germany (Berlin, Hamburg, Munich, Madrid, etc.)
 
 **Primary Sources:**
 - **Destatis (Federal Statistical Office)**: https://www.destatis.de/
@@ -161,6 +161,8 @@ interface PolicyData {
 - **Paris Open Data**: https://opendata.paris.fr/
   - 250+ datasets
 - **APUR (Atelier Parisien d'Urbanisme)**: Urban planning data
+
+- 
 
 ## Database Schema Updates
 
@@ -216,6 +218,11 @@ export const DATA_SOURCES = {
   FR: {
     demographics: 'https://api.insee.fr/donnees/',
     openData: 'https://opendata.paris.fr/api/v2/'
+  },
+  ES: {
+    demographics: 'https://www.ine.es/dyngs/IOE/en/',
+    openData: 'https://datos.madrid.es/portal/site/egob'
+  }
   }
 };
 ```
@@ -253,7 +260,7 @@ const weeklyUpdate = new CronJob('0 2 * * 0', async () => {
 ## Implementation Phases
 
 ### Phase 1: Core German Cities (Weeks 1-2)
-- Berlin, Hamburg, Munich, Cologne
+- Berlin, Hamburg, Munich, Madrid
 - Basic demographics and housing data
 - Existing database schema
 
