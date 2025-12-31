@@ -122,7 +122,14 @@ export const cities = mysqlTable("cities", {
   name: varchar("name", { length: 255 }).notNull().unique(),
   country: varchar("country", { length: 255 }).notNull(),
   population: int("population").notNull(),
+    countryCode: varchar("countryCode", { length: 2 }).notNull(), // DE, US, FR, GB, CA, AT, IT, NL, BE, ES, PL
+  latitude: varchar("latitude", { length: 50 }).notNull(),
+  longitude: varchar("longitude", { length: 50 }).notNull(),
+  timezone: varchar("timezone", { length: 50 }),
+  dataStartYear: int("dataStartYear").default(2015),
+  dataEndYear: int("dataEndYear").default(2024),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type City = typeof cities.$inferSelect;
