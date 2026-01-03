@@ -153,6 +153,26 @@ Full integration guide: `docs/GRID_CELLS_API_INTEGRATION.md`
 
 MIT — see LICENSE file.
 
+## Mapbox Integration
+
+GALOR uses Mapbox GL JS for interactive geospatial visualization of Berlin data.
+
+### Quick Setup
+
+1. Get a free Mapbox access token from [console.mapbox.com](https://console.mapbox.com/)
+2. Add it to your `.env.local` file:
+   ```
+   NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_token_here
+   ```
+3. See [MAPBOX_SETUP.md](MAPBOX_SETUP.md) for detailed integration guide
+
+### Features
+- Interactive Berlin city map
+- Berlin boundary overlay from GeoJSON
+- Custom styling and controls
+- Responsive design
+
+
 ## Acknowledgments
 
 - Built with [Manus](https://manus.im)
