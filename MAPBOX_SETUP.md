@@ -63,6 +63,30 @@ function MyPage() {
 - Berlin boundary overlay from GeoJSON data
 - Zoom and pan controls
 - Responsive design
+- 
+**Core Features:**
+- Interactive map centered on Berlin
+- Berlin boundary overlay from GeoJSON data
+- Zoom and pan controls
+- Responsive design
+
+**✨ Enhanced Interactivity (v2.0):**
+- **Hover Effects**: Polygons highlight on mouse hover with visual feedback
+- **Click Events**: Click on map areas to see detailed information in popups  
+- **Cursor Changes**: Pointer cursor indicates interactive elements
+- **Smooth Transitions**: Animated state changes for better UX
+
+**⚡ Performance Optimizations:**
+- **Direct URL Loading**: GeoJSON loaded directly from URL (reduces memory usage)
+- **Zoom Limits**: Optimized maxzoom setting for better performance
+- **Efficient Buffering**: Tuned buffer size for optimal tile generation
+- **Scalable Architecture**: Ready for multiple data layers
+
+**🎨 Advanced Styling:**
+- **Dual Layer System**: Separate fill and line layers (Mapbox best practice)
+- **Dynamic Line Width**: Scales with zoom level for optimal visibility
+- **Professional Color Scheme**: Blue gradient theme for data visualization
+- **Feature State Management**: Efficient handling of interactive states
 
 ### Customization
 You can customize the map by modifying `MapboxBerlinMap.tsx`:
