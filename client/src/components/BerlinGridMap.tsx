@@ -1,9 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { trpc } from "../lib/trpc";
 import { scaleSequential } from "d3-scale";
 import { interpolateYlOrRd } from "d3-scale-chromatic";
-
-import { BERLIN_OUTLINE_PATH } from "../lib/berlinOutline";
+import { loadBerlinBoundary, convertGeoJSONToPath, BERLIN_OUTLINE_PATH } from "../lib/berlinOutline";
 
 type BerlinGridMapProps = {
   year: number;
@@ -12,12 +11,28 @@ type BerlinGridMapProps = {
 
 export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => {
   const [hoveredCell, setHoveredCell] = useState<{ x: number; y: number; value: number; district: string } | null>(null);
+  const [berlinBoundary, setBerlinBoundary] = useState<any>(null);
   
+  // Load GeoJSON boundary on mount
+  useEffect(() => {
+    loadBerlinBoundary().then(data => {
+      if (data) {
+        setBerlinBoundary(data);
+      }
+    });
+  }, []);
+
   const { data, isLoading } = trpc.berlinGrid.useQuery({
     year,
     month,
     cellsPerRow: 80,
   });
+
+  // Convert GeoJSON to SVG path
+  const berlinOutlinePath = useMemo(() => {
+    if (!berlinBoundary) return BERLIN_OUTLINE_PATH; // fallback to static path
+    return convertGeoJSONToPath(berlinBoundary, 700, 500);
+  }, [berlinBoundary]);
 
   // TEMPORARILY: hard-coded bbox for Berlin in SVG coordinates
   const width = 700;
@@ -38,11 +53,12 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
 
     const min = Math.min(...prices);
     const max = Math.max(...prices);
-
     const colorScale = scaleSequential(interpolateYlOrRd).domain([min, max]);
 
     const cells: {
       x: number;
+      y: number;
+      w: number;
       h: number;
       value: number;
       districtName: string;
@@ -55,8 +71,6 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
 
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
-        // On this step we don't use real district geometry yet,
-        // just paint the grid with price range.
         const district =
           data.districts[(i + j * cols) % data.districts.length];
         const price = district.avgPrice ?? prices[(i + j) % prices.length];
@@ -91,9 +105,8 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
         className="rounded-xl overflow-hidden"
       >
         <defs>
-          {/* Berlin city outline as clipPath */}
           <clipPath id="berlin-clip">
-            <path d={BERLIN_OUTLINE_PATH} />
+            <path d={berlinOutlinePath} />
           </clipPath>
         </defs>
 
@@ -105,7 +118,6 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
           fill="#020617"
         />
 
-        {/* Grid cells clipped to Berlin shape */}
         <g clipPath="url(#berlin-clip)">
           {cells.map((c, idx) => (
             <rect
@@ -123,9 +135,8 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
           ))}
         </g>
 
-        {/* Berlin outline stroke */}
         <path
-          d={BERLIN_OUTLINE_PATH}
+          d={berlinOutlinePath}
           fill="none"
           stroke="#475569"
           strokeWidth="1.5"
@@ -133,7 +144,6 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
         />
       </svg>
 
-      {/* Hover Tooltip */}
       {hoveredCell && (
         <div 
           className="absolute bg-slate-900/95 border border-slate-700 rounded-lg px-3 py-2 pointer-events-none"
@@ -143,14 +153,14 @@ export const BerlinGridMap: React.FC<BerlinGridMapProps> = ({ year, month }) => 
           }}
         >
           <div className="text-xs font-semibold text-slate-200">{hoveredCell.district}</div>
-        <div className="text-sm font-bold text-cyan-400">€{hoveredCell.value.toLocaleString()}<span className="text-xs font-normal text-slate-400">/m²</span></div>                  <div className="flex items-center gap-1 text-xs text-slate-400 mt-1">
-          <span className="text-emerald-400">↑ +5.2%</span>
-          <span>vs last year</span>
-        </div>
+          <div className="text-sm font-bold text-cyan-400">€{hoveredCell.value.toLocaleString()}<span className="text-xs font-normal text-slate-400">/m²</span></div>
+          <div className="flex items-center gap-1 text-xs text-slate-400 mt-1">
+            <span className="text-emerald-400">↑ +5.2%</span>
+            <span>vs last year</span>
+          </div>
         </div>
       )}
 
-      {/* Beautiful Legend with Gradient */}
       <div className="absolute right-4 top-4 bg-slate-900/90 backdrop-blur-sm p-3 rounded-lg border border-slate-700">
         <div className="text-xs font-semibold text-slate-200 mb-2">Property Prices / m²</div>
         <div className="flex items-center gap-2">
