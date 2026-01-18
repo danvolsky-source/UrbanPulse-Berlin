@@ -57,8 +57,7 @@ export default function Overview() {
         </div>
       </header>
 
-      <div className="container py-8">
-        <div className="mb-8">{/* Empty for spacing */}</div>
+      <div className="container py-8">{/* Statistics Grid */}
 
         {/* Statistics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

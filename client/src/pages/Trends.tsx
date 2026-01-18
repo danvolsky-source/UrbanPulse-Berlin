@@ -136,8 +136,7 @@ export default function Trends() {
         </div>
       </header>
 
-      <div className="container py-8">
-        <div className="mb-8">{/* Empty for spacing */}</div>
+      <div className="container py-8">{/* Trend Indicators */}
 
         {/* Trend Indicators */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

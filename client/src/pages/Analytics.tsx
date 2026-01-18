@@ -73,8 +73,7 @@ export default function Analytics() {
         </div>
       </header>
 
-      <div className="container py-8">
-        <div className="mb-8">{/* Empty for spacing */}</div>
+      <div className="container py-8">{/* Analytics Overview */}
 
         {/* Analytics Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
