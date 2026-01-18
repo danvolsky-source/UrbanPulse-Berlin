@@ -1,6 +1,7 @@
-import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, PieChart, Activity, Database } from "lucide-react";
+import { BarChart3, PieChart, Activity, Database, Home as HomeIcon } from "lucide-react";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
 
 export default function Analytics() {
   const analyticsCards = [
@@ -51,14 +52,29 @@ export default function Analytics() {
   ];
 
   return (
-    <DashboardLayout>
-      <div className="container py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Analytics</h1>
-          <p className="text-muted-foreground">
-            Comprehensive data analysis and visualization platform
-          </p>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border">
+        <div className="container py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Analytics</h1>
+              <p className="text-muted-foreground">
+                Comprehensive data analysis and visualization platform
+              </p>
+            </div>
+            <Link href="/">
+              <Button variant="outline" size="sm">
+                <HomeIcon className="w-4 h-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
         </div>
+      </header>
+
+      <div className="container py-8">
+        <div className="mb-8">{/* Empty for spacing */}</div>
 
         {/* Analytics Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -220,6 +236,6 @@ export default function Analytics() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayout>
+    </div>
   );
 }

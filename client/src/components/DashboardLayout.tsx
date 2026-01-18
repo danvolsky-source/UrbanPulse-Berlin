@@ -262,42 +262,10 @@ function DashboardLayoutContent({
             </div>
           </div>
         )}
-          <main className="flex-1 p-4">
-            <div className="grid grid-cols-12 gap-4 h-full">
-              {/* Left Panel: Timeline */}
-              <div className="col-span-2 bg-background border rounded-lg p-4">
-                <h3 className="text-sm font-semibold mb-4">Timeline</h3>
-                <div className="space-y-2">
-                  <Timeline />                  </div>
-                </div>
-              </div>
-              
-              {/* Center Panel: Map + Charts */}
-              <div className="col-span-7 space-y-4">
-                <div className="bg-background border rounded-lg">
-                  {children}
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-background border rounded-lg p-4 h-48">
-                    <h4 className="text-sm font-semibold mb-2">Comparison Chart 1</h4>
-                    <div className="text-xs text-muted-foreground">Chart placeholder</div>
-                  </div>
-                  <div className="bg-background border rounded-lg p-4 h-48">
-                    <h4 className="text-sm font-semibold mb-2">Comparison Chart 2</h4>
-                    <div className="text-xs text-muted-foreground">Chart placeholder</div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Right Panel: Filters + KPI */}
-              <div className="col-span-3 bg-background border rounded-lg p-4">
-                <h3 className="text-sm font-semibold mb-4">Filters & KPI</h3>
-                <div className="space-y-4">
-                  <FilterPanel />                  </div>
-                </div>
-              </div>
-            </div>
-          </main>      </SidebarInset>
+        <main className="flex-1 p-4">
+          {children}
+        </main>
+      </SidebarInset>
     </>
   );
 }

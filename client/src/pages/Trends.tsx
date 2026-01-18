@@ -1,7 +1,8 @@
-import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MarketTrendsChart from "@/components/MarketTrendsChart";
-import { TrendingUp, TrendingDown, Activity } from "lucide-react";
+import { TrendingUp, TrendingDown, Activity, Home as HomeIcon } from "lucide-react";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
 
 export default function Trends() {
   // Additional dummy data for different trend visualizations
@@ -114,14 +115,29 @@ export default function Trends() {
   ];
 
   return (
-    <DashboardLayout>
-      <div className="container py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Market Trends</h1>
-          <p className="text-muted-foreground">
-            Historical trends and market analysis for Berlin real estate
-          </p>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border">
+        <div className="container py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Market Trends</h1>
+              <p className="text-muted-foreground">
+                Historical trends and market analysis for Berlin real estate
+              </p>
+            </div>
+            <Link href="/">
+              <Button variant="outline" size="sm">
+                <HomeIcon className="w-4 h-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
         </div>
+      </header>
+
+      <div className="container py-8">
+        <div className="mb-8">{/* Empty for spacing */}</div>
 
         {/* Trend Indicators */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -213,6 +229,6 @@ export default function Trends() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayout>
+    </div>
   );
 }
