@@ -24,6 +24,9 @@ import CookieConsent from "./components/CookieConsent";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Overview from "./pages/Overview";
+import Trends from "./pages/Trends";
+import Analytics from "./pages/Analytics";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -33,7 +36,10 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/profile" component={Profile} />
       <Route path="/settings" component={Settings} />
+      <Route path="/overview" component={Overview} />
       <Route path="/map" component={MapView} />
+      <Route path="/trends" component={Trends} />
+      <Route path="/analytics" component={Analytics} />
       <Route path="/comparison" component={CityComparison} />
       <Route path="/government" component={GovernmentImpact} />
       <Route path="/methodology" component={Methodology} />
